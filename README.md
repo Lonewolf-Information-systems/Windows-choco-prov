@@ -12,7 +12,8 @@ Dont care to have to keep up on them...
 Simple Package Catagories  by folder , simple CMD files per package..
 
 On First boot Fetch this repo via github coadload... IE zipfile , unpack to.. via powershell , install chocolatey. 
-
+((https://chocolatey.org/install))
+Batch:
 <code>@"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin" </code>
 
 ####  fire up provsion-me.cmd  to invoke cmd's in folders to install a typicall business tools , toys etc. 
