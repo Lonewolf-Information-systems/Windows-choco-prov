@@ -1,0 +1,1 @@
+var Closeable=function(){return{modal:function(n){$(".modal-closeable .close").click(function(t){var i,r;$(t.target).closest(".modal-closeable").hide();i=new Date;i.setTime(i.getTime()+31536e8);r="expires="+i.toUTCString();document.cookie=n+"=true;"+r+";path=/"})}}}()

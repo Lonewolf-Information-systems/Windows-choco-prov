@@ -1,0 +1,1 @@
+choco install lua52 -y

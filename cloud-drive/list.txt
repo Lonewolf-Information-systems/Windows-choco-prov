@@ -1,0 +1,11 @@
+choco install syncback -y
+
+choco install google-backup-and-sync -y 
+
+choco install nextcloud-client
+
+choco install nextcloud-client
+
+choco install filezilla
+
+choco install owncloud-client

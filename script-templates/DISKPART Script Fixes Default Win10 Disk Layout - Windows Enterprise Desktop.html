@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+
+<!--[if gt IE 8]><!--><html class="no-js gt-ie8" dir="ltr" lang="en"><!--<![endif]-->
+<head>
+	<meta charset="utf-8" />
+			<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+			<title>DISKPART Script Fixes Default Win10 Disk Layout - Windows Enterprise Desktop</title>
+			<meta name="viewport" content="width=device-width,initial-scale=1" />
+			<meta name="description" content="In the third and final element of this 3-part series, we show how a DISKPART script fixes default Win10 disk layout issues." />
+			<meta name="robots" content="noodp" />
+			<link rel="canonical" href="http://searchenterprisedesktop.techtarget.com/blog/Windows-Enterprise-Desktop/DISKPART-Script-Fixes-Default-Win10-Disk-Layout" />
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><script src="https://fast.fonts.net/jsapi/124d48dd-e515-4302-8bfb-1d5c1e3da916.js"></script><link rel="stylesheet" href="https://cdn.ttgtmedia.com/rms/ux/responsive/css/main.css?v=7.3"><script src="https://cdn.ttgtmedia.com/rms/ux/responsive/js/responsive.min.js?v=7.3"></script><script src="https://cdn.optimizely.com/js/148927072.js"></script><script>
+TT("page", {"topical":true,"dlotitle":"Download: Our 23-Page Editorial Collection of Windows 10 Blog Content","parentTopicName":"Windows desktop operating systems","siteName":"searchEnterpriseDesktop","appCode":"0","uaid":"UA-18475716-7","adAbbr":"sed","parentTopicId":"315554","zone":"BLOGPOST","dlosrc":"Blog","ga":true,"lang":"en","regTopicName":"Windows 10","timestamp":"2018-02-18 15:00:36","siteType":"editorial","gaPageTrackUrl":"/page/etpk_Windows desktop operating systems-315554/ptpk_Microsoft Windows 10 operating system-2240226888/true/BLOGPOST/content/cid_450421165/date_20170621/mem_0/rtpk_Windows 10-1557560/idx_0","homeAdId":"2240013425","regTopicId":"1557560","pubDate":"20170621","adScheme":"1","ttgtRegHost":"https://users.techtarget.com","atHost":"https://go.techtarget.com","regHost":"https://users.techtarget.com","dloid":"450417689","topicId":"2240226888","adId":"450421165","pageIndex":0,"siteId":192,"topicName":"Microsoft Windows 10 operating system","topicIds":["2240226888","315554"],"gaSiteAcct":"UA-18475716-7"});
+</script>
+
+<!-- Begin Chartbeat -->
+		<script>var _sf_startpt=(new Date()).getTime();</script><!-- End Chartbeat -->
+	
+<script type="text/javascript">(window.NREUM||(NREUM={})).loader_config={xpid:"VwcDVVZACwIDU1lS"};window.NREUM||(NREUM={}),__nr_require=function(t,n,e){function r(e){if(!n[e]){var o=n[e]={exports:{}};t[e][0].call(o.exports,function(n){var o=t[e][1][n];return r(o||n)},o,o.exports)}return n[e].exports}if("function"==typeof __nr_require)return __nr_require;for(var o=0;o<e.length;o++)r(e[o]);return r}({1:[function(t,n,e){function r(t){try{s.console&&console.log(t)}catch(n){}}var o,i=t("ee"),a=t(15),s={};try{o=localStorage.getItem("__nr_flags").split(","),console&&"function"==typeof console.log&&(s.console=!0,o.indexOf("dev")!==-1&&(s.dev=!0),o.indexOf("nr_dev")!==-1&&(s.nrDev=!0))}catch(c){}s.nrDev&&i.on("internal-error",function(t){r(t.stack)}),s.dev&&i.on("fn-err",function(t,n,e){r(e.stack)}),s.dev&&(r("NR AGENT IN DEVELOPMENT MODE"),r("flags: "+a(s,function(t,n){return t}).join(", ")))},{}],2:[function(t,n,e){function r(t,n,e,r,s){try{p?p-=1:o(s||new UncaughtException(t,n,e),!0)}catch(f){try{i("ierr",[f,c.now(),!0])}catch(d){}}return"function"==typeof u&&u.apply(this,a(arguments))}function UncaughtException(t,n,e){this.message=t||"Uncaught error with no additional information",this.sourceURL=n,this.line=e}function o(t,n){var e=n?null:c.now();i("err",[t,e])}var i=t("handle"),a=t(16),s=t("ee"),c=t("loader"),f=t("gos"),u=window.onerror,d=!1,l="nr@seenError",p=0;c.features.err=!0,t(1),window.onerror=r;try{throw new Error}catch(h){"stack"in h&&(t(8),t(7),"addEventListener"in window&&t(5),c.xhrWrappable&&t(9),d=!0)}s.on("fn-start",function(t,n,e){d&&(p+=1)}),s.on("fn-err",function(t,n,e){d&&!e[l]&&(f(e,l,function(){return!0}),this.thrown=!0,o(e))}),s.on("fn-end",function(){d&&!this.thrown&&p>0&&(p-=1)}),s.on("internal-error",function(t){i("ierr",[t,c.now(),!0])})},{}],3:[function(t,n,e){t("loader").features.ins=!0},{}],4:[function(t,n,e){function r(t){}if(window.performance&&window.performance.timing&&window.performance.getEntriesByType){var o=t("ee"),i=t("handle"),a=t(8),s=t(7),c="learResourceTimings",f="addEventListener",u="resourcetimingbufferfull",d="bstResource",l="resource",p="-start",h="-end",m="fn"+p,w="fn"+h,v="bstTimer",y="pushState",g=t("loader");g.features.stn=!0,t(6);var b=NREUM.o.EV;o.on(m,function(t,n){var e=t[0];e instanceof b&&(this.bstStart=g.now())}),o.on(w,function(t,n){var e=t[0];e instanceof b&&i("bst",[e,n,this.bstStart,g.now()])}),a.on(m,function(t,n,e){this.bstStart=g.now(),this.bstType=e}),a.on(w,function(t,n){i(v,[n,this.bstStart,g.now(),this.bstType])}),s.on(m,function(){this.bstStart=g.now()}),s.on(w,function(t,n){i(v,[n,this.bstStart,g.now(),"requestAnimationFrame"])}),o.on(y+p,function(t){this.time=g.now(),this.startPath=location.pathname+location.hash}),o.on(y+h,function(t){i("bstHist",[location.pathname+location.hash,this.startPath,this.time])}),f in window.performance&&(window.performance["c"+c]?window.performance[f](u,function(t){i(d,[window.performance.getEntriesByType(l)]),window.performance["c"+c]()},!1):window.performance[f]("webkit"+u,function(t){i(d,[window.performance.getEntriesByType(l)]),window.performance["webkitC"+c]()},!1)),document[f]("scroll",r,{passive:!0}),document[f]("keypress",r,!1),document[f]("click",r,!1)}},{}],5:[function(t,n,e){function r(t){for(var n=t;n&&!n.hasOwnProperty(u);)n=Object.getPrototypeOf(n);n&&o(n)}function o(t){s.inPlace(t,[u,d],"-",i)}function i(t,n){return t[1]}var a=t("ee").get("events"),s=t(18)(a,!0),c=t("gos"),f=XMLHttpRequest,u="addEventListener",d="removeEventListener";n.exports=a,"getPrototypeOf"in Object?(r(document),r(window),r(f.prototype)):f.prototype.hasOwnProperty(u)&&(o(window),o(f.prototype)),a.on(u+"-start",function(t,n){var e=t[1],r=c(e,"nr@wrapped",function(){function t(){if("function"==typeof e.handleEvent)return e.handleEvent.apply(e,arguments)}var n={object:t,"function":e}[typeof e];return n?s(n,"fn-",null,n.name||"anonymous"):e});this.wrapped=t[1]=r}),a.on(d+"-start",function(t){t[1]=this.wrapped||t[1]})},{}],6:[function(t,n,e){var r=t("ee").get("history"),o=t(18)(r);n.exports=r,o.inPlace(window.history,["pushState","replaceState"],"-")},{}],7:[function(t,n,e){var r=t("ee").get("raf"),o=t(18)(r),i="equestAnimationFrame";n.exports=r,o.inPlace(window,["r"+i,"mozR"+i,"webkitR"+i,"msR"+i],"raf-"),r.on("raf-start",function(t){t[0]=o(t[0],"fn-")})},{}],8:[function(t,n,e){function r(t,n,e){t[0]=a(t[0],"fn-",null,e)}function o(t,n,e){this.method=e,this.timerDuration=isNaN(t[1])?0:+t[1],t[0]=a(t[0],"fn-",this,e)}var i=t("ee").get("timer"),a=t(18)(i),s="setTimeout",c="setInterval",f="clearTimeout",u="-start",d="-";n.exports=i,a.inPlace(window,[s,"setImmediate"],s+d),a.inPlace(window,[c],c+d),a.inPlace(window,[f,"clearImmediate"],f+d),i.on(c+u,r),i.on(s+u,o)},{}],9:[function(t,n,e){function r(t,n){d.inPlace(n,["onreadystatechange"],"fn-",s)}function o(){var t=this,n=u.context(t);t.readyState>3&&!n.resolved&&(n.resolved=!0,u.emit("xhr-resolved",[],t)),d.inPlace(t,y,"fn-",s)}function i(t){g.push(t),h&&(x?x.then(a):w?w(a):(E=-E,O.data=E))}function a(){for(var t=0;t<g.length;t++)r([],g[t]);g.length&&(g=[])}function s(t,n){return n}function c(t,n){for(var e in t)n[e]=t[e];return n}t(5);var f=t("ee"),u=f.get("xhr"),d=t(18)(u),l=NREUM.o,p=l.XHR,h=l.MO,m=l.PR,w=l.SI,v="readystatechange",y=["onload","onerror","onabort","onloadstart","onloadend","onprogress","ontimeout"],g=[];n.exports=u;var b=window.XMLHttpRequest=function(t){var n=new p(t);try{u.emit("new-xhr",[n],n),n.addEventListener(v,o,!1)}catch(e){try{u.emit("internal-error",[e])}catch(r){}}return n};if(c(p,b),b.prototype=p.prototype,d.inPlace(b.prototype,["open","send"],"-xhr-",s),u.on("send-xhr-start",function(t,n){r(t,n),i(n)}),u.on("open-xhr-start",r),h){var x=m&&m.resolve();if(!w&&!m){var E=1,O=document.createTextNode(E);new h(a).observe(O,{characterData:!0})}}else f.on("fn-end",function(t){t[0]&&t[0].type===v||a()})},{}],10:[function(t,n,e){function r(t){var n=this.params,e=this.metrics;if(!this.ended){this.ended=!0;for(var r=0;r<d;r++)t.removeEventListener(u[r],this.listener,!1);if(!n.aborted){if(e.duration=a.now()-this.startTime,4===t.readyState){n.status=t.status;var i=o(t,this.lastSize);if(i&&(e.rxSize=i),this.sameOrigin){var c=t.getResponseHeader("X-NewRelic-App-Data");c&&(n.cat=c.split(", ").pop())}}else n.status=0;e.cbTime=this.cbTime,f.emit("xhr-done",[t],t),s("xhr",[n,e,this.startTime])}}}function o(t,n){var e=t.responseType;if("json"===e&&null!==n)return n;var r="arraybuffer"===e||"blob"===e||"json"===e?t.response:t.responseText;return h(r)}function i(t,n){var e=c(n),r=t.params;r.host=e.hostname+":"+e.port,r.pathname=e.pathname,t.sameOrigin=e.sameOrigin}var a=t("loader");if(a.xhrWrappable){var s=t("handle"),c=t(11),f=t("ee"),u=["load","error","abort","timeout"],d=u.length,l=t("id"),p=t(14),h=t(13),m=window.XMLHttpRequest;a.features.xhr=!0,t(9),f.on("new-xhr",function(t){var n=this;n.totalCbs=0,n.called=0,n.cbTime=0,n.end=r,n.ended=!1,n.xhrGuids={},n.lastSize=null,p&&(p>34||p<10)||window.opera||t.addEventListener("progress",function(t){n.lastSize=t.loaded},!1)}),f.on("open-xhr-start",function(t){this.params={method:t[0]},i(this,t[1]),this.metrics={}}),f.on("open-xhr-end",function(t,n){"loader_config"in NREUM&&"xpid"in NREUM.loader_config&&this.sameOrigin&&n.setRequestHeader("X-NewRelic-ID",NREUM.loader_config.xpid)}),f.on("send-xhr-start",function(t,n){var e=this.metrics,r=t[0],o=this;if(e&&r){var i=h(r);i&&(e.txSize=i)}this.startTime=a.now(),this.listener=function(t){try{"abort"===t.type&&(o.params.aborted=!0),("load"!==t.type||o.called===o.totalCbs&&(o.onloadCalled||"function"!=typeof n.onload))&&o.end(n)}catch(e){try{f.emit("internal-error",[e])}catch(r){}}};for(var s=0;s<d;s++)n.addEventListener(u[s],this.listener,!1)}),f.on("xhr-cb-time",function(t,n,e){this.cbTime+=t,n?this.onloadCalled=!0:this.called+=1,this.called!==this.totalCbs||!this.onloadCalled&&"function"==typeof e.onload||this.end(e)}),f.on("xhr-load-added",function(t,n){var e=""+l(t)+!!n;this.xhrGuids&&!this.xhrGuids[e]&&(this.xhrGuids[e]=!0,this.totalCbs+=1)}),f.on("xhr-load-removed",function(t,n){var e=""+l(t)+!!n;this.xhrGuids&&this.xhrGuids[e]&&(delete this.xhrGuids[e],this.totalCbs-=1)}),f.on("addEventListener-end",function(t,n){n instanceof m&&"load"===t[0]&&f.emit("xhr-load-added",[t[1],t[2]],n)}),f.on("removeEventListener-end",function(t,n){n instanceof m&&"load"===t[0]&&f.emit("xhr-load-removed",[t[1],t[2]],n)}),f.on("fn-start",function(t,n,e){n instanceof m&&("onload"===e&&(this.onload=!0),("load"===(t[0]&&t[0].type)||this.onload)&&(this.xhrCbStart=a.now()))}),f.on("fn-end",function(t,n){this.xhrCbStart&&f.emit("xhr-cb-time",[a.now()-this.xhrCbStart,this.onload,n],n)})}},{}],11:[function(t,n,e){n.exports=function(t){var n=document.createElement("a"),e=window.location,r={};n.href=t,r.port=n.port;var o=n.href.split("://");!r.port&&o[1]&&(r.port=o[1].split("/")[0].split("@").pop().split(":")[1]),r.port&&"0"!==r.port||(r.port="https"===o[0]?"443":"80"),r.hostname=n.hostname||e.hostname,r.pathname=n.pathname,r.protocol=o[0],"/"!==r.pathname.charAt(0)&&(r.pathname="/"+r.pathname);var i=!n.protocol||":"===n.protocol||n.protocol===e.protocol,a=n.hostname===document.domain&&n.port===e.port;return r.sameOrigin=i&&(!n.hostname||a),r}},{}],12:[function(t,n,e){function r(){}function o(t,n,e){return function(){return i(t,[f.now()].concat(s(arguments)),n?null:this,e),n?void 0:this}}var i=t("handle"),a=t(15),s=t(16),c=t("ee").get("tracer"),f=t("loader"),u=NREUM;"undefined"==typeof window.newrelic&&(newrelic=u);var d=["setPageViewName","setCustomAttribute","setErrorHandler","finished","addToTrace","inlineHit","addRelease"],l="api-",p=l+"ixn-";a(d,function(t,n){u[n]=o(l+n,!0,"api")}),u.addPageAction=o(l+"addPageAction",!0),u.setCurrentRouteName=o(l+"routeName",!0),n.exports=newrelic,u.interaction=function(){return(new r).get()};var h=r.prototype={createTracer:function(t,n){var e={},r=this,o="function"==typeof n;return i(p+"tracer",[f.now(),t,e],r),function(){if(c.emit((o?"":"no-")+"fn-start",[f.now(),r,o],e),o)try{return n.apply(this,arguments)}catch(t){throw c.emit("fn-err",[arguments,this,t],e),t}finally{c.emit("fn-end",[f.now()],e)}}}};a("setName,setAttribute,save,ignore,onEnd,getContext,end,get".split(","),function(t,n){h[n]=o(p+n)}),newrelic.noticeError=function(t){"string"==typeof t&&(t=new Error(t)),i("err",[t,f.now()])}},{}],13:[function(t,n,e){n.exports=function(t){if("string"==typeof t&&t.length)return t.length;if("object"==typeof t){if("undefined"!=typeof ArrayBuffer&&t instanceof ArrayBuffer&&t.byteLength)return t.byteLength;if("undefined"!=typeof Blob&&t instanceof Blob&&t.size)return t.size;if(!("undefined"!=typeof FormData&&t instanceof FormData))try{return JSON.stringify(t).length}catch(n){return}}}},{}],14:[function(t,n,e){var r=0,o=navigator.userAgent.match(/Firefox[\/\s](\d+\.\d+)/);o&&(r=+o[1]),n.exports=r},{}],15:[function(t,n,e){function r(t,n){var e=[],r="",i=0;for(r in t)o.call(t,r)&&(e[i]=n(r,t[r]),i+=1);return e}var o=Object.prototype.hasOwnProperty;n.exports=r},{}],16:[function(t,n,e){function r(t,n,e){n||(n=0),"undefined"==typeof e&&(e=t?t.length:0);for(var r=-1,o=e-n||0,i=Array(o<0?0:o);++r<o;)i[r]=t[n+r];return i}n.exports=r},{}],17:[function(t,n,e){n.exports={exists:"undefined"!=typeof window.performance&&window.performance.timing&&"undefined"!=typeof window.performance.timing.navigationStart}},{}],18:[function(t,n,e){function r(t){return!(t&&t instanceof Function&&t.apply&&!t[a])}var o=t("ee"),i=t(16),a="nr@original",s=Object.prototype.hasOwnProperty,c=!1;n.exports=function(t,n){function e(t,n,e,o){function nrWrapper(){var r,a,s,c;try{a=this,r=i(arguments),s="function"==typeof e?e(r,a):e||{}}catch(f){l([f,"",[r,a,o],s])}u(n+"start",[r,a,o],s);try{return c=t.apply(a,r)}catch(d){throw u(n+"err",[r,a,d],s),d}finally{u(n+"end",[r,a,c],s)}}return r(t)?t:(n||(n=""),nrWrapper[a]=t,d(t,nrWrapper),nrWrapper)}function f(t,n,o,i){o||(o="");var a,s,c,f="-"===o.charAt(0);for(c=0;c<n.length;c++)s=n[c],a=t[s],r(a)||(t[s]=e(a,f?s+o:o,i,s))}function u(e,r,o){if(!c||n){var i=c;c=!0;try{t.emit(e,r,o,n)}catch(a){l([a,e,r,o])}c=i}}function d(t,n){if(Object.defineProperty&&Object.keys)try{var e=Object.keys(t);return e.forEach(function(e){Object.defineProperty(n,e,{get:function(){return t[e]},set:function(n){return t[e]=n,n}})}),n}catch(r){l([r])}for(var o in t)s.call(t,o)&&(n[o]=t[o]);return n}function l(n){try{t.emit("internal-error",n)}catch(e){}}return t||(t=o),e.inPlace=f,e.flag=a,e}},{}],ee:[function(t,n,e){function r(){}function o(t){function n(t){return t&&t instanceof r?t:t?c(t,s,i):i()}function e(e,r,o,i){if(!l.aborted||i){t&&t(e,r,o);for(var a=n(o),s=h(e),c=s.length,f=0;f<c;f++)s[f].apply(a,r);var d=u[y[e]];return d&&d.push([g,e,r,a]),a}}function p(t,n){v[t]=h(t).concat(n)}function h(t){return v[t]||[]}function m(t){return d[t]=d[t]||o(e)}function w(t,n){f(t,function(t,e){n=n||"feature",y[e]=n,n in u||(u[n]=[])})}var v={},y={},g={on:p,emit:e,get:m,listeners:h,context:n,buffer:w,abort:a,aborted:!1};return g}function i(){return new r}function a(){(u.api||u.feature)&&(l.aborted=!0,u=l.backlog={})}var s="nr@context",c=t("gos"),f=t(15),u={},d={},l=n.exports=o();l.backlog=u},{}],gos:[function(t,n,e){function r(t,n,e){if(o.call(t,n))return t[n];var r=e();if(Object.defineProperty&&Object.keys)try{return Object.defineProperty(t,n,{value:r,writable:!0,enumerable:!1}),r}catch(i){}return t[n]=r,r}var o=Object.prototype.hasOwnProperty;n.exports=r},{}],handle:[function(t,n,e){function r(t,n,e,r){o.buffer([t],r),o.emit(t,n,e)}var o=t("ee").get("handle");n.exports=r,r.ee=o},{}],id:[function(t,n,e){function r(t){var n=typeof t;return!t||"object"!==n&&"function"!==n?-1:t===window?0:a(t,i,function(){return o++})}var o=1,i="nr@id",a=t("gos");n.exports=r},{}],loader:[function(t,n,e){function r(){if(!x++){var t=b.info=NREUM.info,n=l.getElementsByTagName("script")[0];if(setTimeout(u.abort,3e4),!(t&&t.licenseKey&&t.applicationID&&n))return u.abort();f(y,function(n,e){t[n]||(t[n]=e)}),c("mark",["onload",a()+b.offset],null,"api");var e=l.createElement("script");e.src="https://"+t.agent,n.parentNode.insertBefore(e,n)}}function o(){"complete"===l.readyState&&i()}function i(){c("mark",["domContent",a()+b.offset],null,"api")}function a(){return E.exists&&performance.now?Math.round(performance.now()):(s=Math.max((new Date).getTime(),s))-b.offset}var s=(new Date).getTime(),c=t("handle"),f=t(15),u=t("ee"),d=window,l=d.document,p="addEventListener",h="attachEvent",m=d.XMLHttpRequest,w=m&&m.prototype;NREUM.o={ST:setTimeout,SI:d.setImmediate,CT:clearTimeout,XHR:m,REQ:d.Request,EV:d.Event,PR:d.Promise,MO:d.MutationObserver};var v=""+location,y={beacon:"bam.nr-data.net",errorBeacon:"bam.nr-data.net",agent:"js-agent.newrelic.com/nr-1071.min.js"},g=m&&w&&w[p]&&!/CriOS/.test(navigator.userAgent),b=n.exports={offset:s,now:a,origin:v,features:{},xhrWrappable:g};t(12),l[p]?(l[p]("DOMContentLoaded",i,!1),d[p]("load",r,!1)):(l[h]("onreadystatechange",o),d[h]("onload",r)),c("mark",["firstbyte",s],null,"api");var x=0,E=t(17)},{}]},{},["loader",2,10,4,3]);</script><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+	<link rel="apple-touch-icon" sizes="144×144" href="/apple-touch-icon-144x144.png">
+	<link rel="apple-touch-icon" sizes="114×114" href="/apple-touch-icon-114x114.png">
+	<link rel="apple-touch-icon" sizes="72×72" href="/apple-touch-icon-72x72.png">
+	<link rel="apple-touch-icon" href="/apple-touch-icon-precomposed.png">
+	<link rel="apple-touch-icon-precomposed" sizes="144×144" href="/apple-touch-icon-144x144-precomposed.png">
+	<link rel="apple-touch-icon-precomposed" sizes="114×114" href="/apple-touch-icon-114x114-precomposed.png">
+	<link rel="apple-touch-icon-precomposed" sizes="72×72" href="/apple-touch-icon-72x72-precomposed.png">
+	<link rel="apple-touch-icon-precomposed" href="/apple-touch-icon-precomposed.png">
+
+	</head>
+<body id="blog-post">
+	<!-- Begin Google Tag Manager -->
+		<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-PWWZSH" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-PWWZSH');</script><!-- End Google Tag Manager -->
+	<div id="site-container" class="site-container">
+		<!-- PinnedNavBarController, generated at 15:00:36 Sun Feb 18, 2018, by pv-ecmappma4.techtarget.com -->
+<!-- AdsController, generated at 15:00:36 Sun Feb 18, 2018, by pv-ecmappma4.techtarget.com -->
+<div id="interstitial" class="ad ad-ist"><script>GPT.display('interstitial')</script></div><div class="ad-wrapper header-leaderboard ad-mobile">
+	<!-- AdsController, generated at 15:00:36 Sun Feb 18, 2018, by pv-ecmappma4.techtarget.com -->
+<div id="mobile-lb" class="ad ad-mb"><script>GPT.display('mobile-lb')</script></div></div>
+<header class="header header_v2 en" id="page-header">
+	<button class="nav-toggle"><i class="icon" data-icon="9"></i></button>
+	<a href="http://www.techtarget.com/network" class="header-logo mobile-link">
+		<span class="header-logo-mobile">SearchEnterpriseDesktop</span>
+	</a>
+	<a href="http://searchenterprisedesktop.techtarget.com" class="header-logo desktop-link">
+		<img src="https://cdn.ttgtmedia.com/rms/ux/responsive/img/nav_logo.png" alt="TechTarget" class="header-logo-desktop replace_2x">
+		<img src="https://cdn.ttgtmedia.com/rms/ux/responsive/img/nav_logo.png" alt="TechTarget" class="header-logo-small replace_2x">
+	</a> 
+	<button class="header-search-toggle" ><i class="icon" data-icon="g"></i></button>
+	<form action="https://www.techtarget.com/search/query" method="get" class="header-search">
+		<label for="header-search-input" class="visuallyhidden">Search the TechTarget Network</label>
+		<input class="header-search-input ui-autocomplete-input" id="header-search-input" autocomplete="off" type="text" name="q" placeholder="Search the TechTarget Network">
+		<button class="header-search-submit"><i class="icon" data-icon="g"></i></button>
+	</form>
+			
+	<nav class="nav">
+		<a href="https://users.techtarget.com/registration/searchEnterpriseDesktop/LoginRegister.page" class="nav-join-pro"><span>Sign-up now. Start my free, unlimited access.</span></a>
+					
+		<div class="nav-user">
+		<a href="https://users.techtarget.com/registration/searchEnterpriseDesktop/LoginRegister.page"><span class="nav-user-action">Login</span></a>
+			<a href="https://users.techtarget.com/registration/searchEnterpriseDesktop/Register.page" class="register"><span class="nav-user-action">Register</span></a>
+			</div>
+		<script>TT(["context","lib/jquery"],function(c,$){var u=c.getUser();if(u.loggedIn){$('div.nav-user').children("a:first")
+			.before('<i class="icon header_logged_in_icon" title="'+u.displayName+'"></i>')
+			.attr("href", "https://users.techtarget.com/registration/searchEnterpriseDesktop/Logout.page?fromURL=" + window.location.href).children("span.nav-user-action:first").text('Logout');
+			$('.register').removeAttr('href');$('a.register').hide();}else{$('div.nav-user').children("a:first").attr("href", "https://users.techtarget.com/registration/searchEnterpriseDesktop/LoginRegister.page?fromURL="+window.location.href);
+			$('a.nav-join-pro').attr("href", "https://users.techtarget.com/registration/searchEnterpriseDesktop/LoginRegister.page?fromURL="+window.location.href);}});
+
+		</script>
+
+		<div class="nav-links">
+				<ul>
+					<li id="nav-links-TechtargetNetwork"><a href="http://www.techtarget.com/network">Techtarget Network</a></li>
+					<li id="nav-links-News"><a href="http://searchenterprisedesktop.techtarget.com/info/news">News</a></li>
+					<li id="nav-links-Features"><a href="http://searchenterprisedesktop.techtarget.com/features">Features</a></li>
+					<li id="nav-links-Tips"><a href="http://searchenterprisedesktop.techtarget.com/tips">Tips</a></li>
+					<li class="more-content">
+						<a href="#">More Content<i class="icon icon-arrow-down" data-icon="5"></i></a>
+						<div class="more-content-dropdown">
+							<ul class="nav-list-sublist">
+							<li id="nav-links-Answers"><a href="http://searchenterprisedesktop.techtarget.com/answers">Answers</a></li>
+							<li id="nav-links-Buyer'sGuides"><a href="http://whatis.techtarget.com/resources/Buyers-Guides">Buyer's Guides</a></li>
+							<li id="nav-links-Definitions"><a href="http://searchenterprisedesktop.techtarget.com/definitions">Definitions</a></li>
+							<li id="nav-links-EssentialGuides"><a href="http://searchenterprisedesktop.techtarget.com/guides">Essential Guides</a></li>
+							<li id="nav-links-Opinions"><a href="http://searchenterprisedesktop.techtarget.com/opinions">Opinions</a></li>
+							<li id="nav-links-PhotoStories"><a href="http://searchenterprisedesktop.techtarget.com/photostories">Photo Stories</a></li>
+							<li id="nav-links-Podcasts"><a href="http://searchenterprisedesktop.techtarget.com/podcasts">Podcasts</a></li>
+							<li id="nav-links-Quizzes"><a href="http://searchenterprisedesktop.techtarget.com/quizzes">Quizzes</a></li>
+							<li id="nav-links-Tutorials"><a href="http://searchenterprisedesktop.techtarget.com/tutorials">Tutorials</a></li>
+							<li class="nav-links-sponsoredcommunities">
+									<a href="http://searchenterprisedesktop.techtarget.com/sponsored_communities">Sponsored Communities</a>
+								</li>
+							</ul>
+						</div>
+						</li>
+					<li><a href="http://searchenterprisedesktop.techtarget.com/ezine/Access">E-zine</a></li>
+					</ul>
+			</div>
+		<ul class="nav-list">
+			<li class="nav-list-item nav-list-item-searchsites">
+				
+				<div class="nav-list-item-header searchenterprisedesktop">
+					<a href="http://searchenterprisedesktop.techtarget.com">
+						<span class="nav-list-item-header-title">
+							<span class="logo-search">Search</span><span class="logo-1">Enterprise</span><span class="logo-2">Desktop</span></span>
+					</a>
+				</div>
+			</li>
+			<li class="nav-list-item nav-list-item-topics">
+					<div class="nav-list-item-header">
+						<span class="nav-list-item-header-type">Topic</span> <span class="nav-list-item-header-title"> <a href="http://searchenterprisedesktop.techtarget.com/resources/Windows-desktop-operating-systems">
+								Windows desktop operating systems</a>
+						</span> <i class="icon icon-arrow-down" data-icon="5"></i> <i class="icon icon-navigation-detail" data-icon="A"></i>
+					</div>
+					<div class="nav-list-item-dropdown">
+						<div class="nav-list-item-jscroll">
+							<ul class="nav-list-sublist">
+									<li class="nav-list-sublist-item"><a href="http://searchenterprisedesktop.techtarget.com/resources/Enterprise-application-management"> Enterprise application management</a></li>
+									<li class="nav-list-sublist-item"><a href="http://searchenterprisedesktop.techtarget.com/resources/Microsoft-Windows-desktop-operating-systems-security-management"> Microsoft Windows desktop operating systems security management</a></li>
+									<li class="nav-list-sublist-item"><a href="http://searchenterprisedesktop.techtarget.com/resources/Microsoft-Windows-hardware-including-laptop-and-notebook-reviews"> Microsoft Windows hardware, including laptop and notebook reviews</a></li>
+									<li class="nav-list-sublist-item view-all"><a href="http://searchenterprisedesktop.techtarget.com/resources">All Topics</a></li>
+								</ul>
+							</div>
+					</div>
+			<li class="nav-list-item nav-list-item-sections">
+					<div class="nav-list-item-header">
+						<span class="nav-list-item-header-type">SubTopic</span> <i class="icon icon-arrow-down" data-icon="5"></i> <i
+							class="icon icon-navigation-arrow" data-icon="B"></i> <span class="nav-list-item-header-title"> <a href="http://searchenterprisedesktop.techtarget.com/resources/Microsoft-Windows-10-operating-system"> Windows 10</a>
+								</span>
+					</div>
+					<div class="nav-list-sublist nav-list-item-dropdown">
+						<ul class="nav-list-item-jscroll">
+							<li class="nav-list-sublist-item"><a href="http://searchenterprisedesktop.techtarget.com/resources/Alternative-operating-systems"> Alternative operating systems</a></li>
+							<li class="nav-list-sublist-item"><a href="http://searchenterprisedesktop.techtarget.com/resources/Microsoft-Windows-10-operating-system"> Windows 10</a></li>
+							<li class="nav-list-sublist-item"><a href="http://searchenterprisedesktop.techtarget.com/resources/Microsoft-Windows-7-operating-system"> Microsoft Windows 7 operating system</a></li>
+							<li class="nav-list-sublist-item"><a href="http://searchenterprisedesktop.techtarget.com/resources/Microsoft-Windows-8-operating-system"> Windows 8</a></li>
+							<li class="nav-list-sublist-item"><a href="http://searchenterprisedesktop.techtarget.com/resources/Microsoft-Windows-Vista-operating-system"> Microsoft Windows Vista operating system</a></li>
+							<li class="nav-list-sublist-item"><a href="http://searchenterprisedesktop.techtarget.com/resources/Microsoft-Windows-XP-Pro"> Microsoft Windows XP Pro</a></li>
+							<li class="nav-list-sublist-item"><a href="http://searchenterprisedesktop.techtarget.com/resources/Windows-legacy-operating-systems"> Windows legacy operating systems</a></li>
+							<li class="nav-list-sublist-item view-all"><a href="http://searchenterprisedesktop.techtarget.com/resources/Windows-desktop-operating-systems">All Subtopics</a></li>
+								</ul>
+					</div>
+				</li>
+			</ul>
+		<ul class="nav-social">
+			<li class="nav-social-item title">Follow:</li>
+			<li class="nav-social-item" title="Follow searchEnterpriseDesktop on Google+" id="navBarGooglePlus"><a href="https://plus.google.com/103061642320024220310" target="_blank"><i class="icon" data-icon="s"></i></a></li><li class="nav-social-item" title="Like searchEnterpriseDesktop on Facebook" id="navBarFacebook"><a href="https://www.facebook.com/SearchWindowsServer/205609122872819" target="_blank"><i class="icon" data-icon="u"></i></a></li><li class="nav-social-item" title="Follow @EntDesktopTT on Twitter" id="navBarTwitter"><a href="https://twitter.com/EntDesktopTT" target="_blank"><i class="icon" data-icon="c"></i></a></li><li class="nav-social-item" title="Follow searchEnterpriseDesktop on LinkedIn" id="navBarLinkedIn"><a href="http://www.linkedin.com/company/2987672?trk=tyah" target="_blank"><i class="icon" data-icon="o"></i></a></li></ul>
+	 </nav>
+</header>
+
+<div class="ad-wrapper header-leaderboard ad-desktop">
+	<!-- AdsController, generated at 15:00:36 Sun Feb 18, 2018, by pv-ecmappma4.techtarget.com -->
+<div id="leaderboard" class="ad ad-lb"><script>GPT.display('leaderboard')</script></div></div>
+<div id="main-content" class="main-content">
+			<article id="content-columns" class="content-columns">
+				<!-- ContentItemController, generated at 12:08:39 Sun Feb 18, 2018, by pv-ecmappma4.techtarget.com -->
+<div class="main-guide-hero-header parent-hero-header">
+	<div class="main-guide-hero-header-left full-width">
+		<a href="http://searchenterprisedesktop.techtarget.com/blog/Windows-Enterprise-Desktop"><i class="icon" data-icon="G"></i></a>
+		<h3><a href="http://searchenterprisedesktop.techtarget.com/blog/Windows-Enterprise-Desktop">Windows Enterprise Desktop</a></h3>
+	</div>
+</div>
+
+<header id="content-header" class="main-article-header">
+	<div class="infotype-eyebrow">
+			<a href="http://searchenterprisedesktop.techtarget.com/info/manage" class="infotype-eyebrow-link">Manage</a>
+			<span class="infotype-eyebrow-tooltip"><i class="icon" data-icon="5"></i>Learn to apply best practices and optimize your operations.</span>
+		</div>
+	<h1 class="main-article-title">DISKPART Script Fixes Default Win10 Disk Layout</h1>
+	<!-- GuideController, generated at 12:08:39 Sun Feb 18, 2018, by pv-ecmappma4.techtarget.com -->
+<ul class="main-article-share-counts">
+		<li class="main-article-share-count main-article-comment-count" title="Add/view comments">
+			<i class="icon" data-icon="z"></i> <span></span> </li>
+		
+		<li class="main-article-share-count inline-social-icons inline cboxElement" title="Share this" href="#social-icons-desktop">
+			<i class="icon" data-icon="f"></i>
+			<span></span>
+		</li>
+	</ul>
+
+	<div class="main-article-author">
+		<div class="image-resize">
+					<img src="https://cdn.ttgtmedia.com/rms/onlineImages/tittel_ed.jpg"/>
+				</div>
+			<div class="main-article-author-info">
+				<div class="main-article-author-byline">
+					by<br><a href="http://www.techtarget.com/contributor/Ed-Tittel">Ed Tittel</a>
+									</div>
+				</div>
+			<div class="main-article-author-contact">
+					<a href="https://plus.google.com/112809188329811733159/posts">
+							<i class="icon" data-icon="s"></i>
+						</a>
+					<a href="http://www.linkedin.com/profile/view?id=5955583">
+							<i class="icon" data-icon="o"></i>
+						</a>
+					<a href="mailto:etittel@yahoo.com">
+							<i class="icon" data-icon="n"></i>
+						</a>
+				</div>
+			<script type="text/javascript">
+					var authorBlock = document.getElementsByClassName('main-article-author-info')[0];
+					var innerHtml = '<span>Published: </span><a href="http://searchenterprisedesktop.techtarget.com/archive/2017/6">21 Jun 2017</a>';
+					var authorDateDiv = document.createElement('div');
+					authorDateDiv.className = 'main-article-author-date';
+					authorDateDiv.innerHTML = innerHtml;
+					authorBlock.appendChild(authorDateDiv);
+				</script>			
+			</div>
+	</header>
+<div id="content-left" class="content-left">
+					<div class="locking-full-bar">
+	<div class="locking-left-bar">
+		<!-- LatestContentController, generated at 12:08:40 Sun Feb 18, 2018, by pv-ecmappma4.techtarget.com -->
+<aside class="blog-bar" id="latest-blog-posts">
+	<div class="blog-bar-header">
+		<i class="icon" data-icon="1"></i>
+		About This Blog</div>
+	<p>A blog for IT professionals who work with Windows on large networks.</p>
+	<div class="blog-bar-header latest">
+		<i class="icon" data-icon="1"></i>
+		Latest Blog Posts</div>
+	<ul class="blog-bar-list">
+		<li class="blog-bar-item"><a href="http://searchenterprisedesktop.techtarget.com/blog/Windows-Enterprise-Desktop/Do-Try-Microsoft-Teams">Do Try Microsoft Teams</a></li>
+		<li class="blog-bar-item"><a href="http://searchenterprisedesktop.techtarget.com/blog/Windows-Enterprise-Desktop/Update-7-ZIP-to-1801-NOW">Update 7-ZIP to 18.01 NOW</a></li>
+		<li class="blog-bar-item"><a href="http://searchenterprisedesktop.techtarget.com/blog/Windows-Enterprise-Desktop/No-Win10-Means-No-Office-2019">No Win10 Means No Office 2019</a></li>
+		<li class="blog-bar-item see-more"><a href="http://searchenterprisedesktop.techtarget.com/blog/Windows-Enterprise-Desktop">See More</a></li>
+	</ul>
+</aside>
+<!-- SocialMediaShareBarController, generated at 04:38:12 Sun Feb 18, 2018, by pv-ecmappma4.techtarget.com -->
+<div id="rail-share-bar">
+		<ul id="social-icons-desktop" class="share-bar-desktop">
+		<aside id="social-icons-desktop">
+			<li class="share-bar-item-desktop share-bar-title">Share this item with your network:</li>
+			<li class="share-bar-item-desktop socialMedia-facebook" title="Share on Facebook" data-socialsite="facebook">
+					<a href="#" target="_blank"><i class="icon" data-icon="u"></i></a>
+					<span class="count"></span>
+				</li>
+			<li class="share-bar-item-desktop socialMedia-twitter" title="Share on Twitter" data-socialsite="twitter" data-account="EntDesktopTT" data-related="">
+					<a href="#" target="_blank"><i class="icon" data-icon="c"></i></a>
+					<span class="count"></span>
+				</li>
+			<li class="share-bar-item-desktop socialMedia-google" title="Share on Google+" data-socialsite="google">
+					<a href="#" target="_blank"><i class="icon" data-icon="s"></i></a>
+					<span class="count"></span>
+				</li>
+			<li class="share-bar-item-desktop socialMedia-linkedin" title="Share on LinkedIn" data-socialsite="linkedin">
+					<a href="#" target="_blank"><i class="icon" data-icon="o"></i></a>
+					<span class="count"></span>
+				</li>
+			<li class="share-bar-item-desktop contentTools-print" title="Print This Page">
+					<a href="#" target="_blank"><i class="icon" data-icon="i"></i></a>
+				</li>
+			<li class="share-bar-item-desktop contentTools-email" title="Email a Friend">
+				<a href="#" target="_blank"><i class="icon" data-icon="n"></i></a>
+			</li>
+		</aside>
+		</ul>
+	</div>
+<!-- RelatedContentController, generated at 13:38:16 Sun Feb 18, 2018, by pv-ecmappma4.techtarget.com -->
+<aside class="related-bar desktop-related-bar" id="related-content-bar">
+		<div class="related-bar-header">
+			<i class="icon" data-icon="l"></i>
+			Related Content</div>
+		<ul class="related-bar-list">
+		<li class="related-bar-item">
+			<a href="http://searchenterprisedesktop.techtarget.com/blog/Windows-Enterprise-Desktop/Partition-UEFI-GPT-HDD-Using-Diskpart">Partition UEFI/GPT HDD Using Diskpart</a>
+			<span>&ndash; SearchEnterpriseDesktop</span>
+			</li>
+		<li class="related-bar-item">
+			<a href="http://searchwindowsserver.techtarget.com/tutorial/A-Windows-administrators-guide-to-Diskpart-commands">A Windows administrator's guide to Diskpart commands</a>
+			<span>&ndash; SearchWindowsServer</span>
+			</li>
+		<li class="related-bar-item">
+			<a href="http://searchwindowsserver.techtarget.com/definition/Diskpart-Disk-Partition-Utility">Diskpart (Disk Partition Utility)</a>
+			<span>&ndash; SearchWindowsServer</span>
+			</li>
+		</ul>
+</aside>
+</div>
+	<aside class="resources-bar desktop-resources-bar" id="resources-bar">
+		<!-- VendorResourcesController, generated at 12:08:40 Sun Feb 18, 2018, by pv-ecmappma4.techtarget.com -->
+</aside>
+</div></div>
+				<div id="content-center" class="content-center">
+					<!-- ContentItemController, generated at 12:08:40 Sun Feb 18, 2018, by pv-ecmappma4.techtarget.com -->
+
+
+
+
+
+<ul class="actions-bar">
+	
+	
+	
+	
+			
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+		<li class="actions-bar-item actions-bar-chapters"><i class="icon" data-icon="1"></i></li>
+	
+	
+		<li class="actions-bar-item actions-bar-resources"><i class="icon" data-icon="2"></i></li>
+	
+	
+		<li class="actions-bar-item actions-bar-share"><i class="icon" data-icon="f"></i>
+			<ul class="share-bar-mobile">
+			<aside id="social-icons-desktop">
+				
+					<li class="share-bar-item-mobile socialMedia-facebook" title="Share on Facebook" data-socialsite="facebook">
+						<a href="#"><i class="icon" data-icon="u"></i></a><span class="count"></span>
+					</li>
+				
+				
+					<li class="share-bar-item-mobile socialMedia-twitter" title="Share on Twitter" data-socialsite="twitter" data-account="EntDesktopTT" data-related="">
+						<a href="#"><i class="icon" data-icon="c"></i></a><span class="count"></span>
+					</li>
+				
+				
+					<li class="share-bar-item-mobile socialMedia-google" title="Share on Google+" data-socialsite="google">
+						<a href="#"><i class="icon" data-icon="s"></i></a><span class="count"></span>
+					</li>
+				
+				
+				
+					<li class="share-bar-item-mobile socialMedia-linkedin" title="Share on LinkedIn" data-socialsite="linkedin">
+						<a href="#"><i class="icon" data-icon="o"></i></a><span class="count"></span>
+					</li>	
+				
+				<li class="share-bar-item-mobile contentTools-email" title="Email a Friend">
+					<a href="#"><i class="icon" data-icon="n"></i></a>
+				</li>
+			</aside>
+			</ul>
+		</li>
+	
+</ul><section id="content-body" class="section main-article-chapter">
+<p>In two previous two blog posts, Kari the Finn and I explained how to <a href="http://itknowledgeexchange.techtarget.com/windows-enterprise-desktop/partition-uefigpt-hdd-using-diskpart/">use DISKPART during Windows 10 installation</a>. We also described <a href="http://itknowledgeexchange.techtarget.com/windows-enterprise-desktop/exploring-win10-clean-install-default-disk-layout/">what’s wrong with the default Windows disk layout</a>, and why it benefits from this fix. This, the third and final installment in this series, puts those DISKPART commands into a batch file. In fact, this allows&nbsp;for easy automation, and explores an elaboration on this theme. First and foremost, though, readers will find that this DISKPART script fixes default Win10 disk layout issues quickly and easily.</p>
+<section class="sign-up-wrapper cascading-reg " id="download-offer">
+ <img src="https://cdn.ttgtmedia.com/rms/ux/responsive/img/reg_wrapper_curl.png" class="wrapper-curl" />
+ <div class="ctd-wrapper">
+  <div class="sign-up-content" id="dloWrapper">
+   <header class="sign-up-header">
+    <span class="eyebrow">Download this free guide</span>
+    <div class="reg-cover">
+     <img src="https://cdn.ttgtmedia.com/Marketing/2017/12/Win10 blog fixed.jpg" class="cover" />
+     <img src="https://cdn.ttgtmedia.com/rms/ux/responsive/img/reg_cover_curl.png" class="cover-curl" />
+    </div>
+    <h2>Download: Our 23-Page Editorial Collection of Windows 10 Blog Content</h2>
+    <p>Inside this exclusive download offer, you’ll find a compilation of all of our top followed Windows 10 blog content written by our expert editors, who combined have over 30 years of experience in the IT industry. We’ve compiled a variety of these expert blogs for you - offering best practices and breakdowns designed to help IT professionals tackle the top Windows 10 tips, tricks, concerns and more.</p>
+    <button id="expand-ctd" class="button black-button">Start Download</button>
+   </header>
+   <div id="inlineRegistration">
+    <script>
+
+window["inlineRegistration_VALIDATION_MAXLENGTH"] = "You have exceeded the maximum character limit.";
+
+</script>
+    <form id="inlineregform" class="sign-up-form cascading-reg-form page1" _lpchecked="1" action="https://users.techtarget.com/registration/searchEnterpriseDesktop/InlineRegisterActivate.page" method="post" data-page="1">
+     <div id="inlineregErrContainer" style="display:none"></div>
+     <ul class=" default-list">
+      <li class=""><label for="inlineRegistration_Email">Corporate E-mail Address:</label><input type="text" id="inlineRegistration_Email" name="dgUser#email" maxlength="100" size="25" value="" data-required="true" class="sign-up-textfield" />
+       <div class="signupErrors">
+        <p id="inlineRegistration_Email.blank" class="sign-up-error-msg hidden">You forgot to provide an Email Address.</p>
+        <p id="inlineRegistration_Email.invalid" class="sign-up-error-msg hidden">This email address doesn’t appear to be valid.</p>
+        <p id="inlineRegistration_Email.exists" class="sign-up-error-msg hidden">This email address is already registered. Please <a href="https://users.techtarget.com/registration/searchenterprisedesktop/LoginRegister" class="inlineRegLoginErrMsg">login</a>.</p>
+        <p id="inlineRegistration_Email.maxlength" class="sign-up-error-msg hidden">You have exceeded the maximum character limit.</p>
+        <p id="inlineRegistration_Email.invalid.domain" class="sign-up-error-msg hidden">Please provide a Corporate E-mail Address.</p>
+       </div></li>
+      <input type="hidden" id="inlineRegistration_AppCode" name="appCD" value="127" />
+      <input type="hidden" id="inlineRegistration_FromURL" name="fromURL" value="http://searchenterprisedesktop.techtarget.com/downloadOffer/fulfillment/450417689/a8e7391085acc510VgnVCM100000ef01c80aRCRD?submit=1" />
+      <input type="hidden" id="inlineRegistration_ContentId" name="guideContentId" value="" />
+      <input type="hidden" id="inlineRegistration_AdId" name="ad_id" value="450421165" />
+      <input type="hidden" id="inlineRegistration_IncentiveId" name="incentiveId" value="450417689" />
+      <input type="hidden" id="inlineRegistration_IncentiveRule" name="incentiveRule" value="Blog" />
+      <input type="hidden" id="inlineRegistration_TEST---AB-Tracking1" name="dgUser#abTracking1" value="" />
+      <li class=""><input type="submit" value="Download Now" id="inlineRegSubmit" class="sign-up-btn" /></li>
+      <div id="inlineRegProcessing" style="margin:30px 0px 15px 140px; display:none">
+       <span class="processing" style="display:inline"><span class="animatedIcon"></span><span id="inlineRegProcessingText"></span></span>
+      </div>
+      <p class="declarationOfConsent" id="inlineRegistration_declarationOfConsent" style="display:none">By submitting my Email address I confirm that I have read and accepted the Terms of Use and <a href="https://users.techtarget.com/registration/searchEnterpriseDesktop/DisplayConsentText.page?languageCd=en&amp;enText=true" class="consentWindow">Declaration of Consent.</a></p> 
+      <input type="hidden" id="inlineRegistration_Consent-Popup" name="user_consent#link" value="en" />
+     </ul>
+    </form>
+    <div> 
+     <p class="sign-up-fine-print" style="font-size:12px"> By submitting your personal information, you agree that TechTarget and its <a href="http://www.techtarget.com/html/privacy_partners_0-c.html" target="_blank">partners</a> may contact you regarding relevant content, products and special offers. </p> 
+     <div style="margin-top:10px"> 
+      <p class="sign-up-fine-print" style="font-size:12px">You also agree that your personal information may be transferred and processed in the United States, and that you have read and agree to the <a href="http://searchenterprisedesktop.techtarget.com/about/copyright" target="_blank">Terms of Use</a> and the <a href="http://www.techtarget.com/html/privacy_policy.html" target="_blank">Privacy Policy</a>.</p> 
+     </div> 
+    </div>
+    <script>window.getUtmSrcForReg = function() { 
+  var decode = function(s) { return (s) ? decodeURIComponent(s.replace(/\+/g, " ")) : ""; };
+  var ret = getCookieValue("tt_src") || decode(getQueryStringValue("utm_source")) || "";
+  return ret;
+}
+</script>
+    <script>$("#inlineregform").submit(function(e) {
+
+  if($(this).hasClass("submitInProgress")) {
+    e.preventDefault(); 
+    return false;
+  } else {
+    $(this).addClass("submitInProgress")
+  }
+
+  var validation = {
+    msgInline: true,
+    highlightClass: "error",
+    highlightNode: "parent",
+    triggerJqueryEvent: {
+      error: "tt.inlinereg.emailOnly.error",
+      submit: "tt.inlinereg.emailOnly.submit"
+    },
+    required: { fields: ["dgUser#email"] },
+    emailDomain: { fields: ["dgUser#email"] },
+    emailFormat: { fields: ["dgUser#email"] },
+    emailExists: {
+      field: "dgUser#email",
+      onsuccess: "irr",
+        onfailure: "uidfwd",
+        noHL: true,
+        noErrMsg: true,
+        processingGif: {
+            id: "inlineRegProcessing",
+            hideSubmitId: "inlineRegSubmit",
+            displayStyle: "block"
+        }
+    }
+  };
+  
+  var isValid = urValidation.validate(validation, this);
+  
+  if(!isValid) { 
+   $(this).removeClass("submitInProgress");
+  }
+
+  return isValid;
+
+});
+
+window.uidfwd = function() {
+  window.open("https://users.techtarget.com/registration/searchEnterpriseDesktop/UID.page?email="+encodeURIComponent(document.getElementById("inlineregform").elements["dgUser#email"].value) + "&fromURL="+encodeURIComponent(document.getElementById("inlineregform").elements["fromURL"].value));
+  setTimeout("window.uidrldTimeout();",200);
+};
+window.uidrldTimeout = function() {
+  if(getCookieValue("uidLoggedIn")) {
+    window.location.reload();
+  } else {
+    setTimeout("window.uidrldTimeout();",200);
+  }
+};</script>
+    <script>
+window.irr = function() {
+
+        $("#inlineRegSubmit").hide();
+        // $("#inlineRegProcessingText").html("Beginning Registration...")
+        $("#inlineRegProcessing").show();
+
+        var err = function() {
+          $("#inlineRegProcessing .animatedIcon").hide();
+          $("#inlineRegProcessingText").attr("class","error");
+          $("#inlineRegProcessingText").html("There was an error processing your information. Please try again later.");
+          $("#inlineRegistration").trigger("tt.inlinereg.emailOnly.error");
+        };
+
+	var self = this;
+	self.crs;
+	self.tt_ut;
+
+	var userregUrl = "https://users.techtarget.com/registration/rest/RegistrationService/";
+	var f = $("#inlineregform")[0].elements;
+	var userParams = {
+		email: encodeURIComponent($.trim(f["dgUser#email"].value)),
+		siteName: "searchEnterpriseDesktop",
+		appCode: f["appCD"].value,
+		adId: f["ad_id"].value,
+		contentId: f["guideContentId"].value,
+		incentiveId: f["incentiveId"].value,
+		incentiveRule: f["incentiveRule"].value,
+		utmSource: encodeURIComponent(getUtmSrcForReg()),
+                abTracking1: encodeURIComponent(f["dgUser#abTracking1"].value)
+	};
+
+        var passThruVars = {
+            FromURL: f["fromURL"].value || window.location.href,
+            AppCode: f["appCD"].value,
+            AdId: f["ad_id"].value,
+            ContentId: f["guideContentId"].value,
+            IncentiveId: f["incentiveId"].value,
+            IncentiveRule: f["incentiveRule"].value
+        };
+        window.inlineRegistration_variables = passThruVars;
+
+	$.getJSON(userregUrl + "RegisterEmail?callback=?", userParams, function(data) {
+		if(data.RegTx[0].status == 'SUCCESS') {
+			var d = new Date();
+			d.setTime(d.getTime()+(5*365*24*60*60*1000)); // 5yrs
+			var expireDate = d.toGMTString();
+			for (var i = 0; i < data.RegTx[0].cookies.cookie.length; i++) { 
+				var c = data.RegTx[0].cookies.cookie[i];
+				document.cookie = c.name+"="+c.value+"; expires="+expireDate+"; path=/; domain="+getTopLevelDomainEnv(false);
+			}
+	
+			self.crs = data.RegTx[0].cookies.cookie[1].value;
+			self.tt_ut = data.RegTx[0].cookies.cookie[0].value;
+	
+			// optimizely page 1 function
+			if (typeof successfulPage1FormSubmission === 'function') { 
+				var page1ABValue = document.getElementById("inlineRegistration_TEST---AB-Tracking1").value;
+				successfulPage1FormSubmission(page1ABValue);
+			}
+
+			// Load step2 
+			executeInlineByPage("searchEnterpriseDesktop", "inlineRegistration", "inlineregister", 13);
+		}
+		if(data.RegTx[0].validations.validation) {
+                     err();
+		}
+	
+	}).fail(function() {
+             err();
+	});
+
+ 
+};
+
+// DoC open in new window
+$("#inlineRegistration a.consentWindow")
+    .attr("target", "Consent")
+    .on("click", function(evt) {
+        window.open("", "Consent", "width=500,height=600,scrollbars=1");
+    });
+</script>
+   </div>
+  </div>
+ </div>
+</section>
+<div class="ad-wrapper ad-embedded"> 
+ <div id="mu-top" class="ad ad-mu">
+  <script>GPT.display('mu-top')</script>
+ </div> 
+</div> 
+<section class="section main-article-chapter" data-menu-title="Show Me How This DISKPART Script Fixes Default Win10 Disk Layout!">
+ <h3 class="section-title"><i class="icon" data-icon="1"></i>Show Me How This DISKPART Script Fixes Default Win10 Disk Layout!</h3>
+ <p>Basically, a&nbsp;DISKPART script is a text file with a&nbsp;<strong>.txt</strong> extension. Collecting all the DISKPART commands from Part 1, we&nbsp;&nbsp;simply add&nbsp;some remarks&nbsp; to document our work. Note: lines that start with <strong>rem</strong> are ignored when the script runs.</p>
+ <pre style="padding-left: 30px">rem DISKPART script, put available space into C:
+rem ---------------------------------------------------
+rem Select Disk 0, wipe it empty, convert to GPT
+rem ---------------------------------------------------
+select disk 0
+clean
+convert gpt
+rem ---------------------------------------------------
+rem Create &amp; format 100 MB EFI System partition 
+rem ---------------------------------------------------
+create partition efi size=100
+format quick fs=fat32 label=&quot;System&quot;
+rem ---------------------------------------------------
+rem Create 16 MB MSR partition (will not be formatted)
+rem ---------------------------------------------------
+create partition msr size=16
+rem ---------------------------------------------------
+rem Create Windows partition using all available space
+rem ---------------------------------------------------
+create partition primary
+rem ---------------------------------------------------
+rem Shrink Windows partition to make space for WinRE 
+rem ---------------------------------------------------
+shrink minimum=450
+rem ---------------------------------------------------
+rem Format Windows partition, label it, no drive letter
+rem ---------------------------------------------------
+format quick fs=ntfs label=&quot;Windows&quot;
+rem ---------------------------------------------------
+rem Create &amp; format 450 MB recovery partition 
+rem ---------------------------------------------------
+create partition primary
+format quick fs=ntfs label=&quot;WinRE&quot;
+set id=&quot;de94bba4-06d1-4d40-a16a-bfd50179d6ac&quot;
+rem ---------------------------------------------------
+rem Exit Diskpart 
+rem ---------------------------------------------------
+exit
+
+</pre>
+ <p>Of course, you could omit the&nbsp;remark lines if you don’t want them.&nbsp;For ourselves, we always use remarks in ours script and batch files. That’s&nbsp;because&nbsp;it makes it easier to read and modify archived items like this one, long after we’ve forgotten all the intricate details. Here’s a <a href="https://1drv.ms/t/s!AgL8o-XSp9z8i9cIgaYMtnTAg5ulqw">download link</a> to the script, should you wish to access it as such, rather than cut’n’paste the foregoing text.</p>
+ <div class="ad-wrapper ad-embedded"> 
+  <div id="halfpage" class="ad ad-hp">
+   <script>GPT.display('halfpage')</script>
+  </div> 
+  <div id="mu-1" class="ad ad-mu">
+   <script>GPT.display('mu-1')</script>
+  </div> 
+ </div>
+ <p>DISKPART&nbsp;scripts run from the Command Prompt using this syntax <strong>diskpart /s Z:\MyScript.txt.</strong> In this command, <strong>Z:</strong> identifies the drive where the script resides.&nbsp;We save such scripts at the root of our&nbsp;install media. That means&nbsp;USB flash drives for physical installs, and in ISO files&nbsp;for Hyper-V virtual machines. Any available storage location will work. Thus, for instance, if you cannot add files to an install DVD, save the script on a flash drive instead.</p>
+</section>     
+<section class="section main-article-chapter" data-menu-title="Running the script">
+ <h3 class="section-title"><i class="icon" data-icon="1"></i>Running the script</h3>
+ <p>There’s one small issue with this script, though. Using GPT we don’t always know the drive letter for our install media or the media where the &nbsp;DISKPART script resides. In fact, those values&nbsp;depend on knowing if the disk is new, and all space unallocated, or if it is partitioned and formatted with drive letters assigned. In other words, YMMV.</p>
+ <div class="pro-features-wrapper"></div>
+ <p>That said, there’s an easy workaround. Before running the script, we need to know the install media’s volume&nbsp;label. That way, we can figure out which drive letter Windows setup assigns to that device.&nbsp;Knowing that, we can&nbsp;call the DISKPART script from the correct device.</p>
+ <p>We&nbsp;saved our&nbsp;DISKPART script as <strong>DiskConfig.txt</strong> on root of our Windows 10 PRO install media. This is a USB Flash drive labelled&nbsp;<strong>W10PRO_USB</strong>.</p>
+ <p>The following command&nbsp;elicits the&nbsp;drive letter for any medium (DVD, flash drive, HDD partition) labelled <strong>W10PRO_USB</strong>. Then it&nbsp;then runs the DISKPART script <strong>DiskConfig.txt</strong>. Note: this command is a one-liner, even though word wrap breaks across 2&nbsp;lines:</p>
+ <p><strong>for /f %X in (‘wmic volume get DriveLetter ^, Label ^|<br /> find “W10PRO_USB”‘) do DISKPART /s %X\DiskConfig.txt </strong></p>
+ <p>In this command string, notice&nbsp;the <strong>%X\</strong> value before the script filename. Here, this does not refer to drive X:. Rather, it’s a variable that points to the media labeled <strong>W10PRO_USB</strong>. In fact, script variables are denoted with a single <strong>%</strong> sign at the command line.&nbsp;But you must use&nbsp;two <strong>%</strong> signs in batch files to make them work. That is,&nbsp; you’ll&nbsp;enter the text shown above that uses <strong>%X</strong>, but when you add that same command in a batch file, use <strong>%%X </strong>instead.</p>
+</section>       
+<section class="section main-article-chapter" data-menu-title="Script Output Illustrated">
+ <h3 class="section-title"><i class="icon" data-icon="1"></i>Script Output Illustrated</h3>
+ <p>That’s it. When we boot Windows from our install media, a properly labeled flash drive must also be present (if the script is stored elsewhere). Then, we press <strong>SHIFT + F10</strong> to open the Command Prompt. Finally, we enter the preceding command and let our partitioning script do its thing:</p>
+ <p><a href="http://itknowledgeexchange.techtarget.com/windows-enterprise-desktop/files/2017/06/cmd-script-run.png"><img class="wp-align aligncenter size-full wp-image-7887" src="http://itknowledgeexchange.techtarget.com/windows-enterprise-desktop/files/2017/06/cmd-script-run.png" alt="DISKPART Script Fixes Default Win10 Disk Layout" width="500" height="375" srcset="http://itknowledgeexchange.techtarget.com/windows-enterprise-desktop/files/2017/06/cmd-script-run.png 1024w, http://itknowledgeexchange.techtarget.com/windows-enterprise-desktop/files/2017/06/cmd-script-run-300x225.png 300w, http://itknowledgeexchange.techtarget.com/windows-enterprise-desktop/files/2017/06/cmd-script-run-768x576.png 768w" sizes="(max-width: 500px) 100vw, 500px" /></a></p>
+ <p style="font-size: xx-small;font-family: 'Arial Black', sans-serif;text-align: center">Here’s the output from the script as it runs.<br /> [Click image for full-sized view; this version is hard to read!]</p>
+ <p>In&nbsp;under 30 seconds, our boot/system drive is partitioned just the way we like it! Here’s a screen cap to illustrate.</p>
+ <p><a href="http://itknowledgeexchange.techtarget.com/windows-enterprise-desktop/files/2017/06/gpt-optimal.png"><img class="wp-align aligncenter size-full wp-image-7888" src="http://itknowledgeexchange.techtarget.com/windows-enterprise-desktop/files/2017/06/gpt-optimal.png" alt="gpt-optimal" width="500" height="376" srcset="http://itknowledgeexchange.techtarget.com/windows-enterprise-desktop/files/2017/06/gpt-optimal.png 637w, http://itknowledgeexchange.techtarget.com/windows-enterprise-desktop/files/2017/06/gpt-optimal-300x226.png 300w" sizes="(max-width: 500px) 100vw, 500px" /></a></p>
+ <p style="font-size: xx-small;font-family: 'Arial Black', sans-serif;text-align: center">Here’s our disk layout, after the script is run. (This is for a VM with a deliberately small boot/system drive.)</p>
+</section>       
+<section class="section main-article-chapter" data-menu-title="Putting Additional partitions into the Mix">
+ <h3 class="section-title"><i class="icon" data-icon="1"></i>Putting Additional partitions into the Mix</h3>
+ <p>Here’s another common partitioning scenario to ponder. What if you have a 1 TB HDD or SSD? Then,&nbsp;you might&nbsp;want to allocate 200 GB to C:, and the rest&nbsp;to a&nbsp;data partition.</p>
+ <p>Actually, it’s quite simple. In fact, a few minor tweaks it’s all that needed. You merely&nbsp;add the <strong>size=xxx</strong> option for the Windows partition. Thus,&nbsp;you don’t allocate all available space to it. Ditto, add <strong>size=xxx</strong> to the WinRE partition,&nbsp;and place it after the Windows partition. In last place, create a data partition allocating all remaining space to it instead.</p>
+ <p>First, let’s change the Windows partition entries to allocate 200 GB instead of all available space.</p>
+ <p><strong>create partition primary size=204800<br /> </strong><strong>format quick fs=ntfs label=”Windows”</strong></p>
+ <p>Please note:&nbsp;DISKPART space&nbsp;allocation uses MB as its units. Thus,&nbsp;200 GB = 200 x 1024&nbsp;= 204800 MB. Here again, no drive letter is needed because Windows setup automatically assigns C: to this drive.</p>
+ <p>Next, let’s handle the recovery (WinRE) partition, and allocate&nbsp;it 450 MB:</p>
+ <p><strong>create partition primary size=450<br /> format quick fs=ntfs label=”WinRE”<br /> set id=”de94bba4-06d1-4d40-a16a-bfd50179d6ac”</strong></p>
+ <p>And finally, let’s add a data partition, and&nbsp;let it consume all&nbsp;remaining&nbsp;disk&nbsp;space:</p>
+ <p><strong>create partition primary<br /> format quick fs=ntfs label=”Data”<br /> assign letter W</strong></p>
+</section>          
+<section class="section main-article-chapter" data-menu-title="The Original Script, Revised">
+ <h3 class="section-title"><i class="icon" data-icon="1"></i>The Original Script, Revised</h3>
+ <p>The script now looks like this:</p>
+ <pre style="padding-left: 30px">rem DISKPART script, 200 GB Windows rest Data partition
+rem ---------------------------------------------------
+rem Select Disk 0, wipe it empty, convert to GPT
+rem ---------------------------------------------------
+select disk 0
+clean
+convert gpt
+rem ---------------------------------------------------
+rem Create &amp; format 100 MB EFI System partition 
+rem ---------------------------------------------------
+create partition efi size=100
+format quick fs=fat32 label=&quot;System&quot;
+rem ---------------------------------------------------
+rem Create 16 MB MSR partition (will not be formatted)
+rem ---------------------------------------------------
+create partition msr size=16
+rem ---------------------------------------------------
+rem Create &amp; format a 200 GB Windows partition
+rem ---------------------------------------------------
+create partition primary size=204800
+format quick fs=ntfs label=&quot;Windows&quot;
+rem ---------------------------------------------------
+rem Create &amp; format 450 MB recovery partition 
+rem ---------------------------------------------------
+create partition primary size=450
+format quick fs=ntfs label=&quot;WinRE&quot;
+set id=&quot;de94bba4-06d1-4d40-a16a-bfd50179d6ac&quot;
+rem ---------------------------------------------------
+rem Create &amp; format a data partition with letter W
+rem ---------------------------------------------------
+create partition primary
+format quick fs=ntfs label=&quot;Data&quot;
+assign letter W
+rem ---------------------------------------------------
+rem Exit Diskpart
+rem ---------------------------------------------------
+
+</pre>
+ <p>Note: we&nbsp;assigned drive <strong>W:</strong> to the data partition. Normally, this will be changed later once Windows is installed. For the moment, we want to be sure an unused&nbsp;letter is assigned. Otherwise, a letter collision could cause the script to fail.</p>
+ <div class="join-discussion-wrapper"></div>
+ <p>As&nbsp;mentioned earlier, you can never be sure which drive letters are already assigned when booting from Windows install media on a UEFI / GPT system. Selecting a letter from the end of alphabet makes us pretty sure it’s free when the script runs. Otherwise, we&nbsp;intentionally never use letters W, Y and Z in our various Windows setups. Thus, we can be sure it’s safe to use these letters in scripts. <strong>Remember, X: is off-limits</strong>. That’s because <strong>X:</strong> is reserved for the Windows recovery console and the Windows PE Command Prompt when booting from install media or WinPE!</p>
+</section></section>
+<div class="ad-wrapper ad-inline ad-mobile">
+	<!-- AdsController, generated at 12:08:40 Sun Feb 18, 2018, by pv-ecmappma4.techtarget.com -->
+<div id="mobile-2" class="ad ad-mb"><script>GPT.display('mobile-2')</script></div></div></div>
+				<div id="content-right" class="content-right"></div>
+			</article>
+		</div>
+		<!-- CommentingController, generated at 15:00:36 Sun Feb 18, 2018, by pv-ecmappma4.techtarget.com -->
+<section id="commenting" class="main-content comments-wrapper" data-comment-reference-id="a8e7391085acc510VgnVCM100000ef01c80aRCRD" data-itkerepo-id="268_post_341800">
+	<div class="content-columns">
+		<div class="content-left comments-left">
+			</div>
+				 
+		<div class="content-center comments-center">
+			<h4 class="section-title comments-header">
+				<i class="icon" data-icon="m"></i>
+				Start the conversation</h4>
+			
+			<h3 class="comments-count" style="display:none;" >
+				<i class="icon" data-icon="z"></i>
+				<span class="comments-count-num">0</span>&nbsp;comments</h3>						
+			<form id="loggedoutCommentsForm" class="comments-form logged-out">
+				<textarea id="loggedoutCommentBody" class="comments-form-textarea" placeholder="Share your comment"></textarea>
+				<fieldset class="notifications"> 
+					<input data-field="" id="notifications" name="notifications" checked="checked" type="checkbox">
+						Send me notifications when other members comment.</fieldset>
+				<button type="submit" class="comments-form-btn submit" href="#comments-reg-login">Add My Comment</button>
+				
+				<div style="display:none;">
+					<div id="comments-reg-login">
+					<section id="commenting-registration">
+						<div class="modal-register">
+							<h4>Register</h4>
+							<input class="comments-username" type="text" placeholder="Username">
+							<input class="comments-email" type="text" placeholder="email@techtarget.com">
+							<input class="comments-password" type="password" placeholder="Password">
+							<input id="submit-register" class="comments-form-btn" type="submit" value="Add My Comment">
+						</div>
+						<div class="modal-divider"></div>
+						<div class="modal-login">
+							<h4>Login</h4>
+							<input class="comments-email" type="text" placeholder="email@techtarget.com">
+							<input class="comments-password" type="password" placeholder="Password">
+							<a class="forgot-password" href="#forgotPasswordModal">Forgot your password?</a>
+							<input id="submit-login" class="comments-form-btn" type="submit" value="Add My Comment">
+							<div style="display:none;">													
+								<div id="forgotPasswordModal">
+									<section id="commenting-forgot-password">
+										<div id="forgotPasswordModalHeader">
+											<h4>Forgot your password?</h4>
+											<div id="forgotPasswordModalMessaging">
+												<span class="forgotPasswordModalIntro">No problem! Submit your e-mail address below. We'll send you an email containing your password.</span>
+											</div>
+										</div>		
+										<form action="" method="post" id="forgotPasswordModalForm" name="forgotPasswordModalForm">
+											<input id="forgotPasswordModalFormMessage" name="email" tabindex="1" class="required" placeholder="email@techtarget.com">
+											<button type="submit" id="forgotPasswordModalFormSubmit" class="button primaryButton">Submit</button>
+										</form>
+									</section>
+								</div>
+							</div>
+							<div style="display:none;">
+								<div id="forgotPasswordModalConfirm">
+									<div id="forgotPasswordModalHeader">
+										<h4>Your password has been sent to:<span class="email"></span></h4>
+									</div>
+								</div>
+							</div>
+						</div>
+						<p class="comments-disclaimer">By submitting you agree to receive email from TechTarget and its partners. If you reside outside of the United States, you consent to having your personal data transferred to and processed in the United States. <a href="http://www.techtarget.com/html/privacy_policy.html">Privacy</a></p>
+						</section>
+					</div>
+				</div>
+				<div style="display:none;">					
+					<div id="comments-reg-create">
+					<section id="commenting-registration">
+						<div class="comments-reg-create-body">
+							<h4>Please create a username to comment.</h4>
+							<input class="comments-create-username" type="text" placeholder="Create Username">
+							<input class="comments-form-btn" type="submit" value="Create Username and Add My Comment">
+						</div>
+					</section>
+					</div>
+				</div>
+			</form>		
+			
+			<div id="sort" style="display:none;" >
+				<a id="sortByOldest" class="comments-order" href='#'>Oldest&nbsp;<i class="icon" data-icon="5"></i></a>
+				<a id="sortByNewest" class="comments-order" href='#' style="display: none;">Newest&nbsp;<i class="icon" data-icon="5"></i></a>		
+			</div>
+			
+			<div id="repoComments">
+			</div>
+			
+		</div>
+		<div class="content-right"></div>
+	</div>
+</section><!-- GoogleAdSenseController, generated at 04:33:09 Sun Feb 18, 2018, by pv-ecmappma4.techtarget.com -->
+<div class="ad-wrapper body-pro-callout">
+		<div class="body-pro-callout-inner">
+			<!-- AdsController, generated at 04:33:09 Sun Feb 18, 2018, by pv-ecmappma4.techtarget.com -->
+<div id="promo-2" class="ad ad-pr"><script>GPT.display('promo-2')</script></div></div>
+	</div>
+<section class="main-content ads-by-google" id="ads-by-google">
+		<h2><a href="https://www.google.com/adsense/support/bin/request.py?contact=abg_afc">-ADS BY GOOGLE</a></h2>
+		<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+		<!-- Search Sites Responsive AFC -->
+		<ins class="adsbygoogle"
+			style="display:block"
+			data-ad-client="ca-pub-6050985421795229"
+			data-ad-slot="8728364240"
+			data-ad-format="auto"></ins>
+		<script>
+		(adsbygoogle = window.adsbygoogle || []).push({});
+		</script>
+	</section>
+<!-- NetworkCoverageController, generated at 09:14:52 Sun Feb 18, 2018, by pv-ecmappma4.techtarget.com -->
+<section class="latest-wrapper" id="network-coverage">
+		<nav class="latest-nav-wrapper">
+			<h2>Latest TechTarget <span class="latest-title">resources</span></h2>
+			<ul class="latest-nav">
+				<li>
+						<a href="#" class="latest-nav-item selected" data-item="1">
+							Virtual Desktop<i class="icon mobile-icon" data-icon="5"></i> 
+							<i class="icon desktop-icon" data-icon="A"></i> 
+						</a>
+					</li>
+				<li>
+						<a href="#" class="latest-nav-item" data-item="2">
+							Windows Server<i class="icon mobile-icon" data-icon="5"></i> 
+							<i class="icon desktop-icon" data-icon="A"></i> 
+						</a>
+					</li>
+				<li>
+						<a href="#" class="latest-nav-item" data-item="3">
+							Exchange<i class="icon mobile-icon" data-icon="5"></i> 
+							<i class="icon desktop-icon" data-icon="A"></i> 
+						</a>
+					</li>
+				</ul>
+		</nav>
+		<span class="latest-nav-mask before-mask"></span>
+		<span class="latest-nav-mask after-mask"></span>
+		<div class="latest-body">
+			<div class="latest-content" data-item="1">
+					<h2 class="searchvirtualdesktop">
+						<a href="http://searchvirtualdesktop.techtarget.com">
+							<span class="logo-search">Search</span><span class="logo-1">Virtual</span><span class="logo-2">Desktop</span></a>
+					</h2>
+					<ul>
+						<li>
+										<i class="icon" data-icon="2"></i>
+										<h3><a href="http://searchvirtualdesktop.techtarget.com/feature/The-key-features-in-an-app-desktop-virtualization-product">The key features in an app, desktop virtualization product</a></h3>
+										<p>Desktop and app virtualization tools help admins deliver services to users regardless of where they work and what devices they ...</p>
+									</li>
+								<li>
+										<i class="icon" data-icon="2"></i>
+										<h3><a href="http://searchvirtualdesktop.techtarget.com/feature/Why-deploy-desktop-and-application-virtualization">Why deploy desktop and application virtualization?</a></h3>
+										<p>Virtualizing desktops and apps can enable tighter security and a more agile environment and can simplify maintenance and enhance ...</p>
+									</li>
+								<li class="hide-for-small">
+										<i class="icon" data-icon="2"></i>
+										<h3><a href="http://searchvirtualdesktop.techtarget.com/feature/How-each-remote-display-protocol-handles-codecs">How each remote display protocol handles codecs</a></h3>
+										<p>The codecs that remote display protocols use to transfer an image to a virtual desktop have a large effect on the quality of both...</p>
+									</li>
+								</ul>
+				</div>
+			<div class="latest-content" data-item="2">
+					<h2 class="searchwindowsserver">
+						<a href="http://searchwindowsserver.techtarget.com">
+							<span class="logo-search">Search</span><span class="logo-1">Windows</span><span class="logo-2">Server</span></a>
+					</h2>
+					<ul>
+						<li>
+										<i class="icon" data-icon="2"></i>
+										<h3><a href="http://searchwindowsserver.techtarget.com/tip/Options-for-server-management-tools-expand-to-meet-IT-needs">Options for server management tools expand to meet IT needs</a></h3>
+										<p>Not only do admins have to contend with a mix of server OSes, there are diverse scenarios to complicate their management. Learn ...</p>
+									</li>
+								<li>
+										<i class="icon" data-icon="2"></i>
+										<h3><a href="http://searchwindowsserver.techtarget.com/news/252435027/CPU-bugs-add-to-IT-stress-as-February-Patch-Tuesday-drops">CPU bugs add to IT stress as February Patch Tuesday drops</a></h3>
+										<p>Administrators who rushed out fixes in January for the Meltdown and Spectre flaws then had to unwind some of those corrections ...</p>
+									</li>
+								<li class="hide-for-small">
+										<i class="icon" data-icon="2"></i>
+										<h3><a href="http://searchwindowsserver.techtarget.com/tip/Roll-your-own-Windows-patching-tool-with-PowerShell">Roll your own Windows patching tool with PowerShell</a></h3>
+										<p>This tutorial based on PowerShell helps administrators build an automated routine that audits Windows machines, then applies ...</p>
+									</li>
+								</ul>
+				</div>
+			<div class="latest-content" data-item="3">
+					<h2 class="searchexchange">
+						<a href="http://searchexchange.techtarget.com">
+							<span class="logo-search">Search</span><span class="logo-1">Exchange</span></a>
+					</h2>
+					<ul>
+						<li>
+										<i class="icon" data-icon="2"></i>
+										<h3><a href="http://searchexchange.techtarget.com/tip/New-Office-365-administrators-grapple-with-challenges">New Office 365 administrators grapple with challenges</a></h3>
+										<p>More enterprises mulling the move to Office 365 should factor in the adjustments necessary to get the IT department up to speed ...</p>
+									</li>
+								<li>
+										<i class="icon" data-icon="2"></i>
+										<h3><a href="http://searchexchange.techtarget.com/tip/Curb-stress-from-Exchange-Server-updates-with-these-pointers">Curb stress from Exchange Server updates with these pointers</a></h3>
+										<p>Some administrators let the memories of a bad patch linger and put off Exchange updates. Here are some tips to make this ...</p>
+									</li>
+								<li class="hide-for-small">
+										<i class="icon" data-icon="2"></i>
+										<h3><a href="http://searchexchange.techtarget.com/tip/Compliance-Manager-tool-aims-to-ease-security-audit-process">Compliance Manager tool aims to ease security audit process</a></h3>
+										<p>Administrators who wrestle with compliance tasks in Office 365 and Azure workloads might find some relief with Microsoft's ...</p>
+									</li>
+								</ul>
+				</div>
+			</div>
+	</section>
+<!-- FooterLinksController, generated at 04:33:52 Sun Feb 18, 2018, by pv-ecmappma4.techtarget.com -->
+<footer id="page-footer">
+	<div class="content-left">
+		<!-- Plug in TechTarget Logo inside the anchor tag here. -->
+		<div class="column column-logo">
+			<a href="#"></a>
+		</div>
+	</div>
+	<div class="content-center">
+		<ul class="column">
+			<li class="footer-item footer-item-col-1 footer-item-row-1"><a href="http://searchenterprisedesktop.techtarget.com/about">About Us</a></li>
+			<li class="footer-item footer-item-col-1 footer-item-row-2"><a href="http://searchenterprisedesktop.techtarget.com/about/editors">Meet The Editors</a></li>
+			<li class="footer-item footer-item-col-1 footer-item-row-3"><a href="http://searchenterprisedesktop.techtarget.com/about/contact">Contact Us</a></li>
+			<li class="footer-item footer-item-col-1 footer-item-row-4"><a href="https://www.techtarget.com/html/privacy_policy.html">Privacy Policy</a></li>
+			<li class="footer-item footer-item-col-1 footer-item-row-5"><a href="http://searchenterprisedesktop.techtarget.com/about/advertising">Advertisers</a></li>
+			<li class="footer-item footer-item-col-1 footer-item-row-6"><a href="http://searchenterprisedesktop.techtarget.com/about/partners">Business Partners</a></li>
+			<li class="footer-item footer-item-col-1 footer-item-row-7"><a href="http://www.techtarget.com/mediakit">Media Kit</a></li>
+			<li class="footer-item footer-item-col-1 footer-item-row-8"><a href="https://www.techtarget.com">Corporate Site</a></li>
+			</ul>
+		<ul class="column">
+			<li class="footer-item footer-item-col-2 footer-item-row-1"><a href="http://searchenterprisedesktop.techtarget.com/contributors">Contributors</a></li>
+			<li class="footer-item footer-item-col-2 footer-item-row-2"><a href="http://reprints.ygsgroup.com/m/techtarget">Reprints</a></li>
+			<li class="footer-item footer-item-col-2 footer-item-row-3"><a href="http://searchenterprisedesktop.techtarget.com/archive">Archive</a></li>
+			<li class="footer-item footer-item-col-2 footer-item-row-4"><a href="http://searchenterprisedesktop.techtarget.com/sitemap">Site Map</a></li>
+			<li class="footer-item footer-item-col-2 footer-item-row-5"><a href="http://searchenterprisedesktop.techtarget.com/answers">Answers</a></li>
+			<li class="footer-item footer-item-col-2 footer-item-row-6"><a href="http://searchenterprisedesktop.techtarget.com/definitions">Definitions</a></li>
+			<li class="footer-item footer-item-col-2 footer-item-row-7"><a href="http://searchenterprisedesktop.techtarget.com/eproducts">E-Products</a></li>
+			<li class="footer-item footer-item-col-2 footer-item-row-8"><a href="http://searchenterprisedesktop.techtarget.com/events">Events</a></li>
+			</ul>
+		<ul class="column column-mobile-hidden">
+			<li class="footer-item footer-item-col-3 footer-item-row-1"><a href="http://searchenterprisedesktop.techtarget.com/features">Features</a></li>
+			<li class="footer-item footer-item-col-3 footer-item-row-2"><a href="http://searchenterprisedesktop.techtarget.com/guides">Guides</a></li>
+			<li class="footer-item footer-item-col-3 footer-item-row-3"><a href="http://searchenterprisedesktop.techtarget.com/opinions">Opinions</a></li>
+			<li class="footer-item footer-item-col-3 footer-item-row-4"><a href="http://searchenterprisedesktop.techtarget.com/photostories">Photo Stories</a></li>
+			<li class="footer-item footer-item-col-3 footer-item-row-5"><a href="http://searchenterprisedesktop.techtarget.com/quizzes">Quizzes</a></li>
+			<li class="footer-item footer-item-col-3 footer-item-row-6"><a href="http://searchenterprisedesktop.techtarget.com/tips">Tips</a></li>
+			<li class="footer-item footer-item-col-3 footer-item-row-7"><a href="http://searchenterprisedesktop.techtarget.com/tutorials">Tutorials</a></li>
+			<li class="footer-item footer-item-col-3 footer-item-row-8"><a href="http://searchenterprisedesktop.techtarget.com/videos">Videos</a></li>
+			</ul>
+	</div>
+	<div class="content-right">
+		<div class="column column-legal">
+			<p class="footer-legal">All Rights Reserved, <span>
+			<a href="http://searchenterprisedesktop.techtarget.com/about/copyright">Copyright 2008 - 2018</a>, TechTarget</span>
+			
+			</p>
+			
+		</div>
+	</div>
+</footer><script src="https://cdn.ttgtmedia.com/rms/ux/responsive/js/responsive-ui.min.js?v=7.3"></script><!-- Begin Chartbeat -->
+		<script>
+    var _sf_async_config={};
+    _sf_async_config.uid = 41935;
+    _sf_async_config.domain = 'techtargetnetwork.com';
+    _sf_async_config.sections = 'sed, sed - Windows desktop operating systems';
+    _sf_async_config.authors = 'Ed Tittel, BLOGPOST, sed - BLOGPOST';
+    _sf_async_config.useCanonical = true;
+    (function(){
+      function loadChartbeat() {
+        window._sf_endpt=(new Date()).getTime();
+        var e = document.createElement('script');
+        e.setAttribute('language', 'javascript');
+        e.setAttribute('type', 'text/javascript');
+        e.setAttribute('src',
+           (('https:' == document.location.protocol) ? 'https://a248.e.akamai.net/chartbeat.download.akamai.com/102508/' : 'https://static.chartbeat.com/') + 'js/chartbeat.js');
+        document.body.appendChild(e);
+      }
+      var oldonload = window.onload;
+      window.onload = (typeof window.onload != 'function') ?
+         loadChartbeat : function() { oldonload(); loadChartbeat(); };
+    })();
+</script><!-- End Chartbeat -->
+	<!-- Begin DataPoint Media -->
+		<script>
+(function() {
+var d=document,h=d.getElementsByTagName('head')[0],s=d.createElement('script'),sc = 'https:' == document.location.protocol ? 'https://' : 'http://';
+s.type='text/javascript';
+s.async=true;
+s.src=sc+'s.dpmsrv.com/dpm_b4c96d80854dd27e76d8cc9e21960eebda52e962.min.js';
+h.appendChild(s);
+})();
+</script><!-- End DataPoint Media -->
+	<!-- Begin CrazyEgg -->
+		<script>setTimeout(function(){
+var a=document.createElement("script");
+var b=document.getElementsByTagName("script")[0];
+a.src=document.location.protocol+"//dnn506yrbagrg.cloudfront.net/pages/scripts/0012/7034.js?"+Math.floor(new Date().getTime()/3600000);
+a.async=true;
+a.type="text/javascript";
+b.parentNode.insertBefore(a,b)
+}, 1);</script><!-- End CrazyEgg -->
+	<!-- Begin GoogleRemarketing -->
+		<script>
+var google_conversion_id = 1070110249;
+var google_conversion_label = "RRsgCOW4tgMQqayi_gM";
+var google_custom_params = window.google_tag_params;
+var google_remarketing_only = true;
+</script>
+<script src="https://www.googleadservices.com/pagead/conversion.js">
+</script>
+<noscript>
+<div style="display:inline;">
+<img height="1" width="1" style="border-style:none;" alt="" src="https://googleads.g.doubleclick.net/pagead/viewthroughconversion/1070110249/?value=0&label=RRsgCOW4tgMQqayi_gM&guid=ON&script=0">
+</div>
+</noscript>
+<script>
+var google_conversion_id = 1072226410;
+var google_conversion_label = "x3P_CIql1gMQ6sCj_wM";
+var google_custom_params = window.google_tag_params;
+var google_remarketing_only = true;
+</script>
+<script src="https://www.googleadservices.com/pagead/conversion.js">
+</script>
+<noscript>
+<div style="display:inline;">
+<img height="1" width="1" style="border-style:none;" alt="" src="https://googleads.g.doubleclick.net/pagead/viewthroughconversion/1072226410/?value=0&label=x3P_CIql1gMQ6sCj_wM&guid=ON&script=0">
+</div>
+</noscript><!-- End GoogleRemarketing -->
+	</div>
+	<div id="mobile-sidebars" class="mobile-sidebars">
+		</div>
+	<div id="image-overlay" class="image-overlay">
+		<div class="image-overlay-img"></div>
+		<div class="image-overlay-close">Close</div>
+	</div>
+	
+<!--
+Component Load Times
+====================
+DefaultPageController=26 ms
+PinnedNavBarController=49 ms
+AdsController=0 ms
+CommentingController=6 ms
+
+Total time=81 ms
+Request Serving Server: pv-ecmappma4.techtarget.com
+-->
+
+<script type="text/javascript">window.NREUM||(NREUM={});NREUM.info={"errorBeacon":"bam.nr-data.net","licenseKey":"1068cf12f6","agent":"","beacon":"bam.nr-data.net","applicationTime":165,"applicationID":"313780","transactionName":"ZQMAYxdYXUBSAkFbClxJN0UMFhk=","queueTime":0}</script></body>
+</html>

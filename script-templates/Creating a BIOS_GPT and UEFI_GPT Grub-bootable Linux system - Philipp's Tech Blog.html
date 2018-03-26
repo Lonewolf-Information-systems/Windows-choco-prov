@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en-US" prefix="og: http://ogp.me/ns#" class="no-js"><!--<![endif]-->
+
+<head>
+<meta charset="utf-8">
+<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/><![endif]-->
+
+<meta name="description" content="My name is Philipp C. Heckel and this is my tech blog. I mostly write about security, synchronization and scripting in the world of Linux, Java and PHP." />
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<link rel="stylesheet" media="all" href="https://dqtpg127g2l9y.cloudfront.net/wp-content/themes/fizz-ph/css/normalize.min.css"/>
+<link rel="stylesheet" media="all" href="https://dqtpg127g2l9y.cloudfront.net/wp-content/themes/fizz-ph/css/main.css"/>	
+
+<link rel="shortcut icon" href="https://dqtpg127g2l9y.cloudfront.net/wp-content/themes/fizz-ph/img/loginlogo-favicon.png" type="image/ico" />
+
+<!-- Font-->
+<link href='https://fonts.googleapis.com/css?family=Merriweather+Sans:300' rel='stylesheet' type='text/css'>		
+<style type="text/css" media="all">	
+	body { font-family: 'Merriweather Sans', sans-serif; }
+	h1,h2,h3,h4,h5,h6 { font-family: 'Merriweather Sans', sans-serif; }	
+</style>
+
+<!-- Owner Auth -->
+<meta property="fb:admins" content="1025491522" />
+
+<!-- wp_head -->
+
+<!-- This site is optimized with the Yoast SEO plugin v6.3 - https://yoast.com/wordpress/plugins/seo/ -->
+<title>Creating a BIOS/GPT and UEFI/GPT Grub-bootable Linux system - Philipp&#039;s Tech Blog</title>
+<link rel="canonical" href="https://blog.heckel.xyz/2017/05/28/creating-a-bios-gpt-and-uefi-gpt-grub-bootable-linux-system/" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Creating a BIOS/GPT and UEFI/GPT Grub-bootable Linux system - Philipp&#039;s Tech Blog" />
+<meta property="og:description" content="Good old Master Boot Record (MBR) unfortunately cannot address anything beyond 2TB, so partitioning large disks and making them bootable is impossible using MBR. The GUID Partition Table (GPT) solves this problem: It supports disks up to 16EB. However, installing grub does not work without a special BIOS boot partition. If you also want to &hellip;" />
+<meta property="og:url" content="https://blog.heckel.xyz/2017/05/28/creating-a-bios-gpt-and-uefi-gpt-grub-bootable-linux-system/" />
+<meta property="og:site_name" content="Philipp&#039;s Tech Blog" />
+<meta property="article:tag" content="Bash" />
+<meta property="article:tag" content="BIOS" />
+<meta property="article:tag" content="GPT" />
+<meta property="article:tag" content="Linux" />
+<meta property="article:tag" content="Scripts" />
+<meta property="article:tag" content="UEFI" />
+<meta property="article:section" content="Linux" />
+<meta property="article:published_time" content="2017-05-28T17:52:50+00:00" />
+<meta property="article:modified_time" content="2017-05-31T03:32:22+00:00" />
+<meta property="og:updated_time" content="2017-05-31T03:32:22+00:00" />
+<meta property="og:image" content="https://dqtpg127g2l9y.cloudfront.net/wp-content/uploads/2017/05/Selection_315.jpg" />
+<meta property="og:image:secure_url" content="https://dqtpg127g2l9y.cloudfront.net/wp-content/uploads/2017/05/Selection_315.jpg" />
+<meta property="og:image:width" content="250" />
+<meta property="og:image:height" content="250" />
+<script type='application/ld+json'>{"@context":"http:\/\/schema.org","@type":"WebSite","@id":"#website","url":"https:\/\/blog.heckel.xyz\/","name":"Philipp&#039;s Tech Blog","potentialAction":{"@type":"SearchAction","target":"https:\/\/blog.heckel.xyz\/?s={search_term_string}","query-input":"required name=search_term_string"}}</script>
+<!-- / Yoast SEO plugin. -->
+
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="Philipp&#039;s Tech Blog &raquo; Feed" href="https://blog.heckel.xyz/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Philipp&#039;s Tech Blog &raquo; Comments Feed" href="https://blog.heckel.xyz/comments/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Philipp&#039;s Tech Blog &raquo; Creating a BIOS/GPT and UEFI/GPT Grub-bootable Linux system Comments Feed" href="https://blog.heckel.xyz/2017/05/28/creating-a-bios-gpt-and-uefi-gpt-grub-bootable-linux-system/feed/" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.4\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.4\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blog.heckel.xyz\/wp-includes\/js\/wp-emoji-release.min.js?ver=ae9effdb12897e590dce411ca8890121"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55357,56692,8205,9792,65039],[55357,56692,8203,9792,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='lightbox-css-css'  href='https://dqtpg127g2l9y.cloudfront.net/wp-content/themes/fizz-ph/lib/lightbox2/css/lightbox.css?ver=ae9effdb12897e590dce411ca8890121' type='text/css' media='all' />
+<link rel='stylesheet' id='crayon-theme-github-css'  href='https://dqtpg127g2l9y.cloudfront.net/wp-content/plugins/crayon-syntax-highlighter/themes/github/github.css?ver=_2.7.2_beta' type='text/css' media='all' />
+<link rel='stylesheet' id='crayon-font-monospace-css'  href='https://dqtpg127g2l9y.cloudfront.net/wp-content/plugins/crayon-syntax-highlighter/fonts/monospace.css?ver=_2.7.2_beta' type='text/css' media='all' />
+<script type='text/javascript' src='https://dqtpg127g2l9y.cloudfront.net/wp-includes/js/jquery/jquery.js?ver=1.12.4'></script>
+<script type='text/javascript' src='https://dqtpg127g2l9y.cloudfront.net/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.4.1'></script>
+<script type='text/javascript' src='https://dqtpg127g2l9y.cloudfront.net/wp-content/themes/fizz-ph/lib/lightbox2/js/modernizr.custom.js?ver=ae9effdb12897e590dce411ca8890121'></script>
+<script type='text/javascript' src='https://dqtpg127g2l9y.cloudfront.net/wp-content/themes/fizz-ph/lib/lightbox2/js/lightbox-2.6.min.js?ver=2.6'></script>
+<link rel='https://api.w.org/' href='https://blog.heckel.xyz/wp-json/' />
+<link rel='shortlink' href='https://blog.heckel.xyz/?p=2944' />
+<link rel="alternate" type="application/json+oembed" href="https://blog.heckel.xyz/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fblog.heckel.xyz%2F2017%2F05%2F28%2Fcreating-a-bios-gpt-and-uefi-gpt-grub-bootable-linux-system%2F" />
+<link rel="alternate" type="text/xml+oembed" href="https://blog.heckel.xyz/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fblog.heckel.xyz%2F2017%2F05%2F28%2Fcreating-a-bios-gpt-and-uefi-gpt-grub-bootable-linux-system%2F&#038;format=xml" />
+		<style type="text/css">.recentcomments a{display:inline !important;padding:0 !important;margin:0 !important;}</style>
+			<style type="text/css">.recentcomments a{display:inline !important;padding:0 !important;margin:0 !important;}</style>
+<!-- wp_head -->
+	
+</head>
+
+	<body class="post-template-default single single-post postid-2944 single-format-standard">
+		<!--[if lt IE 7]>
+            <p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+        <![endif]-->
+    	
+
+	<!-- #page -->
+	<div id="page">
+		<div class="header-container">
+			<div class="radial_gradient">
+           <header class=" clearfix">
+           		<div class="top wrapper">
+					<h1 class="site-title"><a href="http://blog.heckel.xyz/"><img src="https://dqtpg127g2l9y.cloudfront.net/wp-content/themes/fizz-ph/admin/images/loginlogo.png" /></a></h1>
+					<p class="site-description">My name is Philipp C. Heckel and I write about nerdy things.<!--googleoff: index--><br><i>This site moved here recently from blog.philippheckel.com!</i><!--googleon: index--></p>
+
+	                <!-- .top-menu-container -->
+			        <div class="top-menu-container">
+				        <nav>
+							<div id="top-menu">
+							<ul class="sf-menu-ph"><li class="page_item page-item-95"><a href="https://blog.heckel.xyz/about/">About me</a></li>
+<li class="page_item page-item-1530"><a href="https://blog.heckel.xyz/papers/">Papers</a></li>
+<li class="page_item page-item-2764"><a href="https://blog.heckel.xyz/projects/">Projects</a></li>
+<li class="page_item page-item-1518"><a href="https://blog.heckel.xyz/travel-map/">Travel Map</a></li>
+</ul>							</div>
+						</nav>
+					</div>
+
+					<ul class="social">
+						<li>Stay connected</li>
+						<li><a href="http://www.linkedin.com/in/philippheckel" class="linkedin" title="LinkedIn">LinkedIn</a></li>																												
+						<li><a href="https://plus.google.com/117151669220976773787?rel=author" class="googleplus" title="Google+"></a></li>
+						<li><a href="https://www.xing.com/profile/Philipp_Heckel" class="xing" title="Xing"></a></li>
+						<li><a href="https://blog.heckel.xyz/feed/rss/" title="RSS" class="rss"></a></li>					</ul>
+           		</div>           	   
+           </header>
+           <div class="subheader-containerc clearfix">
+
+           </div>
+           <span class="clear"></span>
+			</div>
+        </div>
+
+        <div class="page-title">
+        	<div class="wrapper">
+        		<h2>														Creating a BIOS/GPT and UEFI/GPT Grub-bootable Linux system 
+						        			</h2>
+
+				<span class="searchformwrapper">
+		    		<form role="search" method="get" id="searchform" action="https://blog.heckel.xyz" >					
+						<input type="text" value="search" onfocus="if (this.value == 'search') { this.value=''; }" onblur="if (this.value == '') { this.value='search'; }" name="s" id="s" />
+						<input type="submit" id="searchsubmit" value="" />
+					</form>	
+				</span>
+				<br style="clear: left" />
+        	</div>
+        </div>
+
+       
+
+		<!-- .main-container -->
+		<div class="main-container">
+			
+
+			<div class="main wrapper clearfix">
+	
+	<div class="column-one">
+						<article>
+			
+				<header class="clearfix">				
+					<ul class="meta">
+						<li><date>May 28 / 2017</date></li>
+						<li><span class="comments"><a href="https://blog.heckel.xyz/2017/05/28/creating-a-bios-gpt-and-uefi-gpt-grub-bootable-linux-system/#comments">3</a> </span></li>
+						<li><span class="tags"><a href="https://blog.heckel.xyz/tag/bash/" rel="tag">Bash</a>, <a href="https://blog.heckel.xyz/tag/bios/" rel="tag">BIOS</a>, <a href="https://blog.heckel.xyz/tag/gpt/" rel="tag">GPT</a>, <a href="https://blog.heckel.xyz/tag/linux/" rel="tag">Linux</a>, <a href="https://blog.heckel.xyz/tag/scripts/" rel="tag">Scripts</a>, <a href="https://blog.heckel.xyz/tag/uefi/" rel="tag">UEFI</a></a></li>
+					</ul>
+				</header>
+
+				<img width="150" height="150" src="https://dqtpg127g2l9y.cloudfront.net/wp-content/uploads/2017/05/Selection_315-150x150.jpg" class="blog-thumb wp-post-image" alt="" srcset="https://dqtpg127g2l9y.cloudfront.net/wp-content/uploads/2017/05/Selection_315-150x150.jpg 150w, https://dqtpg127g2l9y.cloudfront.net/wp-content/uploads/2017/05/Selection_315-100x100.jpg 100w, https://dqtpg127g2l9y.cloudfront.net/wp-content/uploads/2017/05/Selection_315-170x170.jpg 170w, https://dqtpg127g2l9y.cloudfront.net/wp-content/uploads/2017/05/Selection_315.jpg 250w" sizes="(max-width: 150px) 100vw, 150px" />
+				<div class="blog-entry">
+
+					<span class="categories"><a href="https://blog.heckel.xyz/category/linux/" >Linux</a></span>
+
+					<h2 class="post-title"><a href="https://blog.heckel.xyz/2017/05/28/creating-a-bios-gpt-and-uefi-gpt-grub-bootable-linux-system/">Creating a BIOS/GPT and UEFI/GPT Grub-bootable Linux system</a></h2>
+					
+				</div>
+
+				<br style="clear: both; margin: 0; padding: 0" />
+				<span class="clearfix"></span>
+
+				<p>Good old <a href="https://en.wikipedia.org/wiki/Master_boot_record">Master Boot Record (MBR)</a> unfortunately cannot address anything beyond 2TB, so partitioning large disks and making them bootable is impossible using MBR. The <a href="https://en.wikipedia.org/wiki/GUID_Partition_Table">GUID Partition Table (GPT) </a> solves this problem: It supports disks up to 16EB. However, installing grub does not work without a special <a href="https://en.wikipedia.org/wiki/BIOS_boot_partition">BIOS boot partition</a>. If you also want to support booting the same system via <a href="https://en.wikipedia.org/wiki/Unified_Extensible_Firmware_Interface">UEFI</a>, another partition, the <a href="https://en.wikipedia.org/wiki/EFI_system_partition">EFI System Partition (ESP)</a>, is necessary.</p>
+<p>This should post shows you how to partition a disk with GPT and make a <strong>bootable Linux system via BIOS/Legacy and UEFI</strong>.</p>
+<p><span id="more-2944"></span></p>
+<hr />
+<b>Content</b></p>
+<div class="toc">
+<ol class='l3'>
+<li class='l3 '><a href="https://blog.heckel.xyz/2017/05/28/creating-a-bios-gpt-and-uefi-gpt-grub-bootable-linux-system/#Requirements-Assumptions">Requirements &#038; Assumptions</a></li>
+<li class='l3 '><a href="https://blog.heckel.xyz/2017/05/28/creating-a-bios-gpt-and-uefi-gpt-grub-bootable-linux-system/#Create-a-minimal-Linux-optional">1. Create a minimal Linux (optional)</a></li>
+<li class='l3 '><a href="https://blog.heckel.xyz/2017/05/28/creating-a-bios-gpt-and-uefi-gpt-grub-bootable-linux-system/#Creating-a-GPT-with-a-BIOS-boot-partition-and-an-EFI-System-Partition">2. Creating a GPT with a BIOS boot partition and an EFI System Partition</a></li>
+<li class='l3 '><a href="https://blog.heckel.xyz/2017/05/28/creating-a-bios-gpt-and-uefi-gpt-grub-bootable-linux-system/#Copying-the-root-file-system-installing-grub-into-the-BIOS-partition">3. Copying the root file system, installing grub into the BIOS partition</a></li>
+<li class='l3 '><a href="https://blog.heckel.xyz/2017/05/28/creating-a-bios-gpt-and-uefi-gpt-grub-bootable-linux-system/#Preparing-the-EFI-partition">4. Preparing the EFI partition</a></li>
+<li class='l3 '><a href="https://blog.heckel.xyz/2017/05/28/creating-a-bios-gpt-and-uefi-gpt-grub-bootable-linux-system/#One-script-to-do-it-all">5. One script to do it all</a></li>
+</ol>
+</div>
+<hr />
+<h3 id="Requirements-Assumptions">Requirements &#038; Assumptions</h3>
+<p>For this post, I&#8217;ll assume that you are running everything on a Debian-based system, and all commands shown must be run as root.</p>
+<h3 id="Create-a-minimal-Linux-optional">1. Create a minimal Linux (optional)</h3>
+<p>For this example, we&#8217;ll use a small Linux install that we can create with the following commands. This will bootstrap (<tt>debootstrap</tt>) a minimal Ubuntu 16.04 system to the <tt>chroot/</tt> folder which we will later use to boot our system. To create a bootable system, we need a kernel and the bootloader modules and files, so let&#8217;s install <tt>linux-image-generic</tt> and <tt>grub-pc</tt>:</p>
+<p></p><!-- Crayon Syntax Highlighter v_2.7.2_beta -->
+
+		<div id="crayon-5a89df6c227b2858491733" class="crayon-syntax crayon-theme-github crayon-font-monospace crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-always" style=" margin-top: 12px; margin-bottom: 12px; font-size: 12px !important; line-height: 15px !important;">
+		
+			<div class="crayon-toolbar" data-settings=" show" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><span class="crayon-title">Bootstrapping a new Ubuntu 16.04 system (with a kernel and grub)</span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button" title="Toggle Line Numbers"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="Toggle Plain Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="Toggle Line Wrap"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="Expand Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="Copy"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="Open Code In New Window"><div class="crayon-button-icon"></div></div><span class="crayon-language">Shell</span></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea wrap="soft" class="crayon-plain print-no" data-settings="dblclick" readonly style="-moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4; font-size: 12px !important; line-height: 15px !important;">
+# Bootstrap minimal system
+debootstrap --variant=minbase xenial chroot
+
+# Install kernel and grub
+for d in dev sys proc; do 
+  mount --bind /$d chroot/$d
+done
+
+DEBIAN_FRONTEND=noninteractive chroot chroot apt-get install linux-image-generic grub-pc -y --force-yes
+umount chroot/{dev,proc,sys}</textarea></div>
+			<div class="crayon-main" style=" max-height: 500px;">
+				<table class="crayon-table">
+					<tr class="crayon-row">
+				<td class="crayon-nums " data-settings="show">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-5a89df6c227b2858491733-1">1</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227b2858491733-2">2</div><div class="crayon-num" data-line="crayon-5a89df6c227b2858491733-3">3</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227b2858491733-4">4</div><div class="crayon-num" data-line="crayon-5a89df6c227b2858491733-5">5</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227b2858491733-6">6</div><div class="crayon-num" data-line="crayon-5a89df6c227b2858491733-7">7</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227b2858491733-8">8</div><div class="crayon-num" data-line="crayon-5a89df6c227b2858491733-9">9</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227b2858491733-10">10</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-5a89df6c227b2858491733-1"><span class="crayon-c"># Bootstrap minimal system</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227b2858491733-2"><span class="crayon-v">debootstrap</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-v">variant</span><span class="crayon-o">=</span><span class="crayon-e">minbase </span><span class="crayon-e">xenial </span><span class="crayon-v">chroot</span></div><div class="crayon-line" id="crayon-5a89df6c227b2858491733-3">&nbsp;</div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227b2858491733-4"><span class="crayon-c"># Install kernel and grub</span></div><div class="crayon-line" id="crayon-5a89df6c227b2858491733-5"><span class="crayon-st">for</span><span class="crayon-h"> </span><span class="crayon-i">d</span><span class="crayon-h"> </span><span class="crayon-st">in</span><span class="crayon-h"> </span><span class="crayon-e">dev </span><span class="crayon-e">sys </span><span class="crayon-v">proc</span><span class="crayon-sy">;</span><span class="crayon-h"> </span><span class="crayon-st">do</span><span class="crayon-h"> </span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227b2858491733-6"><span class="crayon-h">&nbsp;&nbsp;</span><span class="crayon-v">mount</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-v">bind</span><span class="crayon-h"> </span><span class="crayon-o">/</span><span class="crayon-v">$d</span><span class="crayon-h"> </span><span class="crayon-v">chroot</span><span class="crayon-o">/</span><span class="crayon-v">$d</span></div><div class="crayon-line" id="crayon-5a89df6c227b2858491733-7"><span class="crayon-st">done</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227b2858491733-8">&nbsp;</div><div class="crayon-line" id="crayon-5a89df6c227b2858491733-9"><span class="crayon-v">DEBIAN_FRONTEND</span><span class="crayon-o">=</span><span class="crayon-e">noninteractive</span><span class="crayon-h"> </span><span class="crayon-e">chroot</span><span class="crayon-h"> </span><span class="crayon-e">chroot</span><span class="crayon-h"> </span><span class="crayon-e">apt</span><span class="crayon-o">-</span><span class="crayon-r">get</span><span class="crayon-h"> </span><span class="crayon-e">install</span><span class="crayon-h"> </span><span class="crayon-e">linux</span><span class="crayon-o">-</span><span class="crayon-e">image</span><span class="crayon-o">-</span><span class="crayon-e">generic</span><span class="crayon-h"> </span><span class="crayon-e">grub</span><span class="crayon-o">-</span><span class="crayon-e">pc</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-e">y</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-e">force</span><span class="crayon-o">-</span><span class="crayon-e">yes</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227b2858491733-10"><span class="crayon-e">umount</span><span class="crayon-h"> </span><span class="crayon-e">chroot</span><span class="crayon-o">/</span><span class="crayon-sy">{</span><span class="crayon-v">dev</span><span class="crayon-sy">,</span><span class="crayon-v">proc</span><span class="crayon-sy">,</span><span class="crayon-v">sys</span><span class="crayon-sy">}</span></div></div></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0014 seconds] -->
+<p></p>
+<p>Alternatively, you can of course use any Linux root file system, provided that it has a kernel and grub. You could, for instance, just copy your own root file system to the <tt>chroot/</tt> folder.</p>
+<h3 id="Creating-a-GPT-with-a-BIOS-boot-partition-and-an-EFI-System-Partition">2. Creating a GPT with a BIOS boot partition and an EFI System Partition</h3>
+<p>Now that we have the Linux root file system in the <tt>chroot/</tt> folder, we&#8217;ll create a sparse file that represents our disk. You may of course do all this with a proper HDD/SSD, i.e. with <tt>/dev/sdX</tt>, but for testing things using a raw disk file is much easier. The following snippet will create 3 partitions:</p>
+<ul>
+<li>A 1 MB <a href="https://en.wikipedia.org/wiki/BIOS_boot_partition">BIOS boot partition</a> (of type <tt>ef02</tt>) that Grub will use to store its core image.</li>
+<li>A 100 MB <a href="https://en.wikipedia.org/wiki/EFI_system_partition">EFI System Partition</a> (of type <tt>ef00</tt>) formatted as FAT32 in which we will store the EFI boot image</li>
+<li>And a partition for our root file system (in our example formatted with ext4)</li>
+</ul>
+<p></p><!-- Crayon Syntax Highlighter v_2.7.2_beta -->
+
+		<div id="crayon-5a89df6c227bd206365653" class="crayon-syntax crayon-theme-github crayon-font-monospace crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-always" style=" margin-top: 12px; margin-bottom: 12px; font-size: 12px !important; line-height: 15px !important;">
+		
+			<div class="crayon-toolbar" data-settings=" show" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><span class="crayon-title">Partitioning a disk/file with GPT to boot via UEFI and BIOS</span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button" title="Toggle Line Numbers"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="Toggle Plain Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="Toggle Line Wrap"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="Expand Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="Copy"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="Open Code In New Window"><div class="crayon-button-icon"></div></div><span class="crayon-language">Shell</span></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea wrap="soft" class="crayon-plain print-no" data-settings="dblclick" readonly style="-moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4; font-size: 12px !important; line-height: 15px !important;">
+# Create sparse file to represent our disk
+truncate --size 30G test.img
+
+# Create partition layout
+sgdisk --clear \
+  --new 1::+1M --typecode=1:ef02 --change-name=1:'BIOS boot partition' \
+  --new 2::+100M --typecode=2:ef00 --change-name=2:'EFI System' \
+  --new 3::-0 --typecode=3:8300 --change-name=3:'Linux root filesystem' \
+  test.img</textarea></div>
+			<div class="crayon-main" style=" max-height: 500px;">
+				<table class="crayon-table">
+					<tr class="crayon-row">
+				<td class="crayon-nums " data-settings="show">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-5a89df6c227bd206365653-1">1</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227bd206365653-2">2</div><div class="crayon-num" data-line="crayon-5a89df6c227bd206365653-3">3</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227bd206365653-4">4</div><div class="crayon-num" data-line="crayon-5a89df6c227bd206365653-5">5</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227bd206365653-6">6</div><div class="crayon-num" data-line="crayon-5a89df6c227bd206365653-7">7</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227bd206365653-8">8</div><div class="crayon-num" data-line="crayon-5a89df6c227bd206365653-9">9</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-5a89df6c227bd206365653-1"><span class="crayon-c"># Create sparse file to represent our disk</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227bd206365653-2"><span class="crayon-v">truncate</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-i">size</span><span class="crayon-h"> </span><span class="crayon-cn">30G</span><span class="crayon-h"> </span><span class="crayon-r">test</span><span class="crayon-e">.img</span></div><div class="crayon-line" id="crayon-5a89df6c227bd206365653-3">&nbsp;</div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227bd206365653-4"><span class="crayon-c"># Create partition layout</span></div><div class="crayon-line" id="crayon-5a89df6c227bd206365653-5"><span class="crayon-v">sgdisk</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-r">clear</span><span class="crayon-h"> </span><span class="crayon-sy">\</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227bd206365653-6"><span class="crayon-h">&nbsp;&nbsp;</span><span class="crayon-o">--</span><span class="crayon-r">new</span><span class="crayon-h"> </span><span class="crayon-cn">1</span><span class="crayon-o">::</span><span class="crayon-o">+</span><span class="crayon-cn">1M</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-v">typecode</span><span class="crayon-o">=</span><span class="crayon-cn">1</span><span class="crayon-o">:</span><span class="crayon-v">ef02</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-v">change</span><span class="crayon-o">-</span><span class="crayon-v">name</span><span class="crayon-o">=</span><span class="crayon-cn">1</span><span class="crayon-o">:</span><span class="crayon-s">'BIOS boot partition'</span><span class="crayon-h"> </span><span class="crayon-sy">\</span></div><div class="crayon-line" id="crayon-5a89df6c227bd206365653-7"><span class="crayon-h">&nbsp;&nbsp;</span><span class="crayon-o">--</span><span class="crayon-r">new</span><span class="crayon-h"> </span><span class="crayon-cn">2</span><span class="crayon-o">::</span><span class="crayon-o">+</span><span class="crayon-cn">100M</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-v">typecode</span><span class="crayon-o">=</span><span class="crayon-cn">2</span><span class="crayon-o">:</span><span class="crayon-v">ef00</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-v">change</span><span class="crayon-o">-</span><span class="crayon-v">name</span><span class="crayon-o">=</span><span class="crayon-cn">2</span><span class="crayon-o">:</span><span class="crayon-s">'EFI System'</span><span class="crayon-h"> </span><span class="crayon-sy">\</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227bd206365653-8"><span class="crayon-h">&nbsp;&nbsp;</span><span class="crayon-o">--</span><span class="crayon-r">new</span><span class="crayon-h"> </span><span class="crayon-cn">3</span><span class="crayon-o">::</span><span class="crayon-o">-</span><span class="crayon-cn">0</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-v">typecode</span><span class="crayon-o">=</span><span class="crayon-cn">3</span><span class="crayon-o">:</span><span class="crayon-cn">8300</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-v">change</span><span class="crayon-o">-</span><span class="crayon-v">name</span><span class="crayon-o">=</span><span class="crayon-cn">3</span><span class="crayon-o">:</span><span class="crayon-s">'Linux root filesystem'</span><span class="crayon-h"> </span><span class="crayon-sy">\</span></div><div class="crayon-line" id="crayon-5a89df6c227bd206365653-9"><span class="crayon-h">&nbsp;&nbsp;</span><span class="crayon-r">test</span><span class="crayon-e">.img</span></div></div></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0004 seconds] -->
+<p></p>
+<p>Once this is done, you can list the partitions with <tt>gdisk -l test.img</tt>:</p>
+<p></p><!-- Crayon Syntax Highlighter v_2.7.2_beta -->
+
+		<div id="crayon-5a89df6c227bf540910606" class="crayon-syntax crayon-theme-github crayon-font-monospace crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-always" style=" margin-top: 12px; margin-bottom: 12px; font-size: 12px !important; line-height: 15px !important;">
+		
+			<div class="crayon-toolbar" data-settings=" show" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><span class="crayon-title">Listing the partitions we just created</span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button" title="Toggle Line Numbers"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="Toggle Plain Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="Toggle Line Wrap"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="Expand Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="Copy"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="Open Code In New Window"><div class="crayon-button-icon"></div></div><span class="crayon-language">Shell</span></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea wrap="soft" class="crayon-plain print-no" data-settings="dblclick" readonly style="-moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4; font-size: 12px !important; line-height: 15px !important;">
+# Now list the partitions
+gdisk -l test.img 
+GPT fdisk (gdisk) version 1.0.1
+
+# ...
+
+Number  Start (sector)    End (sector)  Size       Code  Name
+   1            2048            4095   1024.0 KiB  EF02  BIOS boot partition
+   2            4096          208895   100.0 MiB   EF00  EFI System
+   3          208896        62914526   29.9 GiB    8300  Linux root filesystem</textarea></div>
+			<div class="crayon-main" style=" max-height: 500px;">
+				<table class="crayon-table">
+					<tr class="crayon-row">
+				<td class="crayon-nums " data-settings="show">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-5a89df6c227bf540910606-1">1</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227bf540910606-2">2</div><div class="crayon-num" data-line="crayon-5a89df6c227bf540910606-3">3</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227bf540910606-4">4</div><div class="crayon-num" data-line="crayon-5a89df6c227bf540910606-5">5</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227bf540910606-6">6</div><div class="crayon-num" data-line="crayon-5a89df6c227bf540910606-7">7</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227bf540910606-8">8</div><div class="crayon-num" data-line="crayon-5a89df6c227bf540910606-9">9</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227bf540910606-10">10</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-5a89df6c227bf540910606-1"><span class="crayon-c"># Now list the partitions</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227bf540910606-2"><span class="crayon-v">gdisk</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-i">l</span><span class="crayon-h"> </span><span class="crayon-r">test</span><span class="crayon-e">.img</span><span class="crayon-h"> </span></div><div class="crayon-line" id="crayon-5a89df6c227bf540910606-3"><span class="crayon-e">GPT </span><span class="crayon-e">fdisk</span><span class="crayon-h"> </span><span class="crayon-sy">(</span><span class="crayon-v">gdisk</span><span class="crayon-sy">)</span><span class="crayon-h"> </span><span class="crayon-i">version</span><span class="crayon-h"> </span><span class="crayon-cn">1.0.1</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227bf540910606-4">&nbsp;</div><div class="crayon-line" id="crayon-5a89df6c227bf540910606-5"><span class="crayon-c"># ...</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227bf540910606-6">&nbsp;</div><div class="crayon-line" id="crayon-5a89df6c227bf540910606-7"><span class="crayon-e">Number&nbsp;&nbsp;</span><span class="crayon-e">Start</span><span class="crayon-h"> </span><span class="crayon-sy">(</span><span class="crayon-v">sector</span><span class="crayon-sy">)</span><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-st">End</span><span class="crayon-h"> </span><span class="crayon-sy">(</span><span class="crayon-v">sector</span><span class="crayon-sy">)</span><span class="crayon-h">&nbsp;&nbsp;</span><span class="crayon-e">Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span class="crayon-e">Code&nbsp;&nbsp;</span><span class="crayon-i">Name</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227bf540910606-8"><span class="crayon-h">&nbsp;&nbsp; </span><span class="crayon-cn">1</span><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-cn">2048</span><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-cn">4095</span><span class="crayon-h">&nbsp;&nbsp; </span><span class="crayon-cn">1024.0</span><span class="crayon-h"> </span><span class="crayon-e">KiB&nbsp;&nbsp;</span><span class="crayon-e">EF02&nbsp;&nbsp;</span><span class="crayon-e">BIOS </span><span class="crayon-e">boot </span><span class="crayon-i">partition</span></div><div class="crayon-line" id="crayon-5a89df6c227bf540910606-9"><span class="crayon-h">&nbsp;&nbsp; </span><span class="crayon-cn">2</span><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-cn">4096</span><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-cn">208895</span><span class="crayon-h">&nbsp;&nbsp; </span><span class="crayon-cn">100.0</span><span class="crayon-h"> </span><span class="crayon-e">MiB&nbsp;&nbsp; </span><span class="crayon-e">EF00&nbsp;&nbsp;</span><span class="crayon-e">EFI </span><span class="crayon-i">System</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227bf540910606-10"><span class="crayon-h">&nbsp;&nbsp; </span><span class="crayon-cn">3</span><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-cn">208896</span><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-cn">62914526</span><span class="crayon-h">&nbsp;&nbsp; </span><span class="crayon-cn">29.9</span><span class="crayon-h"> </span><span class="crayon-i">GiB</span><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-cn">8300</span><span class="crayon-h">&nbsp;&nbsp;</span><span class="crayon-e">Linux </span><span class="crayon-e">root </span><span class="crayon-v">filesystem</span></div></div></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0003 seconds] -->
+<p></p>
+<p>After the partitions are created, the EFI and root partition need to be formatted:</p>
+<p></p><!-- Crayon Syntax Highlighter v_2.7.2_beta -->
+
+		<div id="crayon-5a89df6c227c1953830406" class="crayon-syntax crayon-theme-github crayon-font-monospace crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-always" style=" margin-top: 12px; margin-bottom: 12px; font-size: 12px !important; line-height: 15px !important;">
+		
+			<div class="crayon-toolbar" data-settings=" show" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><span class="crayon-title">Formatting the root partition and the EFI System Partition</span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button" title="Toggle Line Numbers"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="Toggle Plain Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="Toggle Line Wrap"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="Expand Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="Copy"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="Open Code In New Window"><div class="crayon-button-icon"></div></div><span class="crayon-language">Shell</span></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea wrap="soft" class="crayon-plain print-no" data-settings="dblclick" readonly style="-moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4; font-size: 12px !important; line-height: 15px !important;">
+# Loop sparse file
+LOOPDEV=$(losetup --find --show test.img)
+partprobe ${LOOPDEV}
+
+# Create filesystems
+mkfs.fat -F32 ${LOOPDEV}p2
+mkfs.ext4 -F -L "demoroot" ${LOOPDEV}p3 # &lt;&lt; Note the label 'demoroot'
+
+# Get rid of loop device
+losetup -d ${LOOPDEV}</textarea></div>
+			<div class="crayon-main" style=" max-height: 500px;">
+				<table class="crayon-table">
+					<tr class="crayon-row">
+				<td class="crayon-nums " data-settings="show">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-5a89df6c227c1953830406-1">1</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227c1953830406-2">2</div><div class="crayon-num" data-line="crayon-5a89df6c227c1953830406-3">3</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227c1953830406-4">4</div><div class="crayon-num" data-line="crayon-5a89df6c227c1953830406-5">5</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227c1953830406-6">6</div><div class="crayon-num" data-line="crayon-5a89df6c227c1953830406-7">7</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227c1953830406-8">8</div><div class="crayon-num" data-line="crayon-5a89df6c227c1953830406-9">9</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227c1953830406-10">10</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-5a89df6c227c1953830406-1"><span class="crayon-c"># Loop sparse file</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227c1953830406-2"><span class="crayon-v">LOOPDEV</span><span class="crayon-o">=</span><span class="crayon-sy">$</span><span class="crayon-sy">(</span><span class="crayon-v">losetup</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-r">find</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-e">show </span><span class="crayon-r">test</span><span class="crayon-e">.img</span><span class="crayon-sy">)</span></div><div class="crayon-line" id="crayon-5a89df6c227c1953830406-3"><span class="crayon-e">partprobe</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-sy">{</span><span class="crayon-v">LOOPDEV</span><span class="crayon-sy">}</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227c1953830406-4">&nbsp;</div><div class="crayon-line" id="crayon-5a89df6c227c1953830406-5"><span class="crayon-c"># Create filesystems</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227c1953830406-6"><span class="crayon-v">mkfs</span><span class="crayon-e">.fat</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-e">F32</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-sy">{</span><span class="crayon-v">LOOPDEV</span><span class="crayon-sy">}</span><span class="crayon-e">p2</span></div><div class="crayon-line" id="crayon-5a89df6c227c1953830406-7"><span class="crayon-v">mkfs</span><span class="crayon-e">.ext4</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-v">F</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-i">L</span><span class="crayon-h"> </span><span class="crayon-s">"demoroot"</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-sy">{</span><span class="crayon-v">LOOPDEV</span><span class="crayon-sy">}</span><span class="crayon-v">p3</span><span class="crayon-h"> </span><span class="crayon-c"># &lt;&lt; Note the label 'demoroot'</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227c1953830406-8">&nbsp;</div><div class="crayon-line" id="crayon-5a89df6c227c1953830406-9"><span class="crayon-c"># Get rid of loop device</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227c1953830406-10"><span class="crayon-e">losetup</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-e">d</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-sy">{</span><span class="crayon-v">LOOPDEV</span><span class="crayon-sy">}</span></div></div></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0003 seconds] -->
+<p></p>
+<p>Note that I named the root partition <tt>demoroot</tt> (the ext4 label). This will be important later in the Grub configuration.</p>
+<h3 id="Copying-the-root-file-system-installing-grub-into-the-BIOS-partition">3. Copying the root file system, installing grub into the BIOS partition</h3>
+<p>Now that the partition to be used for our root file system is formatted, let&#8217;s copy our <tt>chroot/</tt> directory to it and then install grub to the disk with <tt>grub-install</tt>. Because the disk is GPT formatted, grub will use the BIOS partition to install its core image:</p>
+<p></p><!-- Crayon Syntax Highlighter v_2.7.2_beta -->
+
+		<div id="crayon-5a89df6c227c2397992799" class="crayon-syntax crayon-theme-github crayon-font-monospace crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-always" style=" margin-top: 12px; margin-bottom: 12px; font-size: 12px !important; line-height: 15px !important;">
+		
+			<div class="crayon-toolbar" data-settings=" show" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><span class="crayon-title"></span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button" title="Toggle Line Numbers"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="Toggle Plain Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="Toggle Line Wrap"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="Expand Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="Copy"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="Open Code In New Window"><div class="crayon-button-icon"></div></div><span class="crayon-language">Shell</span></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea wrap="soft" class="crayon-plain print-no" data-settings="dblclick" readonly style="-moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4; font-size: 12px !important; line-height: 15px !important;">
+# Loop sparse file
+LOOPDEV=$(losetup --find --show test.img)
+partprobe ${LOOPDEV}
+
+# Mount OS partition and copy from chroot
+MOUNTDIR=$(mktemp -d -t demoXXXXXX)
+mount ${LOOPDEV}p3 $MOUNTDIR
+rsync -a chroot/ ${MOUNTDIR}/
+
+# Install grub, create config
+for d in dev sys proc; do mount --bind /$d ${MOUNTDIR}/$d; done
+chroot ${MOUNTDIR}/ grub-install --modules="ext2 part_gpt" ${LOOPDEV}
+chroot ${MOUNTDIR}/ update-grub
+
+# Unmount OS partition
+umount $MOUNTDIR/{dev,proc,sys,}
+rmdir $MOUNTDIR
+
+# Remove loop
+losetup -d ${LOOPDEV}</textarea></div>
+			<div class="crayon-main" style=" max-height: 500px;">
+				<table class="crayon-table">
+					<tr class="crayon-row">
+				<td class="crayon-nums " data-settings="show">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-5a89df6c227c2397992799-1">1</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227c2397992799-2">2</div><div class="crayon-num" data-line="crayon-5a89df6c227c2397992799-3">3</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227c2397992799-4">4</div><div class="crayon-num" data-line="crayon-5a89df6c227c2397992799-5">5</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227c2397992799-6">6</div><div class="crayon-num" data-line="crayon-5a89df6c227c2397992799-7">7</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227c2397992799-8">8</div><div class="crayon-num" data-line="crayon-5a89df6c227c2397992799-9">9</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227c2397992799-10">10</div><div class="crayon-num" data-line="crayon-5a89df6c227c2397992799-11">11</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227c2397992799-12">12</div><div class="crayon-num" data-line="crayon-5a89df6c227c2397992799-13">13</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227c2397992799-14">14</div><div class="crayon-num" data-line="crayon-5a89df6c227c2397992799-15">15</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227c2397992799-16">16</div><div class="crayon-num" data-line="crayon-5a89df6c227c2397992799-17">17</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227c2397992799-18">18</div><div class="crayon-num" data-line="crayon-5a89df6c227c2397992799-19">19</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227c2397992799-20">20</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-5a89df6c227c2397992799-1"><span class="crayon-c"># Loop sparse file</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227c2397992799-2"><span class="crayon-v">LOOPDEV</span><span class="crayon-o">=</span><span class="crayon-sy">$</span><span class="crayon-sy">(</span><span class="crayon-v">losetup</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-r">find</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-e">show </span><span class="crayon-r">test</span><span class="crayon-e">.img</span><span class="crayon-sy">)</span></div><div class="crayon-line" id="crayon-5a89df6c227c2397992799-3"><span class="crayon-e">partprobe</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-sy">{</span><span class="crayon-v">LOOPDEV</span><span class="crayon-sy">}</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227c2397992799-4">&nbsp;</div><div class="crayon-line" id="crayon-5a89df6c227c2397992799-5"><span class="crayon-c"># Mount OS partition and copy from chroot</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227c2397992799-6"><span class="crayon-v">MOUNTDIR</span><span class="crayon-o">=</span><span class="crayon-sy">$</span><span class="crayon-sy">(</span><span class="crayon-v">mktemp</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-v">d</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-i">t</span><span class="crayon-h"> </span><span class="crayon-v">demoXXXXXX</span><span class="crayon-sy">)</span></div><div class="crayon-line" id="crayon-5a89df6c227c2397992799-7"><span class="crayon-e">mount</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-sy">{</span><span class="crayon-v">LOOPDEV</span><span class="crayon-sy">}</span><span class="crayon-e">p3</span><span class="crayon-h"> </span><span class="crayon-v">$MOUNTDIR</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227c2397992799-8"><span class="crayon-e">rsync</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-e">a</span><span class="crayon-h"> </span><span class="crayon-e">chroot</span><span class="crayon-o">/</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-sy">{</span><span class="crayon-v">MOUNTDIR</span><span class="crayon-sy">}</span><span class="crayon-o">/</span></div><div class="crayon-line" id="crayon-5a89df6c227c2397992799-9">&nbsp;</div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227c2397992799-10"><span class="crayon-c"># Install grub, create config</span></div><div class="crayon-line" id="crayon-5a89df6c227c2397992799-11"><span class="crayon-st">for</span><span class="crayon-h"> </span><span class="crayon-i">d</span><span class="crayon-h"> </span><span class="crayon-st">in</span><span class="crayon-h"> </span><span class="crayon-e">dev </span><span class="crayon-e">sys </span><span class="crayon-v">proc</span><span class="crayon-sy">;</span><span class="crayon-h"> </span><span class="crayon-st">do</span><span class="crayon-h"> </span><span class="crayon-e">mount</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-e">bind</span><span class="crayon-h"> </span><span class="crayon-o">/</span><span class="crayon-v">$d</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-sy">{</span><span class="crayon-v">MOUNTDIR</span><span class="crayon-sy">}</span><span class="crayon-o">/</span><span class="crayon-v">$d</span><span class="crayon-sy">;</span><span class="crayon-h"> </span><span class="crayon-st">done</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227c2397992799-12"><span class="crayon-e">chroot</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-sy">{</span><span class="crayon-v">MOUNTDIR</span><span class="crayon-sy">}</span><span class="crayon-o">/</span><span class="crayon-h"> </span><span class="crayon-v">grub</span><span class="crayon-o">-</span><span class="crayon-v">install</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-v">modules</span><span class="crayon-o">=</span><span class="crayon-s">"ext2 part_gpt"</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-sy">{</span><span class="crayon-v">LOOPDEV</span><span class="crayon-sy">}</span></div><div class="crayon-line" id="crayon-5a89df6c227c2397992799-13"><span class="crayon-e">chroot</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-sy">{</span><span class="crayon-v">MOUNTDIR</span><span class="crayon-sy">}</span><span class="crayon-o">/</span><span class="crayon-h"> </span><span class="crayon-e">update</span><span class="crayon-o">-</span><span class="crayon-e">grub</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227c2397992799-14">&nbsp;</div><div class="crayon-line" id="crayon-5a89df6c227c2397992799-15"><span class="crayon-c"># Unmount OS partition</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227c2397992799-16"><span class="crayon-e">umount</span><span class="crayon-h"> </span><span class="crayon-v">$MOUNTDIR</span><span class="crayon-o">/</span><span class="crayon-sy">{</span><span class="crayon-v">dev</span><span class="crayon-sy">,</span><span class="crayon-v">proc</span><span class="crayon-sy">,</span><span class="crayon-v">sys</span><span class="crayon-sy">,</span><span class="crayon-sy">}</span></div><div class="crayon-line" id="crayon-5a89df6c227c2397992799-17"><span class="crayon-r">rmdir</span><span class="crayon-h"> </span><span class="crayon-v">$MOUNTDIR</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227c2397992799-18">&nbsp;</div><div class="crayon-line" id="crayon-5a89df6c227c2397992799-19"><span class="crayon-c"># Remove loop</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227c2397992799-20"><span class="crayon-e">losetup</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-e">d</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-sy">{</span><span class="crayon-v">LOOPDEV</span><span class="crayon-sy">}</span></div></div></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0006 seconds] -->
+<p></p>
+<p>After this, you should be able to boot the system via BIOS from the root GPT partition. I always do that via KVM like this:</p>
+<p></p><!-- Crayon Syntax Highlighter v_2.7.2_beta -->
+
+		<div id="crayon-5a89df6c227cc177673395" class="crayon-syntax crayon-theme-github crayon-font-monospace crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-always" style=" margin-top: 12px; margin-bottom: 12px; font-size: 12px !important; line-height: 15px !important;">
+		
+			<div class="crayon-toolbar" data-settings=" show" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><span class="crayon-title">Test booting the image via KVM</span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button" title="Toggle Line Numbers"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="Toggle Plain Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="Toggle Line Wrap"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="Expand Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="Copy"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="Open Code In New Window"><div class="crayon-button-icon"></div></div><span class="crayon-language">Shell</span></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea wrap="soft" class="crayon-plain print-no" data-settings="dblclick" readonly style="-moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4; font-size: 12px !important; line-height: 15px !important;">
+kvm -drive format=raw,file=test.img -serial stdio -m 4G -cpu host -smp 2</textarea></div>
+			<div class="crayon-main" style=" max-height: 500px;">
+				<table class="crayon-table">
+					<tr class="crayon-row">
+				<td class="crayon-nums " data-settings="show">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-5a89df6c227cc177673395-1">1</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-5a89df6c227cc177673395-1"><span class="crayon-v">kvm</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-e">drive </span><span class="crayon-v">format</span><span class="crayon-o">=</span><span class="crayon-v">raw</span><span class="crayon-sy">,</span><span class="crayon-r">file</span><span class="crayon-o">=</span><span class="crayon-r">test</span><span class="crayon-e">.img</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-e">serial </span><span class="crayon-v">stdio</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-i">m</span><span class="crayon-h"> </span><span class="crayon-cn">4G</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-e">cpu </span><span class="crayon-v">host</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-i">smp</span><span class="crayon-h"> </span><span class="crayon-cn">2</span></div></div></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0002 seconds] -->
+<p></p>
+<h3 id="Preparing-the-EFI-partition">4. Preparing the EFI partition</h3>
+<p>After you&#8217;ve verified that you can boot via BIOS, let&#8217;s make sure that we can also boot on UEFI systems. We formatted the EFI partition earlier. All that&#8217;s remaining is to create/copy the <tt>bootx64.efi</tt> image file and a valid <tt>grub.cfg</tt> to it.</p>
+<p>Grub can create the EFI image via the <tt>grub-mkimage</tt> command using the Grub modules in <tt>/usr/lib/grub/x86_64-efi</tt> (part of the <tt>grub-efi-amd64-bin</tt> package). In order to avoid having to load anything from the file system, we include all the modules in the image. If you are not booted via EFI, you may need to install the <tt>grub-efi-amd64-bin</tt> package.</p>
+<p>The Grub config file in the EFI partition <tt>grub.cfg</tt> is rather simple: It uses <tt>search --label demoroot</tt> to look for the root partition and then simply includes the actual grub config file via <tt>configfile ...</tt>.</p>
+<p>Let&#8217;s mount the EFI partition again, create the image and the grub config:</p>
+<p></p><!-- Crayon Syntax Highlighter v_2.7.2_beta -->
+
+		<div id="crayon-5a89df6c227ce066447422" class="crayon-syntax crayon-theme-github crayon-font-monospace crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-always" style=" margin-top: 12px; margin-bottom: 12px; font-size: 12px !important; line-height: 15px !important;">
+		
+			<div class="crayon-toolbar" data-settings=" show" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><span class="crayon-title"></span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button" title="Toggle Line Numbers"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="Toggle Plain Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="Toggle Line Wrap"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="Expand Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="Copy"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="Open Code In New Window"><div class="crayon-button-icon"></div></div></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea wrap="soft" class="crayon-plain print-no" data-settings="dblclick" readonly style="-moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4; font-size: 12px !important; line-height: 15px !important;">
+# Loop sparse file
+LOOPDEV=$(losetup --find --show test.img)
+partprobe ${LOOPDEV}
+
+# Mount EFI partition
+MOUNTDIR=$(mktemp -d -t demoXXXXXX)
+mount ${LOOPDEV}p2 $MOUNTDIR
+
+# Create EFI boot image
+apt-get install grub-efi-amd64-bin -y --force-yes
+
+mkdir -p ${MOUNTDIR}/EFI/BOOT
+grub-mkimage \
+  -d /usr/lib/grub/x86_64-efi \
+  -o ${MOUNTDIR}/EFI/BOOT/bootx64.efi \
+  -p /efi/boot \
+  -O x86_64-efi \
+    fat iso9660 part_gpt part_msdos normal boot linux configfile loopback chain efifwsetup efi_gop \
+    efi_uga ls search search_label search_fs_uuid search_fs_file gfxterm gfxterm_background \
+    gfxterm_menu test all_video loadenv exfat ext2 ntfs btrfs hfsplus udf
+
+# Create grub config
+cat &lt;&lt;GRUBCFG &gt; ${MOUNTDIR}/EFI/BOOT/grub.cfg
+search --label demoroot --set prefix # &lt;&lt; Note again, this searches by the 'demoroot' label!
+configfile (\$prefix)/boot/grub/grub.cfg
+GRUBCFG
+
+# Unmount and clean up
+umount ${MOUNTDIR}
+losetup -d ${LOOPDEV}</textarea></div>
+			<div class="crayon-main" style=" max-height: 500px;">
+				<table class="crayon-table">
+					<tr class="crayon-row">
+				<td class="crayon-nums " data-settings="show">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-5a89df6c227ce066447422-1">1</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227ce066447422-2">2</div><div class="crayon-num" data-line="crayon-5a89df6c227ce066447422-3">3</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227ce066447422-4">4</div><div class="crayon-num" data-line="crayon-5a89df6c227ce066447422-5">5</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227ce066447422-6">6</div><div class="crayon-num" data-line="crayon-5a89df6c227ce066447422-7">7</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227ce066447422-8">8</div><div class="crayon-num" data-line="crayon-5a89df6c227ce066447422-9">9</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227ce066447422-10">10</div><div class="crayon-num" data-line="crayon-5a89df6c227ce066447422-11">11</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227ce066447422-12">12</div><div class="crayon-num" data-line="crayon-5a89df6c227ce066447422-13">13</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227ce066447422-14">14</div><div class="crayon-num" data-line="crayon-5a89df6c227ce066447422-15">15</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227ce066447422-16">16</div><div class="crayon-num" data-line="crayon-5a89df6c227ce066447422-17">17</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227ce066447422-18">18</div><div class="crayon-num" data-line="crayon-5a89df6c227ce066447422-19">19</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227ce066447422-20">20</div><div class="crayon-num" data-line="crayon-5a89df6c227ce066447422-21">21</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227ce066447422-22">22</div><div class="crayon-num" data-line="crayon-5a89df6c227ce066447422-23">23</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227ce066447422-24">24</div><div class="crayon-num" data-line="crayon-5a89df6c227ce066447422-25">25</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227ce066447422-26">26</div><div class="crayon-num" data-line="crayon-5a89df6c227ce066447422-27">27</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227ce066447422-28">28</div><div class="crayon-num" data-line="crayon-5a89df6c227ce066447422-29">29</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227ce066447422-30">30</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-5a89df6c227ce066447422-1"><span class="crayon-p"># Loop sparse file</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227ce066447422-2"><span class="crayon-v">LOOPDEV</span><span class="crayon-o">=</span><span class="crayon-sy">$</span><span class="crayon-sy">(</span><span class="crayon-v">losetup</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-v">find</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-e">show </span><span class="crayon-v">test</span><span class="crayon-sy">.</span><span class="crayon-v">img</span><span class="crayon-sy">)</span></div><div class="crayon-line" id="crayon-5a89df6c227ce066447422-3"><span class="crayon-e">partprobe</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-sy">{</span><span class="crayon-v">LOOPDEV</span><span class="crayon-sy">}</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227ce066447422-4">&nbsp;</div><div class="crayon-line" id="crayon-5a89df6c227ce066447422-5"><span class="crayon-p"># Mount EFI partition</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227ce066447422-6"><span class="crayon-v">MOUNTDIR</span><span class="crayon-o">=</span><span class="crayon-sy">$</span><span class="crayon-sy">(</span><span class="crayon-v">mktemp</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-v">d</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-i">t</span><span class="crayon-h"> </span><span class="crayon-v">demoXXXXXX</span><span class="crayon-sy">)</span></div><div class="crayon-line" id="crayon-5a89df6c227ce066447422-7"><span class="crayon-e">mount</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-sy">{</span><span class="crayon-v">LOOPDEV</span><span class="crayon-sy">}</span><span class="crayon-e">p2</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-e">MOUNTDIR</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227ce066447422-8">&nbsp;</div><div class="crayon-line" id="crayon-5a89df6c227ce066447422-9"><span class="crayon-p"># Create EFI boot image</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227ce066447422-10"><span class="crayon-e">apt</span><span class="crayon-o">-</span><span class="crayon-e">get</span><span class="crayon-h"> </span><span class="crayon-e">install</span><span class="crayon-h"> </span><span class="crayon-e">grub</span><span class="crayon-o">-</span><span class="crayon-e">efi</span><span class="crayon-o">-</span><span class="crayon-e">amd64</span><span class="crayon-o">-</span><span class="crayon-e">bin</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-e">y</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-e">force</span><span class="crayon-o">-</span><span class="crayon-e">yes</span></div><div class="crayon-line" id="crayon-5a89df6c227ce066447422-11">&nbsp;</div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227ce066447422-12"><span class="crayon-e">mkdir</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-e">p</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-sy">{</span><span class="crayon-v">MOUNTDIR</span><span class="crayon-sy">}</span><span class="crayon-o">/</span><span class="crayon-e">EFI</span><span class="crayon-o">/</span><span class="crayon-e">BOOT</span></div><div class="crayon-line" id="crayon-5a89df6c227ce066447422-13"><span class="crayon-e">grub</span><span class="crayon-o">-</span><span class="crayon-e">mkimage</span><span class="crayon-h"> </span><span class="crayon-sy">\</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227ce066447422-14"><span class="crayon-h">&nbsp;&nbsp;</span><span class="crayon-o">-</span><span class="crayon-e">d</span><span class="crayon-h"> </span><span class="crayon-o">/</span><span class="crayon-e">usr</span><span class="crayon-o">/</span><span class="crayon-e">lib</span><span class="crayon-o">/</span><span class="crayon-e">grub</span><span class="crayon-o">/</span><span class="crayon-e">x86_64</span><span class="crayon-o">-</span><span class="crayon-e">efi</span><span class="crayon-h"> </span><span class="crayon-sy">\</span></div><div class="crayon-line" id="crayon-5a89df6c227ce066447422-15"><span class="crayon-h">&nbsp;&nbsp;</span><span class="crayon-o">-</span><span class="crayon-e">o</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-sy">{</span><span class="crayon-v">MOUNTDIR</span><span class="crayon-sy">}</span><span class="crayon-o">/</span><span class="crayon-v">EFI</span><span class="crayon-o">/</span><span class="crayon-v">BOOT</span><span class="crayon-o">/</span><span class="crayon-v">bootx64</span><span class="crayon-sy">.</span><span class="crayon-i">efi</span><span class="crayon-h"> </span><span class="crayon-sy">\</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227ce066447422-16"><span class="crayon-h">&nbsp;&nbsp;</span><span class="crayon-o">-</span><span class="crayon-e">p</span><span class="crayon-h"> </span><span class="crayon-o">/</span><span class="crayon-e">efi</span><span class="crayon-o">/</span><span class="crayon-e">boot</span><span class="crayon-h"> </span><span class="crayon-sy">\</span></div><div class="crayon-line" id="crayon-5a89df6c227ce066447422-17"><span class="crayon-h">&nbsp;&nbsp;</span><span class="crayon-o">-</span><span class="crayon-e">O</span><span class="crayon-h"> </span><span class="crayon-e">x86_64</span><span class="crayon-o">-</span><span class="crayon-e">efi</span><span class="crayon-h"> </span><span class="crayon-sy">\</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227ce066447422-18"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-e">fat</span><span class="crayon-h"> </span><span class="crayon-e">iso9660</span><span class="crayon-h"> </span><span class="crayon-e">part_gpt</span><span class="crayon-h"> </span><span class="crayon-e">part_msdos</span><span class="crayon-h"> </span><span class="crayon-e">normal</span><span class="crayon-h"> </span><span class="crayon-e">boot</span><span class="crayon-h"> </span><span class="crayon-e">linux</span><span class="crayon-h"> </span><span class="crayon-e">configfile</span><span class="crayon-h"> </span><span class="crayon-e">loopback</span><span class="crayon-h"> </span><span class="crayon-e">chain</span><span class="crayon-h"> </span><span class="crayon-e">efifwsetup</span><span class="crayon-h"> </span><span class="crayon-e">efi_gop</span><span class="crayon-h"> </span><span class="crayon-sy">\</span></div><div class="crayon-line" id="crayon-5a89df6c227ce066447422-19"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-e">efi_uga</span><span class="crayon-h"> </span><span class="crayon-e">ls</span><span class="crayon-h"> </span><span class="crayon-e">search</span><span class="crayon-h"> </span><span class="crayon-e">search_label</span><span class="crayon-h"> </span><span class="crayon-e">search_fs_uuid</span><span class="crayon-h"> </span><span class="crayon-e">search_fs_file</span><span class="crayon-h"> </span><span class="crayon-e">gfxterm</span><span class="crayon-h"> </span><span class="crayon-e">gfxterm_background</span><span class="crayon-h"> </span><span class="crayon-sy">\</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227ce066447422-20"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-e">gfxterm_menu</span><span class="crayon-h"> </span><span class="crayon-e">test</span><span class="crayon-h"> </span><span class="crayon-e">all_video</span><span class="crayon-h"> </span><span class="crayon-e">loadenv</span><span class="crayon-h"> </span><span class="crayon-e">exfat</span><span class="crayon-h"> </span><span class="crayon-e">ext2</span><span class="crayon-h"> </span><span class="crayon-e">ntfs</span><span class="crayon-h"> </span><span class="crayon-e">btrfs</span><span class="crayon-h"> </span><span class="crayon-e">hfsplus</span><span class="crayon-h"> </span><span class="crayon-e">udf</span></div><div class="crayon-line" id="crayon-5a89df6c227ce066447422-21">&nbsp;</div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227ce066447422-22"><span class="crayon-p"># Create grub config</span></div><div class="crayon-line" id="crayon-5a89df6c227ce066447422-23"><span class="crayon-e">cat</span><span class="crayon-h"> </span><span class="crayon-o">&lt;&lt;</span><span class="crayon-e">GRUBCFG</span><span class="crayon-h"> </span><span class="crayon-o">&gt;</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-sy">{</span><span class="crayon-v">MOUNTDIR</span><span class="crayon-sy">}</span><span class="crayon-o">/</span><span class="crayon-v">EFI</span><span class="crayon-o">/</span><span class="crayon-v">BOOT</span><span class="crayon-o">/</span><span class="crayon-v">grub</span><span class="crayon-sy">.</span><span class="crayon-e">cfg</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227ce066447422-24"><span class="crayon-v">search</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-e">label </span><span class="crayon-v">demoroot</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-e">set </span><span class="crayon-v">prefix</span><span class="crayon-h"> </span><span class="crayon-p"># &lt;&lt; Note again, this searches by the 'demoroot' label!</span></div><div class="crayon-line" id="crayon-5a89df6c227ce066447422-25"><span class="crayon-e">configfile</span><span class="crayon-h"> </span><span class="crayon-sy">(</span><span class="crayon-sy">\</span><span class="crayon-sy">$</span><span class="crayon-v">prefix</span><span class="crayon-sy">)</span><span class="crayon-o">/</span><span class="crayon-v">boot</span><span class="crayon-o">/</span><span class="crayon-v">grub</span><span class="crayon-o">/</span><span class="crayon-v">grub</span><span class="crayon-sy">.</span><span class="crayon-e">cfg</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227ce066447422-26"><span class="crayon-e">GRUBCFG</span></div><div class="crayon-line" id="crayon-5a89df6c227ce066447422-27">&nbsp;</div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227ce066447422-28"><span class="crayon-p"># Unmount and clean up</span></div><div class="crayon-line" id="crayon-5a89df6c227ce066447422-29"><span class="crayon-e">umount</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-sy">{</span><span class="crayon-v">MOUNTDIR</span><span class="crayon-sy">}</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227ce066447422-30"><span class="crayon-e">losetup</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-e">d</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-sy">{</span><span class="crayon-v">LOOPDEV</span><span class="crayon-sy">}</span></div></div></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0014 seconds] -->
+<p></p>
+<p>After that, the EFI partition should contain the two files <tt>/EFI/BOOT/bootx64.efi</tt> and <tt>/EFI/BOOT/grub.cfg</tt>. You can verify that like this:</p>
+<p></p><!-- Crayon Syntax Highlighter v_2.7.2_beta -->
+
+		<div id="crayon-5a89df6c227d3070391901" class="crayon-syntax crayon-theme-github crayon-font-monospace crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-always" style=" margin-top: 12px; margin-bottom: 12px; font-size: 12px !important; line-height: 15px !important;">
+		
+			<div class="crayon-toolbar" data-settings=" show" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><span class="crayon-title"></span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button" title="Toggle Line Numbers"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="Toggle Plain Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="Toggle Line Wrap"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="Expand Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="Copy"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="Open Code In New Window"><div class="crayon-button-icon"></div></div></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea wrap="soft" class="crayon-plain print-no" data-settings="dblclick" readonly style="-moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4; font-size: 12px !important; line-height: 15px !important;">
+# Loop sparse file
+LOOPDEV=$(losetup --find --show test.img)
+partprobe ${LOOPDEV}
+ 
+# Mount EFI partition
+MOUNTDIR=$(mktemp -d -t demoXXXXXX)
+mount ${LOOPDEV}p2 $MOUNTDIR
+
+# List things
+(cd $MOUNTDIR; find .)
+
+# Should output this:
+# ./EFI
+# ./EFI/BOOT
+# ./EFI/BOOT/bootx64.efi
+# ./EFI/BOOT/grub.cfg
+
+# Unmount and clean up
+umount ${MOUNTDIR}
+losetup -d ${LOOPDEV}
+rmdir ${MOUNTDIR}</textarea></div>
+			<div class="crayon-main" style=" max-height: 500px;">
+				<table class="crayon-table">
+					<tr class="crayon-row">
+				<td class="crayon-nums " data-settings="show">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-5a89df6c227d3070391901-1">1</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d3070391901-2">2</div><div class="crayon-num" data-line="crayon-5a89df6c227d3070391901-3">3</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d3070391901-4">4</div><div class="crayon-num" data-line="crayon-5a89df6c227d3070391901-5">5</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d3070391901-6">6</div><div class="crayon-num" data-line="crayon-5a89df6c227d3070391901-7">7</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d3070391901-8">8</div><div class="crayon-num" data-line="crayon-5a89df6c227d3070391901-9">9</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d3070391901-10">10</div><div class="crayon-num" data-line="crayon-5a89df6c227d3070391901-11">11</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d3070391901-12">12</div><div class="crayon-num" data-line="crayon-5a89df6c227d3070391901-13">13</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d3070391901-14">14</div><div class="crayon-num" data-line="crayon-5a89df6c227d3070391901-15">15</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d3070391901-16">16</div><div class="crayon-num" data-line="crayon-5a89df6c227d3070391901-17">17</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d3070391901-18">18</div><div class="crayon-num" data-line="crayon-5a89df6c227d3070391901-19">19</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d3070391901-20">20</div><div class="crayon-num" data-line="crayon-5a89df6c227d3070391901-21">21</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-5a89df6c227d3070391901-1"><span class="crayon-p"># Loop sparse file</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d3070391901-2"><span class="crayon-v">LOOPDEV</span><span class="crayon-o">=</span><span class="crayon-sy">$</span><span class="crayon-sy">(</span><span class="crayon-v">losetup</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-v">find</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-e">show </span><span class="crayon-v">test</span><span class="crayon-sy">.</span><span class="crayon-v">img</span><span class="crayon-sy">)</span></div><div class="crayon-line" id="crayon-5a89df6c227d3070391901-3"><span class="crayon-e">partprobe</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-sy">{</span><span class="crayon-v">LOOPDEV</span><span class="crayon-sy">}</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d3070391901-4"><span class="crayon-h"> </span></div><div class="crayon-line" id="crayon-5a89df6c227d3070391901-5"><span class="crayon-p"># Mount EFI partition</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d3070391901-6"><span class="crayon-v">MOUNTDIR</span><span class="crayon-o">=</span><span class="crayon-sy">$</span><span class="crayon-sy">(</span><span class="crayon-v">mktemp</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-v">d</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-i">t</span><span class="crayon-h"> </span><span class="crayon-v">demoXXXXXX</span><span class="crayon-sy">)</span></div><div class="crayon-line" id="crayon-5a89df6c227d3070391901-7"><span class="crayon-e">mount</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-sy">{</span><span class="crayon-v">LOOPDEV</span><span class="crayon-sy">}</span><span class="crayon-i">p2</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-v">MOUNTDIR</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d3070391901-8">&nbsp;</div><div class="crayon-line" id="crayon-5a89df6c227d3070391901-9"><span class="crayon-p"># List things</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d3070391901-10"><span class="crayon-sy">(</span><span class="crayon-i">cd</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-v">MOUNTDIR</span><span class="crayon-sy">;</span><span class="crayon-h"> </span><span class="crayon-i">find</span><span class="crayon-h"> </span><span class="crayon-sy">.</span><span class="crayon-sy">)</span></div><div class="crayon-line" id="crayon-5a89df6c227d3070391901-11">&nbsp;</div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d3070391901-12"><span class="crayon-p"># Should output this:</span></div><div class="crayon-line" id="crayon-5a89df6c227d3070391901-13"><span class="crayon-p"># ./EFI</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d3070391901-14"><span class="crayon-p"># ./EFI/BOOT</span></div><div class="crayon-line" id="crayon-5a89df6c227d3070391901-15"><span class="crayon-p"># ./EFI/BOOT/bootx64.efi</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d3070391901-16"><span class="crayon-p"># ./EFI/BOOT/grub.cfg</span></div><div class="crayon-line" id="crayon-5a89df6c227d3070391901-17">&nbsp;</div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d3070391901-18"><span class="crayon-p"># Unmount and clean up</span></div><div class="crayon-line" id="crayon-5a89df6c227d3070391901-19"><span class="crayon-e">umount</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-sy">{</span><span class="crayon-v">MOUNTDIR</span><span class="crayon-sy">}</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d3070391901-20"><span class="crayon-e">losetup</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-e">d</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-sy">{</span><span class="crayon-v">LOOPDEV</span><span class="crayon-sy">}</span></div><div class="crayon-line" id="crayon-5a89df6c227d3070391901-21"><span class="crayon-e">rmdir</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-sy">{</span><span class="crayon-v">MOUNTDIR</span><span class="crayon-sy">}</span></div></div></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0004 seconds] -->
+<p></p>
+<p>That&#8217;s it. You should now be able to boot this image via UEFI. I always test this with KVM and <a href="http://www.tianocore.org/ovmf/">OVMF</a>:</p>
+<p></p><!-- Crayon Syntax Highlighter v_2.7.2_beta -->
+
+		<div id="crayon-5a89df6c227d4335477925" class="crayon-syntax crayon-theme-github crayon-font-monospace crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-always" style=" margin-top: 12px; margin-bottom: 12px; font-size: 12px !important; line-height: 15px !important;">
+		
+			<div class="crayon-toolbar" data-settings=" show" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><span class="crayon-title">Booting the image via UEFI/EFI</span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button" title="Toggle Line Numbers"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="Toggle Plain Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="Toggle Line Wrap"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="Expand Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="Copy"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="Open Code In New Window"><div class="crayon-button-icon"></div></div><span class="crayon-language">Shell</span></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea wrap="soft" class="crayon-plain print-no" data-settings="dblclick" readonly style="-moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4; font-size: 12px !important; line-height: 15px !important;">
+apt-get install ovmf -y --force-yes
+kvm --bios /usr/share/qemu/OVMF.fd -net none -drive format=raw,file=test.img -serial stdio -m 4G -cpu host -smp 2</textarea></div>
+			<div class="crayon-main" style=" max-height: 500px;">
+				<table class="crayon-table">
+					<tr class="crayon-row">
+				<td class="crayon-nums " data-settings="show">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-5a89df6c227d4335477925-1">1</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d4335477925-2">2</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-5a89df6c227d4335477925-1"><span class="crayon-v">apt</span><span class="crayon-o">-</span><span class="crayon-r">get</span><span class="crayon-h"> </span><span class="crayon-e">install </span><span class="crayon-v">ovmf</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-v">y</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-v">force</span><span class="crayon-o">-</span><span class="crayon-e">yes</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d4335477925-2"><span class="crayon-v">kvm</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-v">bios</span><span class="crayon-h"> </span><span class="crayon-o">/</span><span class="crayon-v">usr</span><span class="crayon-o">/</span><span class="crayon-v">share</span><span class="crayon-o">/</span><span class="crayon-v">qemu</span><span class="crayon-o">/</span><span class="crayon-v">OVMF</span><span class="crayon-e">.fd</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-e">net </span><span class="crayon-v">none</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-e">drive </span><span class="crayon-v">format</span><span class="crayon-o">=</span><span class="crayon-v">raw</span><span class="crayon-sy">,</span><span class="crayon-r">file</span><span class="crayon-o">=</span><span class="crayon-r">test</span><span class="crayon-e">.img</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-e">serial </span><span class="crayon-v">stdio</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-i">m</span><span class="crayon-h"> </span><span class="crayon-cn">4G</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-e">cpu </span><span class="crayon-v">host</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-i">smp</span><span class="crayon-h"> </span><span class="crayon-cn">2</span></div></div></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0003 seconds] -->
+<p></p>
+<h3 id="One-script-to-do-it-all">5. One script to do it all</h3>
+<p>If you are an impatient man/woman, then you may just want to run the following script to do all of this in one go. You&#8217;ll of course have to adjust it to your needs for production use.</p>
+<p>The script can be called in two ways:</p>
+<p></p><!-- Crayon Syntax Highlighter v_2.7.2_beta -->
+
+		<div id="crayon-5a89df6c227d6888326039" class="crayon-syntax crayon-theme-github crayon-font-monospace crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-always" style=" margin-top: 12px; margin-bottom: 12px; font-size: 12px !important; line-height: 15px !important;">
+		
+			<div class="crayon-toolbar" data-settings=" show" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><span class="crayon-title">Examples on how to use the mkbiosefi script</span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button" title="Toggle Line Numbers"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="Toggle Plain Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="Toggle Line Wrap"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="Expand Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="Copy"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="Open Code In New Window"><div class="crayon-button-icon"></div></div><span class="crayon-language">Shell</span></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea wrap="soft" class="crayon-plain print-no" data-settings="dblclick" readonly style="-moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4; font-size: 12px !important; line-height: 15px !important;">
+# Makes a BIOS/UEFI bootable test.img using "demoroot" as OS partition label
+# and create a minimal chroot via debootstrap in the "chroot/" folder to do so.
+./mkbiosefi test.img demoroot
+
+# Makes a BIOS/UEFI bootable test.img using "demoroot" as OS partition label,
+# but re-uses the existing "chroot/" folder (this is faster!)
+./mkbiosefi test.img demoroot chroot/
+
+# If you want to use your own image file, you may create it beforehand and loop it
+truncate -s 40G my.img
+myloop=$(losetup --find --show my.img)
+./mkbiosefi $myloop demo chroot/
+
+# Or use a raw disk, of course
+./mkbiosefi /dev/sdX demo chroot/</textarea></div>
+			<div class="crayon-main" style=" max-height: 500px;">
+				<table class="crayon-table">
+					<tr class="crayon-row">
+				<td class="crayon-nums " data-settings="show">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-5a89df6c227d6888326039-1">1</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d6888326039-2">2</div><div class="crayon-num" data-line="crayon-5a89df6c227d6888326039-3">3</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d6888326039-4">4</div><div class="crayon-num" data-line="crayon-5a89df6c227d6888326039-5">5</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d6888326039-6">6</div><div class="crayon-num" data-line="crayon-5a89df6c227d6888326039-7">7</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d6888326039-8">8</div><div class="crayon-num" data-line="crayon-5a89df6c227d6888326039-9">9</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d6888326039-10">10</div><div class="crayon-num" data-line="crayon-5a89df6c227d6888326039-11">11</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d6888326039-12">12</div><div class="crayon-num" data-line="crayon-5a89df6c227d6888326039-13">13</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d6888326039-14">14</div><div class="crayon-num" data-line="crayon-5a89df6c227d6888326039-15">15</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-5a89df6c227d6888326039-1"><span class="crayon-c"># Makes a BIOS/UEFI bootable test.img using "demoroot" as OS partition label</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d6888326039-2"><span class="crayon-c"># and create a minimal chroot via debootstrap in the "chroot/" folder to do so.</span></div><div class="crayon-line" id="crayon-5a89df6c227d6888326039-3"><span class="crayon-sy">.</span><span class="crayon-o">/</span><span class="crayon-e">mkbiosefi </span><span class="crayon-r">test</span><span class="crayon-e">.img</span><span class="crayon-h"> </span><span class="crayon-v">demoroot</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d6888326039-4">&nbsp;</div><div class="crayon-line" id="crayon-5a89df6c227d6888326039-5"><span class="crayon-c"># Makes a BIOS/UEFI bootable test.img using "demoroot" as OS partition label,</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d6888326039-6"><span class="crayon-c"># but re-uses the existing "chroot/" folder (this is faster!)</span></div><div class="crayon-line" id="crayon-5a89df6c227d6888326039-7"><span class="crayon-sy">.</span><span class="crayon-o">/</span><span class="crayon-e">mkbiosefi </span><span class="crayon-r">test</span><span class="crayon-e">.img</span><span class="crayon-h"> </span><span class="crayon-e">demoroot </span><span class="crayon-v">chroot</span><span class="crayon-o">/</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d6888326039-8">&nbsp;</div><div class="crayon-line" id="crayon-5a89df6c227d6888326039-9"><span class="crayon-c"># If you want to use your own image file, you may create it beforehand and loop it</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d6888326039-10"><span class="crayon-v">truncate</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-i">s</span><span class="crayon-h"> </span><span class="crayon-cn">40G</span><span class="crayon-h"> </span><span class="crayon-v">my</span><span class="crayon-e">.img</span></div><div class="crayon-line" id="crayon-5a89df6c227d6888326039-11"><span class="crayon-v">myloop</span><span class="crayon-o">=</span><span class="crayon-sy">$</span><span class="crayon-sy">(</span><span class="crayon-v">losetup</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-r">find</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-e">show </span><span class="crayon-v">my</span><span class="crayon-e">.img</span><span class="crayon-sy">)</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d6888326039-12"><span class="crayon-sy">.</span><span class="crayon-o">/</span><span class="crayon-i">mkbiosefi</span><span class="crayon-h"> </span><span class="crayon-v">$myloop</span><span class="crayon-h"> </span><span class="crayon-e">demo </span><span class="crayon-v">chroot</span><span class="crayon-o">/</span></div><div class="crayon-line" id="crayon-5a89df6c227d6888326039-13">&nbsp;</div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d6888326039-14"><span class="crayon-c"># Or use a raw disk, of course</span></div><div class="crayon-line" id="crayon-5a89df6c227d6888326039-15"><span class="crayon-sy">.</span><span class="crayon-o">/</span><span class="crayon-v">mkbiosefi</span><span class="crayon-h"> </span><span class="crayon-o">/</span><span class="crayon-v">dev</span><span class="crayon-o">/</span><span class="crayon-e">sdX </span><span class="crayon-e">demo </span><span class="crayon-v">chroot</span><span class="crayon-o">/</span></div></div></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0003 seconds] -->
+<p></p>
+<p>Here&#8217;s the script:</p>
+<p></p><!-- Crayon Syntax Highlighter v_2.7.2_beta -->
+
+		<div id="crayon-5a89df6c227d7368282566" class="crayon-syntax crayon-theme-github crayon-font-monospace crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-always" style=" margin-top: 12px; margin-bottom: 12px; font-size: 12px !important; line-height: 15px !important;">
+		
+			<div class="crayon-toolbar" data-settings=" show" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><span class="crayon-title">mkbiosefi script that can be used to create a BIOS/UEFI bootable disk/image</span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button" title="Toggle Line Numbers"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="Toggle Plain Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="Toggle Line Wrap"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="Expand Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="Copy"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="Open Code In New Window"><div class="crayon-button-icon"></div></div><span class="crayon-language">Shell</span></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea wrap="soft" class="crayon-plain print-no" data-settings="dblclick" readonly style="-moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4; font-size: 12px !important; line-height: 15px !important;">
+#!/bin/bash 
+
+DISK=$1
+BOOTLABEL=$2
+ROOTDIR=$3
+
+if [ -z "$DISK" -o -z "$BOOTLABEL" ]; then
+  echo "Syntax: $0 &lt;image|disk&gt; &lt;root-label&gt; [&lt;chroot-dir&gt;]"
+  exit 1
+fi
+
+if [ "$UID" != "0" ]; then
+  echo "Must be root."
+  exit 1
+fi
+
+# Exit on errors
+set -xe
+
+# Install dependencies
+apt-get install -y --force-yes \
+  debootstrap \
+  gdisk \
+  rsync \
+  grub-efi-amd64-bin \
+  e2fsprogs
+
+# Create chroot (if requested)
+if [ -z "$ROOTDIR" ]; then
+  ROOTDIR=chroot/
+  
+  # Bootstrap minimal system
+  debootstrap --variant=minbase xenial chroot
+ 
+  # Install kernel and grub
+  for d in dev sys proc; do mount --bind /$d chroot/$d; done
+  DEBIAN_FRONTEND=noninteractive chroot chroot apt-get install linux-image-generic grub-pc -y --force-yes
+  umount chroot/{dev,proc,sys}
+fi
+
+# Create sparse file (if we're not dealing with a block device)
+if [ ! -b "${DISK}" ]; then
+  truncate --size 30G $DISK
+fi
+
+# Create partition layout
+sgdisk --clear \
+  --new 1::+1M --typecode=1:ef02 --change-name=1:'BIOS boot partition' \
+  --new 2::+100M --typecode=2:ef00 --change-name=2:'EFI System' \
+  --new 3::-0 --typecode=3:8300 --change-name=3:'Linux root filesystem' \
+  $DISK 
+
+# Loop sparse file
+LOOPDEV=$(losetup --find --show $DISK)
+partprobe ${LOOPDEV}
+
+# Create filesystems
+mkfs.fat -F32 ${LOOPDEV}p2
+mkfs.ext4 -F -L "${BOOTLABEL}" ${LOOPDEV}p3
+
+# Mount OS partition, copy chroot, install grub
+MOUNTDIR=$(mktemp -d -t demoXXXXXX)
+mount ${LOOPDEV}p3 ${MOUNTDIR}
+
+rsync -a ${ROOTDIR}/ ${MOUNTDIR}/
+
+for d in dev sys proc; do mount --bind /$d ${MOUNTDIR}/$d; done
+chroot ${MOUNTDIR}/ grub-install --modules="ext2 part_gpt" ${LOOPDEV}
+chroot ${MOUNTDIR}/ update-grub
+
+umount $MOUNTDIR/{dev,proc,sys,}
+rmdir $MOUNTDIR
+
+# Mount EFI partition
+MOUNTDIR=$(mktemp -d -t demoXXXXXX)
+mount ${LOOPDEV}p2 $MOUNTDIR
+ 
+mkdir -p ${MOUNTDIR}/EFI/BOOT
+grub-mkimage \
+  -d /usr/lib/grub/x86_64-efi \
+  -o ${MOUNTDIR}/EFI/BOOT/bootx64.efi \
+  -p /efi/boot \
+  -O x86_64-efi \
+    fat iso9660 part_gpt part_msdos normal boot linux configfile loopback chain efifwsetup efi_gop \
+    efi_uga ls search search_label search_fs_uuid search_fs_file gfxterm gfxterm_background \
+    gfxterm_menu test all_video loadenv exfat ext2 ntfs btrfs hfsplus udf
+ 
+# Create grub config
+cat &lt;&lt;GRUBCFG &gt; ${MOUNTDIR}/EFI/BOOT/grub.cfg
+search --label "${BOOTLABEL}" --set prefix
+configfile (\$prefix)/boot/grub/grub.cfg
+GRUBCFG
+
+umount $MOUNTDIR
+rmdir $MOUNTDIR
+
+# Remove loop device
+sync ${LOOPDEV} 
+losetup -d ${LOOPDEV}
+
+echo "Done. ${DISK} is ready to be booted via BIOS and UEFI."</textarea></div>
+			<div class="crayon-main" style=" max-height: 500px;">
+				<table class="crayon-table">
+					<tr class="crayon-row">
+				<td class="crayon-nums " data-settings="show">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-1">1</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-2">2</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-3">3</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-4">4</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-5">5</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-6">6</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-7">7</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-8">8</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-9">9</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-10">10</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-11">11</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-12">12</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-13">13</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-14">14</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-15">15</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-16">16</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-17">17</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-18">18</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-19">19</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-20">20</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-21">21</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-22">22</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-23">23</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-24">24</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-25">25</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-26">26</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-27">27</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-28">28</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-29">29</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-30">30</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-31">31</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-32">32</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-33">33</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-34">34</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-35">35</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-36">36</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-37">37</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-38">38</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-39">39</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-40">40</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-41">41</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-42">42</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-43">43</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-44">44</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-45">45</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-46">46</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-47">47</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-48">48</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-49">49</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-50">50</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-51">51</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-52">52</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-53">53</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-54">54</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-55">55</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-56">56</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-57">57</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-58">58</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-59">59</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-60">60</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-61">61</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-62">62</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-63">63</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-64">64</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-65">65</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-66">66</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-67">67</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-68">68</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-69">69</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-70">70</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-71">71</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-72">72</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-73">73</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-74">74</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-75">75</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-76">76</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-77">77</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-78">78</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-79">79</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-80">80</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-81">81</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-82">82</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-83">83</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-84">84</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-85">85</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-86">86</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-87">87</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-88">88</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-89">89</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-90">90</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-91">91</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-92">92</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-93">93</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-94">94</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-95">95</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-96">96</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-97">97</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-98">98</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-99">99</div><div class="crayon-num crayon-striped-num" data-line="crayon-5a89df6c227d7368282566-100">100</div><div class="crayon-num" data-line="crayon-5a89df6c227d7368282566-101">101</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-5a89df6c227d7368282566-1"><span class="crayon-p">#!/bin/bash </span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-2">&nbsp;</div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-3"><span class="crayon-v">DISK</span><span class="crayon-o">=</span><span class="crayon-sy">$</span><span class="crayon-cn">1</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-4"><span class="crayon-v">BOOTLABEL</span><span class="crayon-o">=</span><span class="crayon-sy">$</span><span class="crayon-cn">2</span></div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-5"><span class="crayon-v">ROOTDIR</span><span class="crayon-o">=</span><span class="crayon-sy">$</span><span class="crayon-cn">3</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-6">&nbsp;</div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-7"><span class="crayon-st">if</span><span class="crayon-h"> </span><span class="crayon-sy">[</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-i">z</span><span class="crayon-h"> </span><span class="crayon-s">"$DISK"</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-v">o</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-i">z</span><span class="crayon-h"> </span><span class="crayon-s">"$BOOTLABEL"</span><span class="crayon-h"> </span><span class="crayon-sy">]</span><span class="crayon-sy">;</span><span class="crayon-h"> </span><span class="crayon-st">then</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-8"><span class="crayon-h">&nbsp;&nbsp;</span><span class="crayon-r">echo</span><span class="crayon-h"> </span><span class="crayon-s">"Syntax: $0 &lt;image|disk&gt; &lt;root-label&gt; [&lt;chroot-dir&gt;]"</span></div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-9"><span class="crayon-h">&nbsp;&nbsp;</span><span class="crayon-r">exit</span><span class="crayon-h"> </span><span class="crayon-cn">1</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-10"><span class="crayon-st">fi</span></div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-11">&nbsp;</div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-12"><span class="crayon-st">if</span><span class="crayon-h"> </span><span class="crayon-sy">[</span><span class="crayon-h"> </span><span class="crayon-s">"$UID"</span><span class="crayon-h"> </span><span class="crayon-o">!=</span><span class="crayon-h"> </span><span class="crayon-s">"0"</span><span class="crayon-h"> </span><span class="crayon-sy">]</span><span class="crayon-sy">;</span><span class="crayon-h"> </span><span class="crayon-st">then</span></div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-13"><span class="crayon-h">&nbsp;&nbsp;</span><span class="crayon-r">echo</span><span class="crayon-h"> </span><span class="crayon-s">"Must be root."</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-14"><span class="crayon-h">&nbsp;&nbsp;</span><span class="crayon-r">exit</span><span class="crayon-h"> </span><span class="crayon-cn">1</span></div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-15"><span class="crayon-st">fi</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-16">&nbsp;</div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-17"><span class="crayon-c"># Exit on errors</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-18"><span class="crayon-v">set</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-v">xe</span></div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-19">&nbsp;</div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-20"><span class="crayon-c"># Install dependencies</span></div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-21"><span class="crayon-v">apt</span><span class="crayon-o">-</span><span class="crayon-r">get</span><span class="crayon-h"> </span><span class="crayon-v">install</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-v">y</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-v">force</span><span class="crayon-o">-</span><span class="crayon-i">yes</span><span class="crayon-h"> </span><span class="crayon-sy">\</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-22"><span class="crayon-h">&nbsp;&nbsp;</span><span class="crayon-i">debootstrap</span><span class="crayon-h"> </span><span class="crayon-sy">\</span></div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-23"><span class="crayon-h">&nbsp;&nbsp;</span><span class="crayon-i">gdisk</span><span class="crayon-h"> </span><span class="crayon-sy">\</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-24"><span class="crayon-h">&nbsp;&nbsp;</span><span class="crayon-i">rsync</span><span class="crayon-h"> </span><span class="crayon-sy">\</span></div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-25"><span class="crayon-h">&nbsp;&nbsp;</span><span class="crayon-v">grub</span><span class="crayon-o">-</span><span class="crayon-v">efi</span><span class="crayon-o">-</span><span class="crayon-v">amd64</span><span class="crayon-o">-</span><span class="crayon-i">bin</span><span class="crayon-h"> </span><span class="crayon-sy">\</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-26"><span class="crayon-h">&nbsp;&nbsp;</span><span class="crayon-v">e2fsprogs</span></div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-27">&nbsp;</div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-28"><span class="crayon-c"># Create chroot (if requested)</span></div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-29"><span class="crayon-st">if</span><span class="crayon-h"> </span><span class="crayon-sy">[</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-i">z</span><span class="crayon-h"> </span><span class="crayon-s">"$ROOTDIR"</span><span class="crayon-h"> </span><span class="crayon-sy">]</span><span class="crayon-sy">;</span><span class="crayon-h"> </span><span class="crayon-st">then</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-30"><span class="crayon-h">&nbsp;&nbsp;</span><span class="crayon-v">ROOTDIR</span><span class="crayon-o">=</span><span class="crayon-v">chroot</span><span class="crayon-o">/</span></div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-31"><span class="crayon-h">&nbsp;&nbsp;</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-32"><span class="crayon-h">&nbsp;&nbsp;</span><span class="crayon-c"># Bootstrap minimal system</span></div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-33"><span class="crayon-h">&nbsp;&nbsp;</span><span class="crayon-v">debootstrap</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-v">variant</span><span class="crayon-o">=</span><span class="crayon-e">minbase </span><span class="crayon-e">xenial </span><span class="crayon-v">chroot</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-34"><span class="crayon-h"> </span></div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-35"><span class="crayon-h">&nbsp;&nbsp;</span><span class="crayon-c"># Install kernel and grub</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-36"><span class="crayon-h">&nbsp;&nbsp;</span><span class="crayon-st">for</span><span class="crayon-h"> </span><span class="crayon-i">d</span><span class="crayon-h"> </span><span class="crayon-st">in</span><span class="crayon-h"> </span><span class="crayon-e">dev </span><span class="crayon-e">sys </span><span class="crayon-v">proc</span><span class="crayon-sy">;</span><span class="crayon-h"> </span><span class="crayon-st">do</span><span class="crayon-h"> </span><span class="crayon-v">mount</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-v">bind</span><span class="crayon-h"> </span><span class="crayon-o">/</span><span class="crayon-v">$d</span><span class="crayon-h"> </span><span class="crayon-v">chroot</span><span class="crayon-o">/</span><span class="crayon-v">$d</span><span class="crayon-sy">;</span><span class="crayon-h"> </span><span class="crayon-st">done</span></div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-37"><span class="crayon-h">&nbsp;&nbsp;</span><span class="crayon-v">DEBIAN_FRONTEND</span><span class="crayon-o">=</span><span class="crayon-e">noninteractive</span><span class="crayon-h"> </span><span class="crayon-e">chroot</span><span class="crayon-h"> </span><span class="crayon-e">chroot</span><span class="crayon-h"> </span><span class="crayon-e">apt</span><span class="crayon-o">-</span><span class="crayon-r">get</span><span class="crayon-h"> </span><span class="crayon-e">install</span><span class="crayon-h"> </span><span class="crayon-e">linux</span><span class="crayon-o">-</span><span class="crayon-e">image</span><span class="crayon-o">-</span><span class="crayon-e">generic</span><span class="crayon-h"> </span><span class="crayon-e">grub</span><span class="crayon-o">-</span><span class="crayon-e">pc</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-e">y</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-e">force</span><span class="crayon-o">-</span><span class="crayon-e">yes</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-38"><span class="crayon-h">&nbsp;&nbsp;</span><span class="crayon-e">umount</span><span class="crayon-h"> </span><span class="crayon-e">chroot</span><span class="crayon-o">/</span><span class="crayon-sy">{</span><span class="crayon-v">dev</span><span class="crayon-sy">,</span><span class="crayon-v">proc</span><span class="crayon-sy">,</span><span class="crayon-v">sys</span><span class="crayon-sy">}</span></div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-39"><span class="crayon-st">fi</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-40">&nbsp;</div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-41"><span class="crayon-c"># Create sparse file (if we're not dealing with a block device)</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-42"><span class="crayon-st">if</span><span class="crayon-h"> </span><span class="crayon-sy">[</span><span class="crayon-h"> </span><span class="crayon-o">!</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-i">b</span><span class="crayon-h"> </span><span class="crayon-s">"${DISK}"</span><span class="crayon-h"> </span><span class="crayon-sy">]</span><span class="crayon-sy">;</span><span class="crayon-h"> </span><span class="crayon-st">then</span></div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-43"><span class="crayon-h">&nbsp;&nbsp;</span><span class="crayon-v">truncate</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-i">size</span><span class="crayon-h"> </span><span class="crayon-cn">30G</span><span class="crayon-h"> </span><span class="crayon-v">$DISK</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-44"><span class="crayon-st">fi</span></div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-45">&nbsp;</div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-46"><span class="crayon-c"># Create partition layout</span></div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-47"><span class="crayon-v">sgdisk</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-r">clear</span><span class="crayon-h"> </span><span class="crayon-sy">\</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-48"><span class="crayon-h">&nbsp;&nbsp;</span><span class="crayon-o">--</span><span class="crayon-r">new</span><span class="crayon-h"> </span><span class="crayon-cn">1</span><span class="crayon-o">::</span><span class="crayon-o">+</span><span class="crayon-cn">1M</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-v">typecode</span><span class="crayon-o">=</span><span class="crayon-cn">1</span><span class="crayon-o">:</span><span class="crayon-v">ef02</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-v">change</span><span class="crayon-o">-</span><span class="crayon-v">name</span><span class="crayon-o">=</span><span class="crayon-cn">1</span><span class="crayon-o">:</span><span class="crayon-s">'BIOS boot partition'</span><span class="crayon-h"> </span><span class="crayon-sy">\</span></div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-49"><span class="crayon-h">&nbsp;&nbsp;</span><span class="crayon-o">--</span><span class="crayon-r">new</span><span class="crayon-h"> </span><span class="crayon-cn">2</span><span class="crayon-o">::</span><span class="crayon-o">+</span><span class="crayon-cn">100M</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-v">typecode</span><span class="crayon-o">=</span><span class="crayon-cn">2</span><span class="crayon-o">:</span><span class="crayon-v">ef00</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-v">change</span><span class="crayon-o">-</span><span class="crayon-v">name</span><span class="crayon-o">=</span><span class="crayon-cn">2</span><span class="crayon-o">:</span><span class="crayon-s">'EFI System'</span><span class="crayon-h"> </span><span class="crayon-sy">\</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-50"><span class="crayon-h">&nbsp;&nbsp;</span><span class="crayon-o">--</span><span class="crayon-r">new</span><span class="crayon-h"> </span><span class="crayon-cn">3</span><span class="crayon-o">::</span><span class="crayon-o">-</span><span class="crayon-cn">0</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-v">typecode</span><span class="crayon-o">=</span><span class="crayon-cn">3</span><span class="crayon-o">:</span><span class="crayon-cn">8300</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-v">change</span><span class="crayon-o">-</span><span class="crayon-v">name</span><span class="crayon-o">=</span><span class="crayon-cn">3</span><span class="crayon-o">:</span><span class="crayon-s">'Linux root filesystem'</span><span class="crayon-h"> </span><span class="crayon-sy">\</span></div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-51"><span class="crayon-h">&nbsp;&nbsp;</span><span class="crayon-v">$DISK</span><span class="crayon-h"> </span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-52">&nbsp;</div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-53"><span class="crayon-c"># Loop sparse file</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-54"><span class="crayon-v">LOOPDEV</span><span class="crayon-o">=</span><span class="crayon-sy">$</span><span class="crayon-sy">(</span><span class="crayon-v">losetup</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-r">find</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-i">show</span><span class="crayon-h"> </span><span class="crayon-v">$DISK</span><span class="crayon-sy">)</span></div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-55"><span class="crayon-e">partprobe</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-sy">{</span><span class="crayon-v">LOOPDEV</span><span class="crayon-sy">}</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-56">&nbsp;</div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-57"><span class="crayon-c"># Create filesystems</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-58"><span class="crayon-v">mkfs</span><span class="crayon-e">.fat</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-e">F32</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-sy">{</span><span class="crayon-v">LOOPDEV</span><span class="crayon-sy">}</span><span class="crayon-e">p2</span></div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-59"><span class="crayon-v">mkfs</span><span class="crayon-e">.ext4</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-v">F</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-i">L</span><span class="crayon-h"> </span><span class="crayon-s">"${BOOTLABEL}"</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-sy">{</span><span class="crayon-v">LOOPDEV</span><span class="crayon-sy">}</span><span class="crayon-v">p3</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-60">&nbsp;</div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-61"><span class="crayon-c"># Mount OS partition, copy chroot, install grub</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-62"><span class="crayon-v">MOUNTDIR</span><span class="crayon-o">=</span><span class="crayon-sy">$</span><span class="crayon-sy">(</span><span class="crayon-v">mktemp</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-v">d</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-i">t</span><span class="crayon-h"> </span><span class="crayon-v">demoXXXXXX</span><span class="crayon-sy">)</span></div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-63"><span class="crayon-e">mount</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-sy">{</span><span class="crayon-v">LOOPDEV</span><span class="crayon-sy">}</span><span class="crayon-e">p3</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-sy">{</span><span class="crayon-v">MOUNTDIR</span><span class="crayon-sy">}</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-64">&nbsp;</div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-65"><span class="crayon-e">rsync</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-e">a</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-sy">{</span><span class="crayon-v">ROOTDIR</span><span class="crayon-sy">}</span><span class="crayon-o">/</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-sy">{</span><span class="crayon-v">MOUNTDIR</span><span class="crayon-sy">}</span><span class="crayon-o">/</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-66">&nbsp;</div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-67"><span class="crayon-st">for</span><span class="crayon-h"> </span><span class="crayon-i">d</span><span class="crayon-h"> </span><span class="crayon-st">in</span><span class="crayon-h"> </span><span class="crayon-e">dev </span><span class="crayon-e">sys </span><span class="crayon-v">proc</span><span class="crayon-sy">;</span><span class="crayon-h"> </span><span class="crayon-st">do</span><span class="crayon-h"> </span><span class="crayon-e">mount</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-e">bind</span><span class="crayon-h"> </span><span class="crayon-o">/</span><span class="crayon-v">$d</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-sy">{</span><span class="crayon-v">MOUNTDIR</span><span class="crayon-sy">}</span><span class="crayon-o">/</span><span class="crayon-v">$d</span><span class="crayon-sy">;</span><span class="crayon-h"> </span><span class="crayon-st">done</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-68"><span class="crayon-e">chroot</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-sy">{</span><span class="crayon-v">MOUNTDIR</span><span class="crayon-sy">}</span><span class="crayon-o">/</span><span class="crayon-h"> </span><span class="crayon-v">grub</span><span class="crayon-o">-</span><span class="crayon-v">install</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-v">modules</span><span class="crayon-o">=</span><span class="crayon-s">"ext2 part_gpt"</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-sy">{</span><span class="crayon-v">LOOPDEV</span><span class="crayon-sy">}</span></div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-69"><span class="crayon-e">chroot</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-sy">{</span><span class="crayon-v">MOUNTDIR</span><span class="crayon-sy">}</span><span class="crayon-o">/</span><span class="crayon-h"> </span><span class="crayon-e">update</span><span class="crayon-o">-</span><span class="crayon-e">grub</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-70">&nbsp;</div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-71"><span class="crayon-e">umount</span><span class="crayon-h"> </span><span class="crayon-v">$MOUNTDIR</span><span class="crayon-o">/</span><span class="crayon-sy">{</span><span class="crayon-v">dev</span><span class="crayon-sy">,</span><span class="crayon-v">proc</span><span class="crayon-sy">,</span><span class="crayon-v">sys</span><span class="crayon-sy">,</span><span class="crayon-sy">}</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-72"><span class="crayon-r">rmdir</span><span class="crayon-h"> </span><span class="crayon-v">$MOUNTDIR</span></div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-73">&nbsp;</div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-74"><span class="crayon-c"># Mount EFI partition</span></div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-75"><span class="crayon-v">MOUNTDIR</span><span class="crayon-o">=</span><span class="crayon-sy">$</span><span class="crayon-sy">(</span><span class="crayon-v">mktemp</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-v">d</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-i">t</span><span class="crayon-h"> </span><span class="crayon-v">demoXXXXXX</span><span class="crayon-sy">)</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-76"><span class="crayon-e">mount</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-sy">{</span><span class="crayon-v">LOOPDEV</span><span class="crayon-sy">}</span><span class="crayon-e">p2</span><span class="crayon-h"> </span><span class="crayon-v">$MOUNTDIR</span></div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-77"><span class="crayon-h"> </span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-78"><span class="crayon-r">mkdir</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-e">p</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-sy">{</span><span class="crayon-v">MOUNTDIR</span><span class="crayon-sy">}</span><span class="crayon-o">/</span><span class="crayon-e">EFI</span><span class="crayon-o">/</span><span class="crayon-e">BOOT</span></div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-79"><span class="crayon-e">grub</span><span class="crayon-o">-</span><span class="crayon-e">mkimage</span><span class="crayon-h"> </span><span class="crayon-sy">\</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-80"><span class="crayon-h">&nbsp;&nbsp;</span><span class="crayon-o">-</span><span class="crayon-e">d</span><span class="crayon-h"> </span><span class="crayon-o">/</span><span class="crayon-e">usr</span><span class="crayon-o">/</span><span class="crayon-e">lib</span><span class="crayon-o">/</span><span class="crayon-e">grub</span><span class="crayon-o">/</span><span class="crayon-e">x86_64</span><span class="crayon-o">-</span><span class="crayon-e">efi</span><span class="crayon-h"> </span><span class="crayon-sy">\</span></div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-81"><span class="crayon-h">&nbsp;&nbsp;</span><span class="crayon-o">-</span><span class="crayon-e">o</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-sy">{</span><span class="crayon-v">MOUNTDIR</span><span class="crayon-sy">}</span><span class="crayon-o">/</span><span class="crayon-v">EFI</span><span class="crayon-o">/</span><span class="crayon-v">BOOT</span><span class="crayon-o">/</span><span class="crayon-v">bootx64</span><span class="crayon-e">.efi</span><span class="crayon-h"> </span><span class="crayon-sy">\</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-82"><span class="crayon-h">&nbsp;&nbsp;</span><span class="crayon-o">-</span><span class="crayon-e">p</span><span class="crayon-h"> </span><span class="crayon-o">/</span><span class="crayon-e">efi</span><span class="crayon-o">/</span><span class="crayon-e">boot</span><span class="crayon-h"> </span><span class="crayon-sy">\</span></div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-83"><span class="crayon-h">&nbsp;&nbsp;</span><span class="crayon-o">-</span><span class="crayon-e">O</span><span class="crayon-h"> </span><span class="crayon-e">x86_64</span><span class="crayon-o">-</span><span class="crayon-e">efi</span><span class="crayon-h"> </span><span class="crayon-sy">\</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-84"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-e">fat</span><span class="crayon-h"> </span><span class="crayon-e">iso9660</span><span class="crayon-h"> </span><span class="crayon-e">part_gpt</span><span class="crayon-h"> </span><span class="crayon-e">part_msdos</span><span class="crayon-h"> </span><span class="crayon-e">normal</span><span class="crayon-h"> </span><span class="crayon-e">boot</span><span class="crayon-h"> </span><span class="crayon-e">linux</span><span class="crayon-h"> </span><span class="crayon-e">configfile</span><span class="crayon-h"> </span><span class="crayon-e">loopback</span><span class="crayon-h"> </span><span class="crayon-e">chain</span><span class="crayon-h"> </span><span class="crayon-e">efifwsetup</span><span class="crayon-h"> </span><span class="crayon-e">efi_gop</span><span class="crayon-h"> </span><span class="crayon-sy">\</span></div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-85"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-e">efi_uga</span><span class="crayon-h"> </span><span class="crayon-r">ls</span><span class="crayon-h"> </span><span class="crayon-e">search</span><span class="crayon-h"> </span><span class="crayon-e">search_label</span><span class="crayon-h"> </span><span class="crayon-e">search_fs_uuid</span><span class="crayon-h"> </span><span class="crayon-e">search_fs_file</span><span class="crayon-h"> </span><span class="crayon-e">gfxterm</span><span class="crayon-h"> </span><span class="crayon-e">gfxterm_background</span><span class="crayon-h"> </span><span class="crayon-sy">\</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-86"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-e">gfxterm_menu</span><span class="crayon-h"> </span><span class="crayon-r">test</span><span class="crayon-h"> </span><span class="crayon-e">all_video</span><span class="crayon-h"> </span><span class="crayon-e">loadenv</span><span class="crayon-h"> </span><span class="crayon-e">exfat</span><span class="crayon-h"> </span><span class="crayon-e">ext2</span><span class="crayon-h"> </span><span class="crayon-e">ntfs</span><span class="crayon-h"> </span><span class="crayon-e">btrfs</span><span class="crayon-h"> </span><span class="crayon-e">hfsplus</span><span class="crayon-h"> </span><span class="crayon-e">udf</span></div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-87"><span class="crayon-h"> </span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-88"><span class="crayon-c"># Create grub config</span></div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-89"><span class="crayon-r">cat</span><span class="crayon-h"> </span><span class="crayon-o">&lt;&lt;</span><span class="crayon-e">GRUBCFG</span><span class="crayon-h"> </span><span class="crayon-o">&gt;</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-sy">{</span><span class="crayon-v">MOUNTDIR</span><span class="crayon-sy">}</span><span class="crayon-o">/</span><span class="crayon-v">EFI</span><span class="crayon-o">/</span><span class="crayon-v">BOOT</span><span class="crayon-o">/</span><span class="crayon-v">grub</span><span class="crayon-e">.cfg</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-90"><span class="crayon-v">search</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-i">label</span><span class="crayon-h"> </span><span class="crayon-s">"${BOOTLABEL}"</span><span class="crayon-h"> </span><span class="crayon-o">--</span><span class="crayon-e">set </span><span class="crayon-e">prefix</span></div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-91"><span class="crayon-e">configfile</span><span class="crayon-h"> </span><span class="crayon-sy">(</span><span class="crayon-sy">\</span><span class="crayon-v">$prefix</span><span class="crayon-sy">)</span><span class="crayon-o">/</span><span class="crayon-v">boot</span><span class="crayon-o">/</span><span class="crayon-v">grub</span><span class="crayon-o">/</span><span class="crayon-v">grub</span><span class="crayon-e">.cfg</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-92"><span class="crayon-e">GRUBCFG</span></div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-93">&nbsp;</div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-94"><span class="crayon-e">umount</span><span class="crayon-h"> </span><span class="crayon-v">$MOUNTDIR</span></div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-95"><span class="crayon-r">rmdir</span><span class="crayon-h"> </span><span class="crayon-v">$MOUNTDIR</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-96">&nbsp;</div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-97"><span class="crayon-c"># Remove loop device</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-98"><span class="crayon-e">sync</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-sy">{</span><span class="crayon-v">LOOPDEV</span><span class="crayon-sy">}</span><span class="crayon-h"> </span></div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-99"><span class="crayon-e">losetup</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-e">d</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-sy">{</span><span class="crayon-v">LOOPDEV</span><span class="crayon-sy">}</span></div><div class="crayon-line crayon-striped-line" id="crayon-5a89df6c227d7368282566-100">&nbsp;</div><div class="crayon-line" id="crayon-5a89df6c227d7368282566-101"><span class="crayon-r">echo</span><span class="crayon-h"> </span><span class="crayon-s">"Done. ${DISK} is ready to be booted via BIOS and UEFI."</span></div></div></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0027 seconds] -->
+<p></p>
+				
+				
+				
+				
+<!-- You can start editing here. -->
+
+<span id="ad_above_comments"></span>
+
+	
+	<div id="comments"><h3><span>3</span> Comments</h3></div>
+	
+	<ol class="commentlist">
+		  <li class="comment even thread-even depth-1">
+    <article id="comment-226787">
+      <header class="comment-author vcard">
+        <img alt='' src='https://secure.gravatar.com/avatar/49bba397bd61931b5f7e587db20ee953?s=65&#038;d=mm&#038;r=g' srcset="https://secure.gravatar.com/avatar/49bba397bd61931b5f7e587db20ee953?s=130&#038;d=mm&#038;r=g 2x" class='avatar avatar-65 photo' height='65' width='65' />        <cite class="fn"><a href='http://www.bbc.co.uk/rd' rel='external nofollow' class='url'>Mark Lomas</a></cite>  
+        <time datetime="2017-08-6"><a href="https://blog.heckel.xyz/2017/05/28/creating-a-bios-gpt-and-uefi-gpt-grub-bootable-linux-system/#comment-226787">August 6th, 2017 </a></time>
+              </header>
+      
+      <section class="comment_content">
+        <p>Hey Philipp,</p>
+<p>This is a great article, I found it super useful. Thanks :-)</p>
+<p>FYI, I had to apt-get the &#8216;udev&#8217; package because partprobe complained about &#8216;udevadm&#8217; being missing and I needed to apt-get &#8216;parted&#8217; so that partprobe was installed. I also added &#8216;&#8211;arch=amd64&#8217; to debootstrap because I wanted a 64bit distro, it seemed to default to &#8216;i386&#8217; which I assumed mean&#8217;t 32bit.</p>
+<p>My next step is to investigate the &#8216;live_boot&#8217; package to see if I can turn the distro into one that can install itself somewhere when booted and I&#8217;d like to find a way to squeeze the image size down from 30GB to something much smaller. Any ideas?</p>
+<p>Thanks once again for the article,</p>
+<p>Best regards<br />
+Mark</p>
+              </section>
+      
+    </article>
+    <br style="clear: both" />     
+	    
+    </li><!-- #comment-## -->
+  <li class="comment odd alt thread-odd thread-alt depth-1">
+    <article id="comment-232132">
+      <header class="comment-author vcard">
+        <img alt='' src='https://secure.gravatar.com/avatar/adf27afdf80122e5d7a065f172a54568?s=65&#038;d=mm&#038;r=g' srcset="https://secure.gravatar.com/avatar/adf27afdf80122e5d7a065f172a54568?s=130&#038;d=mm&#038;r=g 2x" class='avatar avatar-65 photo' height='65' width='65' />        <cite class="fn"><a href='http://cloonix.fr' rel='external nofollow' class='url'>Vincent Perrier</a></cite>  
+        <time datetime="2018-02-4"><a href="https://blog.heckel.xyz/2017/05/28/creating-a-bios-gpt-and-uefi-gpt-grub-bootable-linux-system/#comment-232132">February 4th, 2018 </a></time>
+              </header>
+      
+      <section class="comment_content">
+        <p>Is it possible to have a working system on a sparse file with only uefi, without any bios partition? Thanks a lot for your script!</p>
+              </section>
+      
+    </article>
+    <br style="clear: both" />     
+	    
+    </li><!-- #comment-## -->
+  <li class="comment byuser comment-author-admin bypostauthor even thread-even depth-1">
+    <article id="comment-232135">
+      <header class="comment-author vcard">
+        <img alt='' src='https://secure.gravatar.com/avatar/0f413b65bce44643e7fcbed130f23904?s=65&#038;d=mm&#038;r=g' srcset="https://secure.gravatar.com/avatar/0f413b65bce44643e7fcbed130f23904?s=130&#038;d=mm&#038;r=g 2x" class='avatar avatar-65 photo' height='65' width='65' />        <cite class="fn"><a href='http://www.philippheckel.com' rel='external nofollow' class='url'>Philipp C. Heckel</a></cite>  
+        <time datetime="2018-02-4"><a href="https://blog.heckel.xyz/2017/05/28/creating-a-bios-gpt-and-uefi-gpt-grub-bootable-linux-system/#comment-232135">February 4th, 2018 </a></time>
+              </header>
+      
+      <section class="comment_content">
+        <p>The BIOS partition is used by grub only for BIOS boot. If you want UEFI only all you need is the EFI partition. The EFI grub.cfg references the grub.cfg on the root partition, not the boot partition, so you should be good there. You&#8217;d have to adjust the script not to create a BIOS partition, obviously.</p>
+              </section>
+      
+    </article>
+    <br style="clear: both" />     
+	    
+    </li><!-- #comment-## -->
+	</ol>
+	
+	<div id="comment-nav">
+		<ul>
+	  		<li></li>
+	  		<li></li>
+		</ul>
+	</div>
+  
+	
+
+
+<section id="respond" class="respond-form">
+	<div id="comment-form-title"><h3>Leave a comment</h3></div>
+
+	<p>
+		I'd very much like to hear what you think of this post. Feel free to leave a comment. I usually respond within a day 
+		or two, sometimes even faster. I will not share or publish your e-mail address anywhere.
+	</p>
+			
+	<div id="cancel-comment-reply">
+		<p class="small"><a rel="nofollow" id="cancel-comment-reply-link" href="/2017/05/28/creating-a-bios-gpt-and-uefi-gpt-grub-bootable-linux-system/#respond" style="display:none;">Click here to cancel reply.</a></p>
+	</div>
+
+	
+	<form action="https://blog.heckel.xyz/wp-comments-post.php" method="post" id="commentform">
+	
+	<ul id="comment-form-elements">
+
+		
+		<li>
+		  <label for="author">Name<span class="mustfield">*</span></label>
+		  <input type="text" name="author" id="author" value="" tabindex="1" aria-required='true' />
+		</li>
+		
+		<li>
+		  <label for="email">Email<span class="mustfield">*</span></label>
+		  <input type="email" name="email" id="email" value="" tabindex="2" aria-required='true' />
+		</li>
+		
+		<li>
+		  <label for="url">Website</label>
+		  <input type="url" name="url" id="url" value="" tabindex="3" />
+		</li>
+	
+		
+		<li> 
+			<label for="comment">Comment<span class="mustfield">*</span></label> 
+			<textarea name="comment" id="comment" tabindex="4"></textarea>
+		</li>
+	
+		<li>
+			<label></label>
+			<input name="submit" type="submit" id="submitcomment" class="submitbutton" tabindex="5" value="COMMENT" />
+		</li>
+	  
+	  <input type='hidden' name='comment_post_ID' value='2944' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+	
+	<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="fafe30a6dc" /></p><p style="display: none;"><input type="hidden" id="ak_js" name="ak_js" value="19"/></p>	</ul>
+	</form>
+	
+	</section>
+
+
+			</article>
+
+			
+		</div>
+
+	<div class="column-two">
+		<aside class="sidebar">
+	<!-- Sidebar Widgets Area -->
+			<div id="text-3" class="widget_sidebar clearfix widget_text" ><h3 class="widget-title">About me</h3>			<div class="textwidget"><a href="/about/"><img  id="sidebar_about_me_image" src="/uploads/profile.jpg" alt="" /></a>
+
+<div id="sidebar_about_me_text">
+<a href="/about/"><strong>Philipp C. Heckel</strong></a>
+<br />&nbsp;<br />
+Principal Engineer and Team Lead at <a href="http://www.datto.com/">Datto</a>
+</div></div>
+		</div><span id="ad_amazon"></span><span id="ad_sidebar_top"></span><div id="philippheckel_extended_tag_cloud_widget-2" class="widget_sidebar clearfix widget_philippheckel_extended_tag_cloud_widget" >        <!-- start extended tag cloud widget -->
+        <h3 class="widget-title">Tags</h3>	<a href="https://blog.heckel.xyz/tag/bash/" class="tag-cloud-link tag-link-40 tag-link-position-1" style="font-size: 13.117647058824pt;" aria-label="Bash (8 items)">Bash</a>
+<a href="https://blog.heckel.xyz/tag/cloud-computing/" class="tag-cloud-link tag-link-59 tag-link-position-2" style="font-size: 11.941176470588pt;" aria-label="Cloud Computing (6 items)">Cloud Computing</a>
+<a href="https://blog.heckel.xyz/tag/code-snippets/" class="tag-cloud-link tag-link-117 tag-link-position-3" style="font-size: 14.176470588235pt;" aria-label="Code Snippets (10 items)">Code Snippets</a>
+<a href="https://blog.heckel.xyz/tag/cron/" class="tag-cloud-link tag-link-43 tag-link-position-4" style="font-size: 10.176470588235pt;" aria-label="Cron (4 items)">Cron</a>
+<a href="https://blog.heckel.xyz/tag/debian/" class="tag-cloud-link tag-link-21 tag-link-position-5" style="font-size: 11.941176470588pt;" aria-label="Debian (6 items)">Debian</a>
+<a href="https://blog.heckel.xyz/tag/distributed-systems/" class="tag-cloud-link tag-link-138 tag-link-position-6" style="font-size: 10.176470588235pt;" aria-label="Distributed Systems (4 items)">Distributed Systems</a>
+<a href="https://blog.heckel.xyz/tag/hacking/" class="tag-cloud-link tag-link-71 tag-link-position-7" style="font-size: 11.941176470588pt;" aria-label="Hacking (6 items)">Hacking</a>
+<a href="https://blog.heckel.xyz/tag/java/" class="tag-cloud-link tag-link-15 tag-link-position-8" style="font-size: 15.470588235294pt;" aria-label="Java (13 items)">Java</a>
+<a href="https://blog.heckel.xyz/tag/linux/" class="tag-cloud-link tag-link-134 tag-link-position-9" style="font-size: 19pt;" aria-label="Linux (27 items)">Linux</a>
+<a href="https://blog.heckel.xyz/tag/mail/" class="tag-cloud-link tag-link-22 tag-link-position-10" style="font-size: 9pt;" aria-label="Mail (3 items)">Mail</a>
+<a href="https://blog.heckel.xyz/tag/mobile/" class="tag-cloud-link tag-link-141 tag-link-position-11" style="font-size: 9pt;" aria-label="Mobile (3 items)">Mobile</a>
+<a href="https://blog.heckel.xyz/tag/php/" class="tag-cloud-link tag-link-5 tag-link-position-12" style="font-size: 13.705882352941pt;" aria-label="PHP (9 items)">PHP</a>
+<a href="https://blog.heckel.xyz/tag/scripts/" class="tag-cloud-link tag-link-39 tag-link-position-13" style="font-size: 15.823529411765pt;" aria-label="Scripts (14 items)">Scripts</a>
+<a href="https://blog.heckel.xyz/tag/security/" class="tag-cloud-link tag-link-136 tag-link-position-14" style="font-size: 16.411764705882pt;" aria-label="Security (16 items)">Security</a>
+<a href="https://blog.heckel.xyz/tag/ssl/" class="tag-cloud-link tag-link-96 tag-link-position-15" style="font-size: 11.117647058824pt;" aria-label="SSL (5 items)">SSL</a>
+<a href="https://blog.heckel.xyz/tag/syncany/" class="tag-cloud-link tag-link-72 tag-link-position-16" style="font-size: 10.176470588235pt;" aria-label="Syncany (4 items)">Syncany</a>
+<a href="https://blog.heckel.xyz/tag/synchronization/" class="tag-cloud-link tag-link-137 tag-link-position-17" style="font-size: 12.529411764706pt;" aria-label="Synchronization (7 items)">Synchronization</a>
+<a href="https://blog.heckel.xyz/tag/tls/" class="tag-cloud-link tag-link-97 tag-link-position-18" style="font-size: 9pt;" aria-label="TLS (3 items)">TLS</a>
+<a href="https://blog.heckel.xyz/tag/ubuntu/" class="tag-cloud-link tag-link-6 tag-link-position-19" style="font-size: 14.176470588235pt;" aria-label="Ubuntu (10 items)">Ubuntu</a>
+<a href="https://blog.heckel.xyz/tag/zfs/" class="tag-cloud-link tag-link-149 tag-link-position-20" style="font-size: 9pt;" aria-label="ZFS (3 items)">ZFS</a>        <!-- end extended tag cloud widget -->
+
+        </div><div id="philippheckel_popular_posts_widget-2" class="widget_sidebar clearfix widget_philippheckel_popular_posts_widget" ><h3 class="widget-title">Popular Posts</h3><ul class='popular_posts'><li class='popular_posts_item'><a href='https://blog.heckel.xyz/2008/05/16/roundcube-login-via-php-script/'><img src='https://dqtpg127g2l9y.cloudfront.net/wp-content/uploads/2008/05/roundcube.png' class='popular_posts_image' /></a><span class='popular_posts_text'><a href='https://blog.heckel.xyz/2008/05/16/roundcube-login-via-php-script/' class='popular_posts_link'>Roundcube login via PHP script</a> <span class='popular_posts_comments'><span title='209 comments'>(209)</span></span></span></li>
+<li class='popular_posts_item'><a href='https://blog.heckel.xyz/2013/07/07/send-whatsapp-messages-via-php-script-using-whatsapi/'><img src='https://dqtpg127g2l9y.cloudfront.net/wp-content/uploads/2013/07/whatsapp2-150x150.jpg' class='popular_posts_image' /></a><span class='popular_posts_text'><a href='https://blog.heckel.xyz/2013/07/07/send-whatsapp-messages-via-php-script-using-whatsapi/' class='popular_posts_link'>Send WhatsApp messages via PHP using WhatsAPI</a> <span class='popular_posts_comments'><span title='159 comments'>(159)</span></span></span></li>
+<li class='popular_posts_item'><a href='https://blog.heckel.xyz/2013/07/01/how-to-use-mitmproxy-to-read-and-modify-https-traffic-of-your-phone/'><img src='https://dqtpg127g2l9y.cloudfront.net/wp-content/uploads/2013/07/20130707-Selection001-150x150.png' class='popular_posts_image' /></a><span class='popular_posts_text'><a href='https://blog.heckel.xyz/2013/07/01/how-to-use-mitmproxy-to-read-and-modify-https-traffic-of-your-phone/' class='popular_posts_link'>How To: Use mitmproxy to read and modify HTTPS traffic</a> <span class='popular_posts_comments'><span title='63 comments'>(63)</span></span></span></li>
+<li class='popular_posts_item'><a href='https://blog.heckel.xyz/2013/07/05/how-to-sniff-the-whatsapp-password-from-your-android-phone-or-iphone/'><img src='https://dqtpg127g2l9y.cloudfront.net/wp-content/uploads/2013/07/whatsapp2-150x150.jpg' class='popular_posts_image' /></a><span class='popular_posts_text'><a href='https://blog.heckel.xyz/2013/07/05/how-to-sniff-the-whatsapp-password-from-your-android-phone-or-iphone/' class='popular_posts_link'>How To: Sniff the WhatsApp password from your Android phone or iPhone</a> <span class='popular_posts_comments'><span title='59 comments'>(59)</span></span></span></li>
+<li class='popular_posts_item'><a href='https://blog.heckel.xyz/2013/08/04/use-sslsplit-to-transparently-sniff-tls-ssl-connections/'><img src='https://dqtpg127g2l9y.cloudfront.net/wp-content/uploads/2013/07/sslsplit-featured.png' class='popular_posts_image' /></a><span class='popular_posts_text'><a href='https://blog.heckel.xyz/2013/08/04/use-sslsplit-to-transparently-sniff-tls-ssl-connections/' class='popular_posts_link'>Use SSLsplit to transparently sniff TLS/SSL connections - including non-HTTP(S) protocols</a> <span class='popular_posts_comments'><span title='56 comments'>(56)</span></span></span></li>
+</ul></div><div id="philippheckel_multi_column_archives_widget-2" class="widget_sidebar clearfix widget_philippheckel_multi_column_archives_widget" ><h3 class="widget-title">Archives</h3><div class='multi_column_archives_wrapper'>
+ <div class='multi_column_archives_partlist_wrapper'>
+  <ul class='multi_column_archives_partlist'>
+   <li><a href='https://blog.heckel.xyz/2017/05/'>May &lsquo;17</a></li>
+   <li><a href='https://blog.heckel.xyz/2017/01/'>Jan &lsquo;17</a></li>
+   <li><a href='https://blog.heckel.xyz/2016/12/'>Dec &lsquo;16</a></li>
+   <li><a href='https://blog.heckel.xyz/2016/01/'>Jan &lsquo;16</a></li>
+   <li><a href='https://blog.heckel.xyz/2015/12/'>Dec &lsquo;15</a></li>
+   <li><a href='https://blog.heckel.xyz/2015/10/'>Oct &lsquo;15</a></li>
+   <li><a href='https://blog.heckel.xyz/2015/08/'>Aug &lsquo;15</a></li>
+   <li><a href='https://blog.heckel.xyz/2015/05/'>May &lsquo;15</a></li>
+   <li><a href='https://blog.heckel.xyz/2015/03/'>Mar &lsquo;15</a></li>
+   <li><a href='https://blog.heckel.xyz/2015/01/'>Jan &lsquo;15</a></li>
+   <li><a href='https://blog.heckel.xyz/2014/10/'>Oct &lsquo;14</a></li>
+   <li><a href='https://blog.heckel.xyz/2014/08/'>Aug &lsquo;14</a></li>
+   <li><a href='https://blog.heckel.xyz/2014/06/'>Jun &lsquo;14</a></li>
+   <li><a href='https://blog.heckel.xyz/2014/05/'>May &lsquo;14</a></li>
+  </ul>
+ </div>
+ <div class='multi_column_archives_partlist_wrapper'>
+  <ul class='multi_column_archives_partlist'>
+   <li><a href='https://blog.heckel.xyz/2014/03/'>Mar &lsquo;14</a></li>
+   <li><a href='https://blog.heckel.xyz/2014/02/'>Feb &lsquo;14</a></li>
+   <li><a href='https://blog.heckel.xyz/2013/10/'>Oct &lsquo;13</a></li>
+   <li><a href='https://blog.heckel.xyz/2013/08/'>Aug &lsquo;13</a></li>
+   <li><a href='https://blog.heckel.xyz/2013/07/'>Jul &lsquo;13</a></li>
+   <li><a href='https://blog.heckel.xyz/2013/06/'>Jun &lsquo;13</a></li>
+   <li><a href='https://blog.heckel.xyz/2013/05/'>May &lsquo;13</a></li>
+   <li><a href='https://blog.heckel.xyz/2013/03/'>Mar &lsquo;13</a></li>
+   <li><a href='https://blog.heckel.xyz/2013/01/'>Jan &lsquo;13</a></li>
+   <li><a href='https://blog.heckel.xyz/2012/12/'>Dec &lsquo;12</a></li>
+   <li><a href='https://blog.heckel.xyz/2012/06/'>Jun &lsquo;12</a></li>
+   <li><a href='https://blog.heckel.xyz/2011/03/'>Mar &lsquo;11</a></li>
+   <li><a href='https://blog.heckel.xyz/2011/02/'>Feb &lsquo;11</a></li>
+   <li><a href='https://blog.heckel.xyz/2011/01/'>Jan &lsquo;11</a></li>
+  </ul>
+ </div>
+ <div class='multi_column_archives_partlist_wrapper'>
+  <ul class='multi_column_archives_partlist'>
+   <li><a href='https://blog.heckel.xyz/2010/08/'>Aug &lsquo;10</a></li>
+   <li><a href='https://blog.heckel.xyz/2010/05/'>May &lsquo;10</a></li>
+   <li><a href='https://blog.heckel.xyz/2010/01/'>Jan &lsquo;10</a></li>
+   <li><a href='https://blog.heckel.xyz/2009/09/'>Sep &lsquo;09</a></li>
+   <li><a href='https://blog.heckel.xyz/2009/08/'>Aug &lsquo;09</a></li>
+   <li><a href='https://blog.heckel.xyz/2009/04/'>Apr &lsquo;09</a></li>
+   <li><a href='https://blog.heckel.xyz/2009/03/'>Mar &lsquo;09</a></li>
+   <li><a href='https://blog.heckel.xyz/2008/11/'>Nov &lsquo;08</a></li>
+   <li><a href='https://blog.heckel.xyz/2008/10/'>Oct &lsquo;08</a></li>
+   <li><a href='https://blog.heckel.xyz/2008/09/'>Sep &lsquo;08</a></li>
+   <li><a href='https://blog.heckel.xyz/2008/07/'>Jul &lsquo;08</a></li>
+   <li><a href='https://blog.heckel.xyz/2008/05/'>May &lsquo;08</a></li>
+  </ul>
+ </div>
+</div></div>		<!-- END Sidebar Widgets Area -->
+</aside> <!-- Sidebar -->	</div><!-- end #column-two -->
+
+                </div>
+                <!-- end #main -->
+            </div>
+            <!-- end .main-container -->            
+            <!-- .footer-container -->
+            <div class="footer-container clearfix">
+                <div class="footer_wrapper">
+                <div class="radial_gradient">
+                
+                    <div class="footer-widgets wrapper">
+                       <div class="sidebar-footer clearfix">
+	<!-- Footer Sidebar Widgets Area -->
+			<div id="philippheckel_multi_column_categories_widget-3" class="widget_footer clearfix widget_philippheckel_multi_column_categories_widget" ><h3 class="widget-title">Categories</h3><div class='multi_column_categories_wrapper'>
+ <div class='multi_column_categories_partlist_wrapper'>
+  <ul class='multi_column_categories_partlist'>
+   <li><a href='/category/administration/'>Administration</a> (9)</li>
+   <li><a href='/category/android/'>Android</a> (3)</li>
+   <li><a href='/category/cloud-computing/'>Cloud Computing</a> (4)</li>
+   <li><a href='/category/snippets/'>Code Snippets</a> (13)</li>
+   <li><a href='/category/distributed-systems/'>Distributed Systems</a> (4)</li>
+   <li><a href='/category/linux/'>Linux</a> (27)</li>
+   <li><a href='/category/mobile/'>Mobile</a> (4)</li>
+  </ul>
+ </div>
+ <div class='multi_column_categories_partlist_wrapper'>
+  <ul class='multi_column_categories_partlist'>
+   <li><a href='/category/multimedia/'>Multimedia</a> (5)</li>
+   <li><a href='/category/office/'>Office</a> (4)</li>
+   <li><a href='/category/programming/'>Programming</a> (22)</li>
+   <li><a href='/category/scripting/'>Scripting</a> (13)</li>
+   <li><a href='/category/security/'>Security</a> (16)</li>
+   <li><a href='/category/synchronization/'>Synchronization</a> (7)</li>
+   <li><a href='/category/virtualization/'>Virtualization</a> (2)</li>
+  </ul>
+ </div>
+</div></div><div id="recent-comments-3" class="widget_footer clearfix philippheckel_extended_recent_comments_widget" ><h3 class="widget-title">Recent Comments</h3><ul class="recentcomments_list">
+<li class="recentcomments_item"> <div class='avatar'><img alt='' src='https://secure.gravatar.com/avatar/0f413b65bce44643e7fcbed130f23904?s=40&#038;d=https%3A%2F%2Fblog.heckel.xyz%2Fwp-content%2Fthemes%2Ffizz-ph%2Fimg%2Fdefault-avatar.png&#038;r=g' srcset="https://secure.gravatar.com/avatar/0f413b65bce44643e7fcbed130f23904?s=80&#038;d=https%3A%2F%2Fblog.heckel.xyz%2Fwp-content%2Fthemes%2Ffizz-ph%2Fimg%2Fdefault-avatar.png&#038;r=g 2x" class='avatar avatar-40 photo' height='40' width='40' /></div>
+ <article>
+  <header>
+   <span class='author'><a href='http://www.philippheckel.com' rel='external nofollow' class='url'>Philipp C. Heckel</a></span>
+   <time datetime='2018-02-4'>at February 4th, 2018</time>
+  </header>
+  <section><span class='on'>on</span> <a href='https://blog.heckel.xyz/2017/05/28/creating-a-bios-gpt-and-uefi-gpt-grub-bootable-linux-system/#comment-232135'>Creating a BIOS/GPT and UEFI/GPT Grub-bootable Linux system</a></section>
+ </article>
+ <br style='clear: both' />
+</li>
+<li class="recentcomments_item"> <div class='avatar'><img alt='' src='https://secure.gravatar.com/avatar/adf27afdf80122e5d7a065f172a54568?s=40&#038;d=https%3A%2F%2Fblog.heckel.xyz%2Fwp-content%2Fthemes%2Ffizz-ph%2Fimg%2Fdefault-avatar.png&#038;r=g' srcset="https://secure.gravatar.com/avatar/adf27afdf80122e5d7a065f172a54568?s=80&#038;d=https%3A%2F%2Fblog.heckel.xyz%2Fwp-content%2Fthemes%2Ffizz-ph%2Fimg%2Fdefault-avatar.png&#038;r=g 2x" class='avatar avatar-40 photo' height='40' width='40' /></div>
+ <article>
+  <header>
+   <span class='author'><a href='http://cloonix.fr' rel='external nofollow' class='url'>Vincent Perrier</a></span>
+   <time datetime='2018-02-4'>at February 4th, 2018</time>
+  </header>
+  <section><span class='on'>on</span> <a href='https://blog.heckel.xyz/2017/05/28/creating-a-bios-gpt-and-uefi-gpt-grub-bootable-linux-system/#comment-232132'>Creating a BIOS/GPT and UEFI/GPT Grub-bootable Linux system</a></section>
+ </article>
+ <br style='clear: both' />
+</li>
+<li class="recentcomments_item"> <div class='avatar'><img alt='' src='https://secure.gravatar.com/avatar/1b3d7bc9caad093f50028556e8c4b0e0?s=40&#038;d=https%3A%2F%2Fblog.heckel.xyz%2Fwp-content%2Fthemes%2Ffizz-ph%2Fimg%2Fdefault-avatar.png&#038;r=g' srcset="https://secure.gravatar.com/avatar/1b3d7bc9caad093f50028556e8c4b0e0?s=80&#038;d=https%3A%2F%2Fblog.heckel.xyz%2Fwp-content%2Fthemes%2Ffizz-ph%2Fimg%2Fdefault-avatar.png&#038;r=g 2x" class='avatar avatar-40 photo' height='40' width='40' /></div>
+ <article>
+  <header>
+   <span class='author'>Anh Pham</span>
+   <time datetime='2018-01-31'>at January 31st, 2018</time>
+  </header>
+  <section><span class='on'>on</span> <a href='https://blog.heckel.xyz/2013/07/01/how-to-use-mitmproxy-to-read-and-modify-https-traffic-of-your-phone/#comment-232035'>How To: Use mitmproxy to read and modify HTTPS traffic</a></section>
+ </article>
+ <br style='clear: both' />
+</li>
+<li class="recentcomments_item"> <div class='avatar'><img alt='' src='https://secure.gravatar.com/avatar/984d2c0a3906f5a53aebcfc6946ed7b0?s=40&#038;d=https%3A%2F%2Fblog.heckel.xyz%2Fwp-content%2Fthemes%2Ffizz-ph%2Fimg%2Fdefault-avatar.png&#038;r=g' srcset="https://secure.gravatar.com/avatar/984d2c0a3906f5a53aebcfc6946ed7b0?s=80&#038;d=https%3A%2F%2Fblog.heckel.xyz%2Fwp-content%2Fthemes%2Ffizz-ph%2Fimg%2Fdefault-avatar.png&#038;r=g 2x" class='avatar avatar-40 photo' height='40' width='40' /></div>
+ <article>
+  <header>
+   <span class='author'>Bob</span>
+   <time datetime='2018-01-25'>at January 25th, 2018</time>
+  </header>
+  <section><span class='on'>on</span> <a href='https://blog.heckel.xyz/2013/07/01/how-to-use-mitmproxy-to-read-and-modify-https-traffic-of-your-phone/#comment-231939'>How To: Use mitmproxy to read and modify HTTPS traffic</a></section>
+ </article>
+ <br style='clear: both' />
+</li>
+</ul>
+</div><div id="text-5" class="widget_footer clearfix widget_text" ><h3 class="widget-title">Links</h3>			<div class="textwidget"><ul>
+<li><a href="http://www.linkedin.com/in/philippheckel">LinkedIn Profile</a></li>
+<li><a href="https://www.xing.com/profile/Philipp_Heckel">XING Profile</a></li>
+<li><a href="https://plus.google.com/117151669220976773787?rel=author">Google+ Profile</a></li>
+<li><a href="http://www.syncany.org/">Syncany Project Site</a></li>
+<li><a href="https://github.com/syncany/syncany">Syncany on GitHub</a></li>
+</ul></div>
+		</div>		<!-- END Footer Sidebar Widgets Area -->
+</div> <!-- Footer Sidebar -->                    </div>
+                
+                </div>
+                </div>
+
+
+				<footer class="wrapper">
+					<div class="footer_copyright">
+						&copy; <a href="/about/">Philipp C. Heckel</a>, 1998 - 2018								
+					</div>
+					<div class="footer_theme_credits">
+						Original Theme by <a href="http://www.s5themes.com/">Site5</a>
+					</div>
+				</footer>
+            </div>
+            <!-- end .footer-container -->
+
+        </div>
+        <!-- end #page -->
+
+	<link rel='stylesheet' id='crayon-css'  href='https://dqtpg127g2l9y.cloudfront.net/wp-content/plugins/crayon-syntax-highlighter/css/min/crayon.min.css?ver=_2.7.2_beta' type='text/css' media='all' />
+<script type='text/javascript' src='https://dqtpg127g2l9y.cloudfront.net/wp-includes/js/wp-embed.min.js?ver=ae9effdb12897e590dce411ca8890121'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var CrayonSyntaxSettings = {"version":"_2.7.2_beta","is_admin":"0","ajaxurl":"https:\/\/blog.heckel.xyz\/wp-admin\/admin-ajax.php","prefix":"crayon-","setting":"crayon-setting","selected":"crayon-setting-selected","changed":"crayon-setting-changed","special":"crayon-setting-special","orig_value":"data-orig-value","debug":""};
+var CrayonSyntaxStrings = {"copy":"Press %s to Copy, %s to Paste","minimize":"Click To Expand Code"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://dqtpg127g2l9y.cloudfront.net/wp-content/plugins/crayon-syntax-highlighter/js/min/crayon.min.js?ver=_2.7.2_beta'></script>
+<script async="async" type='text/javascript' src='https://dqtpg127g2l9y.cloudfront.net/wp-content/plugins/akismet/_inc/form.js?ver=4.0.2'></script>
+		
+		<a href="#" class="go-top"></a>		
+
+
+		<!-- Custom JS -->
+						
+		<script type="text/javascript" src="https://dqtpg127g2l9y.cloudfront.net/wp-content/themes/fizz-ph/js/custom.js"></script>			
+	</body>
+</html>
+
+<!--
+Performance optimized by W3 Total Cache. Learn more: https://www.w3-edge.com/products/
+
+Object Caching 1296/82 objects using disk
+Page Caching using disk: enhanced (SSL caching disabled) 
+Content Delivery Network via Amazon Web Services: CloudFront: dqtpg127g2l9y.cloudfront.net
+Database Caching 1/15 queries in 0.006 seconds using disk
+
+Served from: blog.heckel.xyz @ 2018-02-18 21:17:48 by W3 Total Cache
+-->

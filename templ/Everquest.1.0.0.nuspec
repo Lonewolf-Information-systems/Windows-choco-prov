@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Everquest</id>
+    <version>1.0.0</version>
+    <title>Everquest</title>
+    <authors>Necrose99</authors>
+    <owners>Necrose99</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <projectUrl>https://www.everquest.com/home</projectUrl>
+    <iconUrl>https://www.google.com/imgres?imgurl=https:%2F%2Fpbs.twimg.com%2Fprofile_images%2F3169841590%2Fd8ad5646c9e7c5fda0ecca2b190852c2_400x400.jpeg&amp;imgrefurl=https:%2F%2Ftwitter.com%2Feqaccount&amp;docid=1YvlWQqCsC6LfM&amp;tbnid=TnaBRE5agMYArM:&amp;vet=1&amp;w=400&amp;h=400&amp;bih=588&amp;biw=1366&amp;ved=0ahUKEwigw_nzxKrZAhVNCKwKHX0PBKkQxiAIGCgC&amp;iact=c&amp;ictx=1</iconUrl>
+    <description>Welcome to EverQuest ® - the online game that started it all! No other MMO matches EverQuest's content that includes 21 expansions, plus the original base game. Now, in its unprecedented eighteenth year of development, EverQuest continues to add immersive gameplay, captivating storytelling and exciting worlds full of mystery and adventure.
+
+EverQuest is Free to Play. Your Way.™ Join a thriving community unlike any other online game, immerse yourself in hundreds of unique zones, battle thousands of creatures, and complete exciting quests. Group with friends and experience an online game the way it should be, epic and legendary.</description>
+    <summary>Everquest Online MMO.</summary>
+    <copyright>Day Break Games</copyright>
+    <language></language>
+    <dependencies>
+      <dependency id="DirectX" version="9.25.0" />
+    </dependencies>
+  </metadata>
+</package>

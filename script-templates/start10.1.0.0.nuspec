@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>start10</id>
+    <version>1.0.0</version>
+    <title>Start10</title>
+    <authors>Stardock</authors>
+    <owners>necrose99</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <projectUrl>http://www.stardock.com/products/start10/</projectUrl>
+    <iconUrl>https://www.stardock.com/products/start10/images/logo-start10.png</iconUrl>
+    <description>The Windows� 7  Style start menu returns with Start10�!
+
+Clasicshell for Windows 10 is an option, for most users 
+ however for power users/admins/devs/gamers  offten bogs down or corupts. req. re-install.. 
+Start 10 is a Windows 10 Version of Previous Start 8 for Win8 ,
+Rocksolid preformance and speed even @ over 500 apps were windows 10 Native menus also start to fail..</description>
+    <summary>The Windows� 7  Style start menu returns with Start10�!</summary>
+    <releaseNotes>grabs trial, version, if you have a key then automaticly switches to paid mode.</releaseNotes>
+    <copyright>stardock</copyright>
+    <tags>windows 10  windows-7-style-start-menu stardock</tags>
+  </metadata>
+  <files>
+    <file src="tools\chocolateyInstall.ps1" target="tools\chocolateyInstall.ps1" />
+    <file src="tools\chocolateyUninstall.ps1" target="tools\chocolateyUninstall.ps1" />
+    <file src="logo-start10.png" target="logo-start10.png" />
+  </files>
+</package>

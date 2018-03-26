@@ -1,0 +1,39 @@
+Package testing. See package page for more details. Outlook CalDav Synchronizer (Install) 3.0.0
+By:
+
+    Pauby tkriviradev 
+
+Outlook Plugin, which synchronizes events, tasks and contacts between Outlook and Google, SOGo, Horde or any other CalDAV or CardDAV server. Supported Outlook versions are 2016, 2013, 2010 and 2007. This project was initially developed as a master thesis project at the University of Applied Sciences Technikum Wien, Software Engineering Degree prog... More information
+
+3,053 downloads Tags
+
+    outlookcaldavsynchronizer outlookcaldav caldav synchronizer outlook admin 
+
+onenote-taggingkit-addin.install icon
+C:\> choco install onenote-taggingkit-addin.install
+Package testing. See package page for more details. OneNote Tagging Kit Add-In 3.2.6401.32978
+By:
+
+    WetHat choco install outlookcaldav 
+
+This add-in for OneNote 2010, 2013, or 2016 (desktop) is based on the built-in OneNote tagging system. ## Features * Page Tags can be added/removed from pages on-the-fly * Search refinement using page tags (facetted search) * Page tags are available and fully operational for all users of shared OneNote notebooks (requires add-in to be installed o... More information  
+
+choco install onenote-taggingkit-addin.install 
+
+588 downloads Tags
+
+    admin onenote tagging addin onenote2010 onenote2013 onenote2016 taxonomy categorization 
+
+
+Package testing. See package page for more details. G Suite Sync for Microsoft Outlook (Install) 3.8.440.12503
+By:
+
+    bcurran3 
+
+##What is GSSMO? G Suite Sync for Microsoft Outlook is a Microsoft Outlook plug-in that lets you use Microsoft Outlook as a client for G Suite email, calendar, and contacts. Email, calendar events (including recurring meetings), and contacts are all synchronized between G Suite and Microsoft Outlook. Outlook Notes are synced with Google Docs. Outl... More information
+
+2,025 downloads Tags
+
+    gssmo gsuite gapps google migration sync outlook admin 
+
+choco install gsuite-sync-outlook 

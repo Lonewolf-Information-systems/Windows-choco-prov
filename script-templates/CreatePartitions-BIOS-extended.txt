@@ -1,0 +1,37 @@
+select disk 0
+clean
+rem == 1. System partition ======================
+create partition primary size=100
+format quick fs=ntfs label="System"
+assign letter="S"
+active
+rem == 2. Utility partition =====================
+create partition primary size=100
+format quick fs=ntfs label="Utility1"
+assign letter="U"
+set id=27
+rem == 3. Utility partition =====================
+create partition primary size=200
+format quick fs=ntfs label="Utility2"
+assign letter="V"
+set id=27
+rem == 4. Extended partition ====================
+create partition extended
+rem == 4a. Windows partition ====================
+rem ==    a. Create the Windows partition =======
+create partition logical
+rem ==    b. Create space for the recovery tools  
+shrink minimum=500
+rem       ** NOTE: Update this size to match the
+rem                size of the recovery tools 
+rem                (winre.wim)                 **
+rem ==    c. Prepare the Windows partition ====== 
+format quick fs=ntfs label="Windows"
+assign letter="C"
+rem == 4b. Recovery tools partition ==============
+create partition logical
+format quick fs=ntfs label="Recovery"
+assign letter="R"
+set id=27
+list volume
+exit

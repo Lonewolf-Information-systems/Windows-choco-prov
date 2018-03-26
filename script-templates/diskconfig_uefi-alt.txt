@@ -1,0 +1,36 @@
+rem DISKPART script, 200 GB Windows rest Data partition
+rem ---------------------------------------------------
+rem Select Disk 0, wipe it empty, convert to GPT
+rem ---------------------------------------------------
+select disk 0
+clean
+convert gpt
+rem ---------------------------------------------------
+rem Create & format 100 MB EFI System partition 
+rem ---------------------------------------------------
+create partition efi size=100
+format quick fs=fat32 label="System"
+rem ---------------------------------------------------
+rem Create 16 MB MSR partition (will not be formatted)
+rem ---------------------------------------------------
+create partition msr size=16
+rem ---------------------------------------------------
+rem Create & format a 200 GB Windows partition
+rem ---------------------------------------------------
+create partition primary size=204800
+format quick fs=ntfs label="Windows"
+rem ---------------------------------------------------
+rem Create & format 450 MB recovery partition 
+rem ---------------------------------------------------
+create partition primary size=450
+format quick fs=ntfs label="WinRE"
+set id="de94bba4-06d1-4d40-a16a-bfd50179d6ac"
+rem ---------------------------------------------------
+rem Create & format a data partition with letter W
+rem ---------------------------------------------------
+create partition primary
+format quick fs=ntfs label="Data"
+assign letter W
+rem ---------------------------------------------------
+rem Exit Diskpart
+rem ---------------------------------------------------

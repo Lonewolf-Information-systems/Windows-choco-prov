@@ -1,0 +1,3 @@
+@ echo off
+REM  silent install... 
+ResilioSync.exe /PERFORMINSTALL /S

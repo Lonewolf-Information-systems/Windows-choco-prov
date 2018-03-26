@@ -1,0 +1,1 @@
+choco install notepadplusplus.install --x64 -y

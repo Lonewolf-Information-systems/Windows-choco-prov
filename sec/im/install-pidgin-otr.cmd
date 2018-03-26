@@ -1,0 +1,1 @@
+choco install pidgin-otr -y

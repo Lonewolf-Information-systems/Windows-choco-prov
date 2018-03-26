@@ -1,0 +1,1 @@
+imagex /config c:\imaging\<configuration_list>.ini /append d: d:\imaging\data.wim "Drive D"

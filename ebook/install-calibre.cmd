@@ -1,0 +1,1 @@
+choco install calibre --x64 -y

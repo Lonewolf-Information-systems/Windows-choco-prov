@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>Everquest2</id>
+        <version>1.0.0</version>
+        <title>Everquest</title>
+        <authors>Necrose99</authors>
+        <projectUrl>https://www.everquest.com/home</projectUrl>
+        <iconUrl>https://www-cdn.everquest.com/images/logos/eq_logo_clear.png?v=3034478648</iconUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Welcome to EverQuest ® - the online game that started it all! No other MMO matches EverQuest's content that includes 21 expansions, plus the original base game. Now, in its unprecedented eighteenth year of development, EverQuest continues to add immersive gameplay, captivating storytelling and exciting worlds full of mystery and adventure.
+
+EverQuest is Free to Play. Your Way.™ Join a thriving community unlike any other online game, immerse yourself in hundreds of unique zones, battle thousands of creatures, and complete exciting quests. Group with friends and experience an online game the way it should be, epic and legendary.</description>
+        <summary>Everquest Online MMO.</summary>
+        <copyright>Day Break Games</copyright>
+        <language />
+        <dependencies>
+            <dependency id="DirectX" version="9.25" />
+        </dependencies>
+    </metadata>
+    <files />
+</package>

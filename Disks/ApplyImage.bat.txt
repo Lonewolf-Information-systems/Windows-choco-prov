@@ -1,0 +1,24 @@
+rem These commands copy the selected image file to
+rem predefined drive partitions on a UEFI-based computer.
+
+rem Usage:   ApplyImage WimFileName 
+rem Example: ApplyImage N:\Images\my-windows-partition.wim
+
+rem === Copy the image to the recovery image partition ==
+copy %1 R:\install.wim
+
+rem === Apply the image to the Windows partition ========
+imagex /apply R:\install.wim 1 W:\
+
+rem === Copy tools to the recovery tools partition ======
+md T:\Recovery\WindowsRE
+copy W:\windows\system32\recovery\winre.wim T:\Recovery\WindowsRE\winre.wim
+
+rem === Copy boot files to the System partition =========
+bcdboot W:\Windows /s S:
+
+rem === Set the location of the Windows partition =======
+W:\Windows\System32\reagentc /setosimage /path R: /target W:\Windows
+
+rem === Set the location of the Windows RE tools ========
+W:\Windows\System32\reagentc /setreimage /path T:\Recovery\WindowsRE /target W:\Windows

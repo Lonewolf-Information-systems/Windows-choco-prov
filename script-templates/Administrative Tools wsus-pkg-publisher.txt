@@ -1,0 +1,21 @@
+### add evavator / get addmin uac from templ...
+
+add url fetch shortcut ps1  wsus pkg publisher via github..
+
+add unzip powershell 
+## :::: Get-ChildItem 'path to folder' -Filter *.zip | Expand-Archive -DestinationPath 'path to extract' -Force
+
+## Windows PowerShell 5.0 (included in Windows 10)
+## Expand-Archive -Path Draft.Zip -DestinationPath C:\Reference
+
+
+# Example 2: Unblock multiple files
+PS C:\> dir C:\Downloads\*PowerShell* | Unblock-File
+
+### 
+
+C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Administrative Tools
+
+add powershell CMD create folder WSUS Package Publisher
+
+add ps1 create shortcuts 

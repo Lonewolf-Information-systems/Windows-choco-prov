@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en" class="static ">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chocolatey Gallery | Packages matching game-engine
+  </title>
+    
+<link href="/cassette.axd/stylesheet/ce7ef63431fadd031fb50672dd66f1d332a9b263/Content/Site.css" type="text/css" rel="stylesheet"/>
+<link href="/cassette.axd/stylesheet/7e91dd8bbeb9c48e7485ac943bb5f9f756a8b141/Content/chocolatey.css" type="text/css" rel="stylesheet"/>
+
+    
+ 
+    
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <link rel="nuget" type="application/atom+xml" title="Chocolatey" href="https://www.chocolatey.org/api/v2" />
+    <link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="Chocolatey Search">
+  
+    
+    
+<script src="/cassette.axd/script/3e48fce4929af563c0e6fd08ce3972e5e4dfa5b7/Scripts/header" type="text/javascript"></script>
+
+    
+    
+    <script type="text/javascript">
+        var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+        document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type="text/javascript">
+        try{
+            var pageTracker = _gat._getTracker("UA-2743882-12");
+            pageTracker._trackPageview();
+        } catch(err) {}
+    </script>
+
+    
+</head>
+<body>
+    <div id="content-wrapper">
+        <header class="main">
+            <div id="logo">
+                <a href="/">Chocolatey Gallery</a>
+            </div>
+            <div id="header-right">
+                <div class="notices">Notices: This section not yet converted to new layout. Download stats are rolling back out.</div>
+                <div class="user-display">
+                    <span class="welcome"><a id="ux_account" href="/users/account/LogOn">Log On</a></span>
+                    <a id="ux_account_action" href="/account/Register" class="register">Register</a>
+        </div>
+            </div>
+        </header>
+        <nav class="main">
+            <ul id="menu">
+                <li class=""><a href="/">Home</a></li>
+                <li class=""><a href="/about">About</a></li>
+                <li><a href="/pricing">Compare</a></li>
+                <li class="current"><a href="/packages">Packages</a></li>
+                <li class=""><a href="/packages/upload" class="upload">Upload</a></li>
+                <li><a href="/docs">Docs</a></li>
+                <li><a href="https://groups.google.com/group/chocolatey">Forum*</a></li>
+                <li><a href="http://cafepress.com/chocolatey">Shop*</a></li>
+            </ul>
+            <form id="searchBox" role="search" action="/packages" method="get">
+                <input id="searchBoxSubmit" title="Search by id only with 'id:searchValue'. Search by tags with 'tag:searchValue'." type="submit" value=" " />
+                <input name="q" id="searchBoxInput" title="Search by id only with 'id:searchValue'. Search by tags with 'tag:searchValue'." placeholder="Search Packages" value="game-engine" />
+            </form>
+        </nav>
+        <div id="body" role="main">
+            
+
+
+
+      <div class="p">
+        <div class="block full-width m-t p-b clearfix p">
+          
+        <div>
+          <p class="no-margin">
+            Your use of the packages on this site means you understand they are not supported or guaranteed in any way. Due to the nature of a public repository and unreliability due to distribution rights, these packages should not be used as is for organizational purposes either. <a href="/docs/community-packages-disclaimer">Learn more</a>.
+          </p>
+        </div>
+          <div class="flex modal-closeable" id="package-disclaimer">
+    <div class="message-content">
+      <p class="no-margin">
+        Welcome to the Chocolatey Community Package Repository! The packages found in this section of the site are provided, maintained, and moderated by the community.
+      </p>
+        <h4 class="no-margin">Moderation</h4>
+        <p class="no-margin">
+          Every version of each package undergoes a rigorous moderation process before it goes live that typically includes:
+          <ul>
+            <li><a href="/security#chocolateyorg-packages" target="_blank">Security</a>, consistency, and <a href="https://github.com/chocolatey/package-validator/wiki#what-is-the-validator" target="_blank">quality checking</a></li>
+            <li><a href="https://github.com/chocolatey/package-verifier/wiki" target="_blank">Installation testing</a></li>
+            <li><a href="/security#chocolateyorg-packages" target="_blank">Virus checking through VirusTotal</a></li>
+            <li>Human moderators who give final review and sign off</li>
+          </ul>
+          More detail at <a href="/security#chocolateyorg-packages" target="_blank">Security</a> and <a href="/docs/moderation" target="_blank">Moderation</a>.
+        </p>
+        <h4 class="no-margin">Organizational Use</h4>
+        <p class="no-margin">
+          If you are an organization using Chocolatey, we want your experience to be fully reliable. 
+          Due to the nature of this publicly offered repository, <a href="/docs/community-packages-disclaimer#reliability" target="_blank">reliability</a> cannot be guaranteed. 
+          Packages offered here are subject to distribution rights, which means they may need to reach out further to the internet to the official locations to download files at runtime. 
+          <br /><br />
+          Fortunately, distribution rights do not apply for internal use. With any edition of Chocolatey (including the free open source edition), you can <a href="/docs/how-to-host-feed" target="_blank">host your own packages</a> and cache or <a href="/docs/how-to-recompile-packages" target="_blank">internalize</a> existing community packages.
+        </p>
+        <h4 class="no-margin">Disclaimer</h4>
+        <p class="no-margin">
+          Your use of the packages on this site means you understand they are 
+          not supported or guaranteed in any way. 
+          <a href="/docs/community-packages-disclaimer" target="_blank">Learn more...</a>
+          <br /><br />
+        </p>
+        <div class="close button"><i class="fa fa-fw fa-check-circle-o"></i>I Understand</div>
+    </div>
+</div>
+
+        </div>
+      </div>
+
+<div class="hgroup search">
+    <div style="float:right">
+        <a href="https://feeds.feedburner.com/chocolatey" title="Subscribe to package updates" rel="alternate" type="application/rss+xml"><img src="https://www.feedburner.com/fb/images/pub/feed-icon32x32.png" alt="RSS" style="border:0" />&nbsp;<span>Subscribe to updates</span></a>
+        <br />
+        <form style="border:0px solid #ccc;padding:1px;text-align:center;" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=chocolatey', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true"><input type="hidden" value="chocolatey" name="uri" /><input type="hidden" name="loc" value="en_US" />Or subcribe by <input type="submit" value="email" /></form>
+    </div>
+        <h1>
+            Search for "game-engine" returned 7 packages         </h1>
+        <h2>Displaying results 1 - 7.</h2>
+</div>
+<form method="get" action="">
+    <fieldset class="form search">
+        <legend>Sort Order</legend>
+        <input type="hidden" name="q" value="game-engine" />
+        <div class="form-field">
+            <select name="moderatorQueue" id="moderatorQueue">
+                    <option value="" >Normal View</option>    
+
+                    <option value="true" >Moderator Queue</option>    
+
+            </select>
+
+            <select name="prerelease" id="prerelease">
+                    <option value="false" >Stable Only</option>    
+
+                    <option value="true" >Include Prerelease</option>    
+
+            </select>
+
+            <label for="sortOrder">Sort By</label>
+            <select name="sortOrder" id="sortOrder">
+    <option value="relevance" selected="selected">Relevance</option>    
+                    <option value="package-download-count" >Popularity</option>    
+
+                    <option value="package-title" >A-Z</option>    
+
+                    <option value="package-created" >Recent</option>    
+
+            </select>
+        </div>
+    </fieldset>
+</form>
+<ol id="searchResults">
+        <li>
+            <section class="package ">
+    <div class="side">
+        <a href="/packages/unity/2017.3.1" title="View more about Unity (Install)">
+            <img src="/content/packageimages/unity.2017.3.1.png" alt="unity icon" onerror="this.src='/Content/Images/packageDefaultIcon-50x50.png';" />
+        </a>
+    </div>
+    <div class="main">
+        <header> 
+            <div class="nuget-badge-small">
+                <code><span>C:\&gt; </span>choco install unity
+</code>
+            </div>
+            <h1><img class="package-testing" src="/content/images/green_ball_48.png" title="Package testing. See package page for more details." alt="Package testing. See package page for more details." /> <a href="/packages/unity/2017.3.1">Unity (Install) 2017.3.1</a></h1>
+            
+            <h2>By:</h2>
+            <ul class="owners">
+                    <li><a href="/profiles/vovkas" title="vovkas">vovkas</a></li>
+                    <li><a href="/profiles/LudicrousByte" title="LudicrousByte">LudicrousByte</a></li>
+            </ul>
+        </header>
+
+        <p>
+## Features
+#### Multiplatform game engine (Note: Need to install separate package for some Target Platforms)
+* Android, iOS, Windows Store, Tizen
+* PC, MacOS, Linux
+* WebGL
+* PlayStation 4, PlayStation Vita, Xbox 360, Xbox One, Wii U, Nintendo 3DS
+* Oculus Rift, Google Cardboard, PlayStation VR, Gear VR, Microsoft Hololens
+* Android TV, Samsung SM... <a href="/packages/unity/2017.3.1">More information</a>
+           
+        </p>
+
+        <footer>
+            <p class="downloads">
+                20,940 downloads
+            </p>
+            
+                <div class="tags">
+                    <h2>Tags</h2>
+                    <ul class="tags">
+                            <li><a href="/packages?q=tag%3Aunity" title="Search for unity">unity</a></li>
+                            <li><a href="/packages?q=tag%3Aadmin" title="Search for admin">admin</a></li>
+                            <li><a href="/packages?q=tag%3Agames" title="Search for games">games</a></li>
+                            <li><a href="/packages?q=tag%3Across-platform" title="Search for cross-platform">cross-platform</a></li>
+                            <li><a href="/packages?q=tag%3Aunity3d" title="Search for unity3d">unity3d</a></li>
+                            <li><a href="/packages?q=tag%3Aide" title="Search for ide">ide</a></li>
+                            <li><a href="/packages?q=tag%3Aeditor" title="Search for editor">editor</a></li>
+                            <li><a href="/packages?q=tag%3A3d" title="Search for 3d">3d</a></li>
+                            <li><a href="/packages?q=tag%3Avr" title="Search for vr">vr</a></li>
+                            <li><a href="/packages?q=tag%3Amultiplatform" title="Search for multiplatform">multiplatform</a></li>
+                    </ul>
+                </div>
+        </footer>
+    </div>
+</section>
+
+        </li>
+        <li>
+            <section class="package ">
+    <div class="side">
+        <a href="/packages/epicgameslauncher/1.1.97.0" title="View more about Epic Games Launcher">
+            <img src="/content/packageimages/epicgameslauncher.1.1.97.0.svg" alt="epicgameslauncher icon" onerror="this.src='/Content/Images/packageDefaultIcon-50x50.png';" />
+        </a>
+    </div>
+    <div class="main">
+        <header> 
+            <div class="nuget-badge-small">
+                <code><span>C:\&gt; </span>choco install epicgameslauncher
+</code>
+            </div>
+            <h1><img class="package-testing" src="/content/images/green_ball_48.png" title="Package testing. See package page for more details." alt="Package testing. See package page for more details." /> <a href="/packages/epicgameslauncher">Epic Games Launcher 1.1.97.0</a></h1>
+            
+            <h2>By:</h2>
+            <ul class="owners">
+                    <li><a href="/profiles/iicolsandersii" title="iicolsandersii">iicolsandersii</a></li>
+            </ul>
+        </header>
+
+        <p>
+The Epic Games Launcher is how you obtain the Unreal Game Engine, modding tools and other Epic Games downloads (Epic Games Account Required).           
+        </p>
+
+        <footer>
+            <p class="downloads">
+                683 downloads
+            </p>
+            
+                <div class="tags">
+                    <h2>Tags</h2>
+                    <ul class="tags">
+                            <li><a href="/packages?q=tag%3Aepic" title="Search for epic">epic</a></li>
+                            <li><a href="/packages?q=tag%3Agames" title="Search for games">games</a></li>
+                            <li><a href="/packages?q=tag%3Alauncher" title="Search for launcher">launcher</a></li>
+                            <li><a href="/packages?q=tag%3Aunreal" title="Search for unreal">unreal</a></li>
+                            <li><a href="/packages?q=tag%3Agame" title="Search for game">game</a></li>
+                            <li><a href="/packages?q=tag%3Aengine" title="Search for engine">engine</a></li>
+                            <li><a href="/packages?q=tag%3Aadmin" title="Search for admin">admin</a></li>
+                    </ul>
+                </div>
+        </footer>
+    </div>
+</section>
+
+        </li>
+        <li>
+            <section class="package ">
+    <div class="side">
+        <a href="/packages/spatial/1.1.9" title="View more about spatial (Install)">
+            <img src="/content/packageimages/spatial.1.1.9.png" alt="spatial icon" onerror="this.src='/Content/Images/packageDefaultIcon-50x50.png';" />
+        </a>
+    </div>
+    <div class="main">
+        <header> 
+            <div class="nuget-badge-small">
+                <code><span>C:\&gt; </span>choco install spatial
+</code>
+            </div>
+            <h1><img class="package-testing" src="/content/images/green_ball_48.png" title="Package testing. See package page for more details." alt="Package testing. See package page for more details." /> <a href="/packages/spatial">spatial (Install) 1.1.9</a></h1>
+            
+            <h2>By:</h2>
+            <ul class="owners">
+                    <li><a href="/profiles/petemounce" title="petemounce">petemounce</a></li>
+                    <li><a href="/profiles/improbable" title="improbable">improbable</a></li>
+                    <li><a href="/profiles/davidbimmler" title="davidbimmler">davidbimmler</a></li>
+                    <li><a href="/profiles/helcaraxan" title="helcaraxan">helcaraxan</a></li>
+                    <li><a href="/profiles/improbablepiotr" title="improbablepiotr">improbablepiotr</a></li>
+                    <li><a href="/profiles/oblm" title="oblm">oblm</a></li>
+            </ul>
+        </header>
+
+        <p>
+# SpatialOS: Build worlds where everything matters.
+
+SpatialOS is a computation platform that allows you to exceed the power of a single game engine or server.
+
+## Code Beyond Server Boundaries
+SpatialOS can create a swarm of hundreds of conventional game engines that overlap together to create a huge, seamless world. Develop unconstrained by the c... <a href="/packages/spatial/1.1.9">More information</a>
+           
+        </p>
+
+        <footer>
+            <p class="downloads">
+                4,021 downloads
+            </p>
+            
+                <div class="tags">
+                    <h2>Tags</h2>
+                    <ul class="tags">
+                            <li><a href="/packages?q=tag%3Aspatialos" title="Search for spatialos">spatialos</a></li>
+                            <li><a href="/packages?q=tag%3Asimulation" title="Search for simulation">simulation</a></li>
+                            <li><a href="/packages?q=tag%3Aworld" title="Search for world">world</a></li>
+                            <li><a href="/packages?q=tag%3Aspatial" title="Search for spatial">spatial</a></li>
+                    </ul>
+                </div>
+        </footer>
+    </div>
+</section>
+
+        </li>
+        <li>
+            <section class="package ">
+    <div class="side">
+        <a href="/packages/flare/0.19.20141201" title="View more about Flare">
+            <img src="/content/packageimages/flare.0.19.20141201.png" alt="flare icon" onerror="this.src='/Content/Images/packageDefaultIcon-50x50.png';" />
+        </a>
+    </div>
+    <div class="main">
+        <header> 
+            <div class="nuget-badge-small">
+                <code><span>C:\&gt; </span>choco install flare
+</code>
+            </div>
+            <h1><img class="package-testing" src="/content/images/red_ball_48.png" title="Package testing. See package page for more details." alt="Package testing. See package page for more details." /> <a href="/packages/flare">Flare 0.19.20141201</a></h1>
+            
+            <h2>By:</h2>
+            <ul class="owners">
+                    <li><a href="/profiles/adgellida" title="adgellida">adgellida</a></li>
+            </ul>
+        </header>
+
+        <p>
+A simple game engine built to handle a very specific kind of game: single-player 2D action RPGs.
+	
+	###Notes
+	
+	Probably alpha release (automatic push). Package version less than v1, treat as stable.           
+        </p>
+
+        <footer>
+            <p class="downloads">
+                810 downloads
+            </p>
+            
+                <div class="tags">
+                    <h2>Tags</h2>
+                    <ul class="tags">
+                            <li><a href="/packages?q=tag%3Agame" title="Search for game">game</a></li>
+                            <li><a href="/packages?q=tag%3Arpg" title="Search for rpg">rpg</a></li>
+                            <li><a href="/packages?q=tag%3Arole-playing-game" title="Search for role-playing-game">role-playing-game</a></li>
+                            <li><a href="/packages?q=tag%3Agame-engine" title="Search for game-engine">game-engine</a></li>
+                    </ul>
+                </div>
+        </footer>
+    </div>
+</section>
+
+        </li>
+        <li>
+            <section class="package ">
+    <div class="side">
+        <a href="/packages/wave-engine/2.4.1" title="View more about Wave Engine">
+            <img src="/content/packageimages/wave-engine.2.4.1.png" alt="wave-engine icon" onerror="this.src='/Content/Images/packageDefaultIcon-50x50.png';" />
+        </a>
+    </div>
+    <div class="main">
+        <header> 
+            <div class="nuget-badge-small">
+                <code><span>C:\&gt; </span>choco install wave-engine
+</code>
+            </div>
+            <h1><img class="package-testing" src="/content/images/grey_ball_48.png" title="Package testing. See package page for more details." alt="Package testing. See package page for more details." /> <a href="/packages/wave-engine">Wave Engine 2.4.1</a></h1>
+            
+            <h2>By:</h2>
+            <ul class="owners">
+                    <li><a href="/profiles/AdmiringWorm" title="AdmiringWorm">AdmiringWorm</a></li>
+            </ul>
+        </header>
+
+        <p>
+Wave Engine is a C# component-based modern game engine which allows you to create cross-platform games and apps for many platforms: Windows, Linux, MacOS, IOS, Android, Windows Store and Windows Phone.
+
+Wave Engine supports the same set of features in all its platforms to make it easy to port all your projects to other supported platforms.
+
+You als... <a href="/packages/wave-engine/2.4.1">More information</a>
+           
+        </p>
+
+        <footer>
+            <p class="downloads">
+                619 downloads
+            </p>
+            
+                <div class="tags">
+                    <h2>Tags</h2>
+                    <ul class="tags">
+                            <li><a href="/packages?q=tag%3Awave" title="Search for wave">wave</a></li>
+                            <li><a href="/packages?q=tag%3Aengine" title="Search for engine">engine</a></li>
+                            <li><a href="/packages?q=tag%3Aadmin" title="Search for admin">admin</a></li>
+                            <li><a href="/packages?q=tag%3Adevelopment" title="Search for development">development</a></li>
+                            <li><a href="/packages?q=tag%3A.net" title="Search for .net">.net</a></li>
+                    </ul>
+                </div>
+        </footer>
+    </div>
+</section>
+
+        </li>
+        <li>
+            <section class="package ">
+    <div class="side">
+        <a href="/packages/tome-editor/1.0" title="View more about Tome">
+            <img src="/content/packageimages/tome-editor.1.0.png" alt="tome-editor icon" onerror="this.src='/Content/Images/packageDefaultIcon-50x50.png';" />
+        </a>
+    </div>
+    <div class="main">
+        <header> 
+            <div class="nuget-badge-small">
+                <code><span>C:\&gt; </span>choco install tome-editor
+</code>
+            </div>
+            <h1><img class="package-testing" src="/content/images/green_ball_48.png" title="Package testing. See package page for more details." alt="Package testing. See package page for more details." /> <a href="/packages/tome-editor">Tome 1.0</a></h1>
+            
+            <h2>By:</h2>
+            <ul class="owners">
+                    <li><a href="/profiles/npruehs" title="npruehs">npruehs</a></li>
+            </ul>
+        </header>
+
+        <p>
+Developing games is all about data. With game systems for modifying data and user interfaces for presenting it, finding a sophisticated data model is key to creating successful games. Even more, being able to change this data and iterate on a day-to-day basis is mandatory in today&#39;s production cycles.
+
+Tome solves two problems that arise with every... <a href="/packages/tome-editor/1.0">More information</a>
+           
+        </p>
+
+        <footer>
+            <p class="downloads">
+                531 downloads
+            </p>
+            
+                <div class="tags">
+                    <h2>Tags</h2>
+                    <ul class="tags">
+                            <li><a href="/packages?q=tag%3Atome" title="Search for tome">tome</a></li>
+                            <li><a href="/packages?q=tag%3Agame" title="Search for game">game</a></li>
+                            <li><a href="/packages?q=tag%3Adata" title="Search for data">data</a></li>
+                            <li><a href="/packages?q=tag%3Aeditor" title="Search for editor">editor</a></li>
+                    </ul>
+                </div>
+        </footer>
+    </div>
+</section>
+
+        </li>
+        <li>
+            <section class="package ">
+    <div class="side">
+        <a href="/packages/visual-studio-2015-tools-for-unity/3.3.0.2" title="View more about Visual Studio 2015 Tools for Unity">
+            <img src="/content/packageimages/visual-studio-2015-tools-for-unity.3.3.0.2.png" alt="visual-studio-2015-tools-for-unity icon" onerror="this.src='/Content/Images/packageDefaultIcon-50x50.png';" />
+        </a>
+    </div>
+    <div class="main">
+        <header> 
+            <div class="nuget-badge-small">
+                <code><span>C:\&gt; </span>choco install visual-studio-2015-tools-for-unity
+</code>
+            </div>
+            <h1><img class="package-testing" src="/content/images/green_ball_48.png" title="Package testing. See package page for more details." alt="Package testing. See package page for more details." /> <a href="/packages/visual-studio-2015-tools-for-unity">Visual Studio 2015 Tools for Unity 3.3.0.2</a></h1>
+            
+            <h2>By:</h2>
+            <ul class="owners">
+                    <li><a href="/profiles/petemounce" title="petemounce">petemounce</a></li>
+            </ul>
+        </header>
+
+        <p>
+# A Visual Studio extension for helping Unity development
+
+Note: you need _an_ edition of Visual Studio 2015.
+
+Unity is a game engine and development environment for creating cross-platform games. The Unity engine runs on over a dozen platforms spanning from powerful PCs, to game consoles, to touch-enabled tablets and mobile phones—even to the web.... <a href="/packages/visual-studio-2015-tools-for-unity/3.3.0.2">More information</a>
+           
+        </p>
+
+        <footer>
+            <p class="downloads">
+                406 downloads
+            </p>
+            
+                <div class="tags">
+                    <h2>Tags</h2>
+                    <ul class="tags">
+                            <li><a href="/packages?q=tag%3Avisualstudio" title="Search for visualstudio">visualstudio</a></li>
+                            <li><a href="/packages?q=tag%3Aextension" title="Search for extension">extension</a></li>
+                            <li><a href="/packages?q=tag%3Aunity" title="Search for unity">unity</a></li>
+                    </ul>
+                </div>
+        </footer>
+    </div>
+</section>
+
+        </li>
+</ol>
+
+
+</div>
+
+
+
+        </div>
+    </div>
+    <div id="layout-footer" class="group">
+        <footer id="footer">
+            <ul class="recommended">
+                <li><a name="newsletter" id="newsletter">Sign up for the Newsletter!</a>
+                    <p>Be the first to know about upcoming features, security releases, and news about Chocolatey.</p>
+                </li>
+                <li> <!-- Begin MailChimp Signup Form -->
+                    <link href="//cdn-images.mailchimp.com/embedcode/slim-081711.css" rel="stylesheet"
+                        type="text/css">
+                    <style type="text/css">
+                        #mc_embed_signup
+                        {
+                            font: 12px Helvetica,Arial,sans-serif;
+                            width: 160px;
+                        }
+                        #mc_embed_signup input.email { min-width: 150px;}
+                        /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+	                   We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+                    </style>
+                    <div id="mc_embed_signup">
+                        <form action="//chocolatey.us8.list-manage.com/subscribe/post?u=86a6d80146a0da7f2223712e4&amp;id=73b018498d"
+                        method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate"
+                        target="_blank" novalidate>
+                        <input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="Your e-mail address"
+                            required />
+                        <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+                        <div style="position: absolute; left: -5000px;">
+                            <input type="text" name="b_86a6d80146a0da7f2223712e4_73b018498d" tabindex="-1" value="">
+                        </div>
+                        <div class="clear">
+                            <input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe"
+                                class="button" /></div>
+                        </form>
+                    </div>
+                    <!--End mc_embed_signup-->
+                </li>
+                <li><a href="https://groups.google.com/group/chocolatey">Discussion</a>
+                    <p>Find a possible bug? Got a feature request? Get involved in the discussion!</p>
+                </li>
+                <li><a href="/faq">FAQ</a>
+                    <p>Read the Frequently Asked Questions about Chocolatey.</p>
+                </li>
+            </ul>
+            <div class="newsletter">
+            </div>
+            <div class="license">
+                <p><a href="https://twitter.com/chocolateynuget" class="twitter-follow-button" data-show-count="true"
+                data-width="250px" data-lang="en">Follow @chocolateynuget</a> <a href="https://twitter.com/share"
+                class="twitter-share-button" data-hashtags="chocolatey" data-lang="en">Tweet</a>
+
+                    <script type="text/javascript">
+                        !function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = "//platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs); } } (document, "script", "twitter-wjs");
+                    </script>
+
+                    <br />
+                    &copy; 2011 - 2018 RealDimensions Software, LLC. </p>
+                    <p id="releaseTag">
+                        Deployed from <a href="https://github.com/chocolatey/chocolatey.org/commit/0180e390b95d755ee676453f94ed4170bce3c092" title="View the commit.">0180e390b9</a>. You are on web.3. UTC time is currently 18 Feb 2018 17:37:48 +00:00.
+                    </p>
+            </div>
+            <div class="supporters">
+                Site made possible by the following sponsors:
+                <ul class="supporters">
+                    <li></li>
+                    <li><a href="http://codingutopia.com">RealDimensions</a> <a id="realdimensions-logo"
+                    href="http://codingutopia.com"></a></li>
+                    <li><a href="https://appharbor.com">AppHarbor</a> <a id="appharbor-logo" href="https://appharbor.com">
+                    </a></li>
+                    <li><a href="https://turbo.net">Turbo.net</a> <a id="turbo-logo" href="https://turbo.net">
+                    </a></li>
+                    <li></li>
+                </ul>
+            </div>
+        </footer>
+    </div>
+  <div class="cookies-popup">
+    <div class="cookies-message">
+        Chocolatey.org uses cookies to enhance the user experience of the site.
+    </div>
+    <div class="cookies-close">Ok</div>
+</div>
+  
+<script src="/cassette.axd/script/38aa5bdc0f8abe828d929dca37c202f0ea46495f/Scripts/closeable" type="text/javascript"></script>
+<script src="/cassette.axd/script/7fb27281445312dab3cfccba7ffc5ab8adf812b9/Scripts" type="text/javascript"></script>
+<script src="/cassette.axd/script/0ffaf2466be51dbc35f0480183ba45bad3a13d58/Scripts/CookiesNotice" type="text/javascript"></script>
+
+  
+    <script>
+        $(function () {
+            $("#sortOrder,#prerelease,#moderatorQueue").change(function () {
+                $(this).closest("form").submit();
+            });
+
+            Closeable.modal("chocolatey_hide_packages_disclaimer");
+            if (!getCookie('chocolatey_hide_packages_disclaimer')) {
+              $(".modal-closeable").css('display', 'block');
+            }
+        });
+     </script>
+ 
+
+        <style media="screen" type="text/css">
+            @-webkit-keyframes fade {
+              0% { background:#dedede; }
+              20% { background:@notices; }
+              30% { background:@notices; }
+              90% { background:lighten( @notices, 20% ); }
+            }
+            @keyframes fade {
+              0% { background:#dedede; }
+              20% { background:@notices; }
+              30% { background:@notices; }
+              90% { background:lighten( @notices, 20% ); }
+            }
+        </style>
+    <script>
+        ((window.gitter = {}).chat = {}).options = {
+            room: 'chocolatey/chocolatey.org'
+        };
+    </script>
+    <script src="https://sidecar.gitter.im/dist/sidecar.v1.js" async defer></script>
+    <script language="javascript" type="text/javascript">
+      CookiesNotice.modal("chocolatey_hide_cookies_notice");
+      if (!getCookie('chocolatey_hide_cookies_notice')) {
+        $(".cookies-popup").css('display', 'block');
+      }
+    </script>
+</body>
+</html>
